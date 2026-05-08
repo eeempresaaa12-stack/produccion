@@ -16,7 +16,7 @@
 
         <div class="navbar-logo">
 
-            <img src="../img/logo-plastypetco2.png" alt="logo plastypet">
+            <a href="../index.php"><img src="../img/logo-plastypetco2.png" alt="logo plastypet"></a>
 
         </div>
 
