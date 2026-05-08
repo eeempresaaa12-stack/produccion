@@ -1,4 +1,6 @@
 <?php
+/** @var mysqli $conexion */
+
 require_once("../conexion.php");
 
 $anio = $_GET['anio'] ?? date('Y');

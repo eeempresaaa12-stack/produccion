@@ -1,4 +1,5 @@
 <?php
+/** @var mysqli $conexion */
 
 require_once("../conexion.php");
 

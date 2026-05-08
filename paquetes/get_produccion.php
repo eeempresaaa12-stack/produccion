@@ -1,4 +1,6 @@
 <?php
+/** @var mysqli $conexion */
+
 require_once("../conexion.php");
 
 $tipo = $_GET['tipo'] ?? 'semana';

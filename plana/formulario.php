@@ -1,4 +1,6 @@
 <?php 
+/** @var mysqli $conexion */
+
 include("../includes/header.php");
 require_once("../conexion.php");
 
