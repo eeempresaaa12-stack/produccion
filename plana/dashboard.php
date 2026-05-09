@@ -558,7 +558,7 @@ $total_neto += $row['neto'];
 
 <br> <br> <br>
 
-<a class="btn" href="formulario.php">Registrar Producción</a>
+<a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfaRx43KiOMm9vi_y_TB46Mw2c-obkC9RCe7aMIZfdR2ACYcA/viewform?usp=dialog">Registrar Producción</a>
 <a class="btn" href="lista.php">Ver Historial</a>
 <a class="btn" href="../index.php">Volver al menú</a>
 

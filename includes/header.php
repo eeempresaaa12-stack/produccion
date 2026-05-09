@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <title>Control Producción</title>
 
-    <link rel="icon" type="image/png" href="../img/logo-plastypetco2.png">
+    <link rel="icon" type="image/png" href="../img/logo-plastypetco.png">
     <link rel="stylesheet" href="/control_produccion/css/estilos.css">
 
 </head>
