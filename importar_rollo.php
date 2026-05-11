@@ -176,9 +176,9 @@ while(($data = fgetcsv($archivo,1000,",")) !== FALSE){
     ========================= */
 
     $sql = "INSERT IGNORE INTO PRODUCCION_ROLLO
-    (marca_temporal,fecha_roll,id_maquina,id_referencia,id_color,id_turno,peso_rollo,retal_roll,total_roll)
+    (marca_temporal,fecha_roll,id_maquina,id_referencia,id_color,id_turno,peso_rollo,retal_roll)
     VALUES
-    ('$marca','$fecha','$id_maquina','$id_referencia','$id_color','$id_turno','$peso_rollo','$retal','$total_roll')";
+    ('$marca','$fecha','$id_maquina','$id_referencia','$id_color','$id_turno','$peso_rollo','$retal')";
 
     mysqli_query($conexion,$sql);
 
