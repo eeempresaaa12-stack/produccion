@@ -7,21 +7,22 @@
 
     <link rel="icon" type="image/png" href="../img/logo-plastypetco.png">
     <link rel="stylesheet" href="/control_produccion/css/estilos.css">
-
+    
 </head>
 
 <body>
 
 <div class="navbar">
 
-        <div class="navbar-logo">
+    <div class="navbar-logo">
 
-            <a href="../index.php"><img src="../img/logo-plastypetco2.png" alt="logo plastypet"></a>
+        <a href="../index.php"><img src="../img/logo-plastypetco.png" alt="logo plastypet"></a>
 
-        </div>
+    </div>
 
     <h1>Control Producción</h1>
-
+    
 </div>
 
 <div class="contenido">
+
