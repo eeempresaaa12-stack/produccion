@@ -1,8 +1,8 @@
 <?php
 /** @var mysqli $conexion */
 
-include(dirname(__DIR__) . "/includes/header.php");
-require_once(dirname(__DIR__) . "/conexion.php");
+include("../includes/header.php");
+require_once("../conexion.php");
 
 /* ACTIVAR ERRORES (solo una vez) */
 
@@ -206,7 +206,7 @@ $res_tabla_maquina = mysqli_query($conexion,$sql_tabla_maquina);
 
 <!-- BOTON PARA IMPORTAR DATOS DE GOOGLEEEEE -->
 
-<a class="btn" href="../importar_rollo.php" target="_blank">Importar datos del formulario</a>
+<a class="btn" href="http://localhost/CONTROL_PRODUCCION/importar_rollo.php" target="_blank">Importar datos del formulario</a>
 
 <div class="resumen-mes">
 
