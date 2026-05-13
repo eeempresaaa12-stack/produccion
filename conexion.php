@@ -1,10 +1,10 @@
 <?php
 
-$host = "switchyard.proxy.rlwy.net";
-$usuario = "root";
+$host     = "mysql.railway.internal";
+$usuario  = "root";
 $password = "EagzBrYIJHawioQrQhpqbjYAxXFhMwUU";
 $database = "CONTROL_PRODUCCION";
-$puerto = 22573;
+$puerto   = 3306;
 
 $conexion = mysqli_connect($host, $usuario, $password, $database, $puerto);
 
@@ -13,6 +13,5 @@ if (!$conexion) {
 }
 
 mysqli_set_charset($conexion, "utf8mb4");
-
 
 ?>
