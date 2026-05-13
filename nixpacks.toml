@@ -1,5 +1,2 @@
-[phases.setup]
-nixPkgs = ["php82", "php82Extensions.mysqli", "php82Extensions.mbstring", "nginx"]
-
 [start]
-cmd = "php-fpm82 --nodaemonize --fpm-config /app/php-fpm.conf & nginx -c /app/nginx.conf -g 'daemon off;'"
+cmd = "frankenphp php-server --root /app"
