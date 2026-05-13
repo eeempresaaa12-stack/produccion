@@ -1,8 +1,8 @@
 <?php
 /** @var mysqli $conexion */
 
-include("../includes/header.php");
-require_once("../conexion.php");
+include(__DIR__ . "/../includes/header.php");
+require_once(__DIR__ . "/../conexion.php");
 
 
 /* ACTIVAR ERRORES (solo una vez) */
