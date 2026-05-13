@@ -421,7 +421,7 @@ $total_operario += $row['total'];
 
 <br> <br> <br>
 
-<a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdBDR9C7O6HMN1L_pmwnOjqLjT4Ca7vod0XE_l-qjx9jmn9Tg/viewform?usp=dialog">Registrar Producción</a>
+<a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdBDR9C7O6HMN1L_pmwnOjqLjT4Ca7vod0XE_l-qjx9jmn9Tg/viewform?usp=dialog" target="_blank">Registrar Producción</a>
 <a class="btn" href="lista.php">Ver Historial</a>
 <a class="btn" href="../index.php">Volver al menú</a>
 
