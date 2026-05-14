@@ -66,9 +66,8 @@ function sendProgress($pct, $msg, $extra = '') {
 <div class="wrapper">
 
   <div class="top">
-    <div class="logo"></div>
     <div>
-      <h1>Control de Producción</h1>
+      <h1>Producción de Paquetes</h1>
       <p>Google Sheets &rarr; MySQL &middot; PRODUCCION_PAQUETES</p>
     </div>
   </div>
@@ -123,7 +122,7 @@ function up(pct, msg) {
   document.getElementById('fill').style.width   = pct + '%';
   document.getElementById('pct').textContent    = pct;
   document.getElementById('msg').textContent    = msg;
-  document.getElementById('dot').className      = 'dot';        // activo/parpadeando
+  document.getElementById('dot').className      = 'dot';       
   document.getElementById('status-lbl').textContent = 'Procesando';
 }
 
@@ -133,7 +132,7 @@ function tick(cur, total, ok, dup, msgLog, type) {
   document.getElementById('fill').style.width = pct + '%';
   document.getElementById('pct').textContent  = pct;
   document.getElementById('msg').textContent  =
-    'Importando producción de paquetes\u2026 (' + cur + '\u202f/\u202f' + total + ')';
+    'Importando \u2026 (' + cur + '\u202f/\u202f' + total + ')';
   // Log
   var row = document.createElement('div');
   row.className = 'lr ' + type;
