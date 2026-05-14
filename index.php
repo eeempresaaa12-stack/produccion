@@ -7,7 +7,7 @@
 <title>Control de Producción</title>
 
     <link rel="icon" type="image/png" href="./img/logo-plastypetco.png">
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="./css/estilos.css">
 
 </head>
 

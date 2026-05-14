@@ -1,2 +1,0 @@
-[start]
-cmd = "frankenphp php-server --root /app"
