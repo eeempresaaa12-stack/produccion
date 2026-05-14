@@ -2,7 +2,7 @@
 /** @var mysqli $conexion */
 
 include("../includes/header.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . '/conexion.php'); 
+require_once("../conexion.php");
 
 /* ACTIVAR ERRORES (solo una vez) */
 
