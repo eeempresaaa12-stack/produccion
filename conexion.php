@@ -1,9 +1,10 @@
 <?php
-$host      = getenv('DB_HOST');
-$usuario   = getenv('DB_USER');
-$password  = getenv('DB_PASS');
-$database  = getenv('DB_NAME');
-$puerto    = getenv('DB_PORT');
+
+$host     = "switchyard.proxy.rlwy.net";
+$usuario  = "root";
+$password = "EagzBrYIJHawioQrQhpqbjYAxXFhMwUU";
+$database = "CONTROL_PRODUCCION";
+$puerto   = 22573;
 
 $conexion = mysqli_connect($host, $usuario, $password, $database, $puerto);
 
@@ -12,4 +13,5 @@ if (!$conexion) {
 }
 
 mysqli_set_charset($conexion, "utf8mb4");
+
 ?>
