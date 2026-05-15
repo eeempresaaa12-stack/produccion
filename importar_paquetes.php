@@ -10,6 +10,13 @@ set_time_limit(0);
 include("conexion.php");
 mysqli_set_charset($conexion, "utf8mb4");
 
+define('PROGRESS_FILE', __DIR__ . '/importar_paquetes_progress.json');
+define('DB_HOST', 'switchyard.proxy.rlwy.net');
+define('DB_USER', 'root');
+define('DB_PASS', 'EagzBrYIJHawioQrQhpqbjYAxXFhMwUU');
+define('DB_NAME', 'CONTROL_PRODUCCION');
+define('DB_PORT', 22573);
+
 /* =====================
    FUNCIONES
 ===================== */
@@ -276,8 +283,8 @@ foreach ($filas as $data) {
 
     $tipo   = $inserted ? 'ok' : 'dup';
     $logMsg = $inserted
-        ? addslashes("✔ $operario · $referencia · $color")
-        : addslashes("↩ Duplicado · $operario · $referencia");
+        ? addslashes("✔ Insertado · $operario · $fecha_mysql")
+        : addslashes("↩ Duplicado · $operario · $fecha_mysql");
 
     echo "<script>tick($contador,$total,$insertados,$duplicados,'$logMsg','$tipo');</script>\n";
     if (ob_get_level()) ob_flush(); flush();
