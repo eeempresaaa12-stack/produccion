@@ -3,7 +3,7 @@
 ================================================= */
 
 body {
-  background: rgba(19, 77, 32);
+  background: rgb(20, 80, 33);
   color: white;
   font-family: "Poppins", sans-serif;
   min-height: 100vh;
@@ -12,7 +12,6 @@ body {
   justify-content: center;
   padding: 24px;
   background-image: radial-gradient(#1c233340 1px, transparent 1px);
-  background-size: 28px 28px;
 }
 
 .wrapper {
@@ -28,19 +27,19 @@ body {
 
 .top {
   background: rgba(255, 255, 255, 0.75);
-  color: #144714;
+  color: #134213;
   display: flex;
   align-items: center;
   gap: 14px;
   margin-bottom: 32px;
   border-radius: 14px;
   padding: 15px;
-  border: 1px solid #1a5e1a;
+  border: 1px solid #134413;
 }
 
 .card {
-  background: rgba(14, 59, 24, 0.9);
-  border: 1px solid #0c4110;
+  background: rgba(17, 73, 29, 0.9);
+  border: 1px solid #0e4112;
   border-radius: 20px;
   padding: 30px 26px;
   position: relative;
@@ -265,7 +264,7 @@ body {
   text-align: right;
 }
 .lr.ok .t {
-  color: #1c8c94;
+  color: rgb(20, 80, 30);
 }
 .lr.dup .t {
   color: #ac6802;
