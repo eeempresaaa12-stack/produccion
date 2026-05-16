@@ -12,9 +12,7 @@
 
 body {
   font-family: "Poppins", sans-serif;
-  background:
-    linear-gradient(rgb(229, 234, 235, 0.5), rgba(255, 255, 255, 0.7)),
-    url("../img/fondo2.jpg");
+  background: url("../img/fondo2.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
