@@ -229,9 +229,7 @@ form select:focus {
   display: flex;
   justify-content: center;
   align-items: center;
-  background:
-    linear-gradient(rgb(239, 249, 250, 0.8), rgba(255, 255, 255, 0.6)),
-    url("../img/fondo1.png");
+  background: url("../img/fondo1.png");
   background-position: center;
   background-attachment: fixed;
 }
