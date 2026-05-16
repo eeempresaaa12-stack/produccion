@@ -48,7 +48,6 @@ function cargarCatalogo($conexion, $tabla, $campo_nombre, $campo_id) {
         $lista[trim($row[$campo_nombre])] = $row[$campo_id];
     return $lista;
 }
-
 // Enviar actualizacion de progreso al JS en tiempo real
 function sendProgress($pct, $msg, $extra = '') {
     $msg = addslashes($msg);
@@ -68,7 +67,7 @@ function sendProgress($pct, $msg, $extra = '') {
   <link rel="stylesheet" href="./css/estilos-importar.css"> 
 
 </head>
-<body class="body-importar">
+<body>
 
 <div class="wrapper">
 
@@ -170,9 +169,6 @@ function toggleLog() {
 </script>
 
 <?php
-/* =====================
-   LEER TODAS LAS FILAS (para conocer el total)
-===================== */
 $url = "https://docs.google.com/spreadsheets/d/17gs1oTKRYY9S-qiU5ZMJCFrxe3K5r_pU1lgeZgUP8u8/export?format=csv&gid=399598423";
 
 $archivo = fopen($url, "r");
@@ -283,8 +279,8 @@ foreach ($filas as $data) {
 
     $tipo   = $inserted ? 'ok' : 'dup';
     $logMsg = $inserted
-        ? addslashes("✔ Insertado · $operario · $fecha_mysql")
-        : addslashes("↩ Duplicado · $operario · $fecha_mysql");
+        ? addslashes("✔ Insertado · $fecha")
+        : addslashes("↩ Duplicado · $fecha");
 
     echo "<script>tick($contador,$total,$insertados,$duplicados,'$logMsg','$tipo');</script>\n";
     if (ob_get_level()) ob_flush(); flush();

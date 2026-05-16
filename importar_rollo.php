@@ -3,149 +3,248 @@
 ini_set('memory_limit', '512M');
 set_time_limit(0);
 
-include("conexion.php");
+// Desactivo de Compresion
+@apache_setenv('no-gzip', 1);
+@ini_set('zlib.output_compression', 0);
+@ini_set('output_buffering', 0);
 
+include("conexion.php");
 mysqli_set_charset($conexion,"utf8mb4");
 
-echo "Conexión OK <br>";
-
-$url = "https://docs.google.com/spreadsheets/d/1CpdDtlNVQJoSHJ7WAc0BrXP-FIohYWhMB6si1bzmOz0/export?format=csv&gid=1327914009";
+define('PROGRESS_FILE', __DIR__ . '/importar_paquetes_progress.json');
+define('DB_HOST', 'switchyard.proxy.rlwy.net');
+define('DB_USER', 'root');
+define('DB_PASS', 'EagzBrYIJHawioQrQhpqbjYAxXFhMwUU');
+define('DB_NAME', 'CONTROL_PRODUCCION');
+define('DB_PORT', 22573);
 
 /* =========================
 FUNCIONES
 ========================= */
-
 function limpiarNombre($texto){
-
     $texto = trim($texto);
-
-
     if(strpos($texto,' - ') !== false){
         $partes = explode(' - ',$texto);
         return trim($partes[1]);
     }
-
     return $texto;
 }
 
 function convertirMarca($fecha){
-
     $fecha = trim($fecha);
-
     $f = DateTime::createFromFormat('d/m/Y H:i:s', $fecha);
-
-    if(!$f){
-        $f = DateTime::createFromFormat('d/m/Y G:i:s', $fecha);
-    }
-
-    if($f){
-        return $f->format('Y-m-d H:i:s');
-    }
-
-    return null;
+    if(!$f) $f = DateTime::createFromFormat('d/m/Y G:i:s', $fecha);
+    return $f ? $f->format('Y-m-d H:i:s') : null;
 }
 
 function convertirFecha($fecha){
-
     $f = DateTime::createFromFormat('d/m/Y', trim($fecha));
-
-    if($f){
-        return $f->format('Y-m-d 00:00:00');
-    }
-
-    return null;
+    return $f ? $f->format('Y-m-d') : null;
 }
 
 function convertirNumero($valor){
-
     $valor = trim($valor);
-
     if($valor === '' || $valor === null){
         return 0;
     }
-
-    // quitar separador de miles
     $valor = str_replace('.', '', $valor);
-
-    // convertir decimal latino a decimal estándar
     $valor = str_replace(',', '.', $valor);
-
     return (float)$valor;
 }
 
-
-/* =========================
-CARGAR CATALOGOS
-========================= */
-
-function cargarCatalogo($conexion,$tabla,$campo_nombre,$campo_id){
-
+function cargarCatalogo($conexion, $tabla, $campo_nombre, $campo_id) {
     $lista = [];
-
-    $sql = "SELECT $campo_id,$campo_nombre FROM $tabla";
-    $res = mysqli_query($conexion,$sql);
-
-    while($row = mysqli_fetch_assoc($res)){
+    $res = mysqli_query($conexion, "SELECT $campo_id,$campo_nombre FROM $tabla");
+    while ($row = mysqli_fetch_assoc($res))
         $lista[trim($row[$campo_nombre])] = $row[$campo_id];
-    }
-
     return $lista;
 }
+// Enviar actualizacion de progreso al JS en tiempo real
+function sendProgress($pct, $msg, $extra = '') {
+    $msg = addslashes($msg);
+    echo "<script>up($pct,'$msg'$extra);</script>\n";
+    if (ob_get_level()) ob_flush();
+    flush();
+}
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Importando Rollo</title>
 
-$maquinas = cargarCatalogo($conexion,"MAQUINAS","nombre_maquina","id_maquina");
-$referencias = cargarCatalogo($conexion,"REFERENCIAS","nombre_referencia","id_referencia");
-$colores = cargarCatalogo($conexion,"COLORES","nombre_color","id_color");
-$turnos = cargarCatalogo($conexion,"TURNOS","nombre_turno","id_turno");
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="./css/estilos-importar.css"> 
 
-/* =========================
-ABRIR CSV
-========================= */
+</head>
+<body>
 
-$archivo = fopen($url,"r");
+<div class="wrapper">
 
-if(!$archivo){
-    die("❌ No se pudo abrir el Google Sheet");
+  <div class="top">
+    <div>
+      <h1>Producción de Rollos</h1>
+      <p>Google Sheets &rarr; MySQL &middot; PRODUCCION_ROLLO</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="status-row">
+      <span class="dot idle" id="dot"></span>
+      <span id="status-lbl">Iniciando</span>
+    </div>
+
+    <div id="msg">Preparando importación…</div>
+
+    <div class="track"><div id="fill"></div></div>
+
+    <div class="num-row">
+      <div class="pct-wrap">
+        <span id="pct">0</span><span class="sign">%</span>
+      </div>
+      <span id="counter">— / — registros</span>
+    </div>
+
+    <div id="stats">
+      <div class="st ok">
+        <div class="v" id="s-ok">0</div>
+        <div class="l">Insertados</div>
+      </div>
+      <div class="st dup">
+        <div class="v" id="s-dup">0</div>
+        <div class="l">Duplicados</div>
+      </div>
+      <div class="st tot">
+        <div class="v" id="s-tot">0</div>
+        <div class="l">Total</div>
+      </div>
+    </div>
+
+    <button id="toggle-btn" onclick="toggleLog()">
+      Ver detalle de registros
+      <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+        <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div id="log"></div>
+  </div>
+
+</div>
+
+<script>
+function up(pct, msg) {
+  document.getElementById('fill').style.width   = pct + '%';
+  document.getElementById('pct').textContent    = pct;
+  document.getElementById('msg').textContent    = msg;
+  document.getElementById('dot').className      = 'dot';       
+  document.getElementById('status-lbl').textContent = 'Procesando';
 }
 
-echo "Google Sheet abierto <br>";
+function tick(cur, total, ok, dup, msgLog, type) {
+  document.getElementById('counter').textContent = cur + ' / ' + total + ' registros';
+  var pct = 8 + Math.round((cur / total) * 90);
+  document.getElementById('fill').style.width = pct + '%';
+  document.getElementById('pct').textContent  = pct;
+  document.getElementById('msg').textContent  =
+    'Importando \u2026 (' + cur + '\u202f/\u202f' + total + ')';
+  // Log
+  var row = document.createElement('div');
+  row.className = 'lr ' + type;
+  row.innerHTML = '<span class="n">' + cur + '</span>'
+                + '<span class="t">' + msgLog + '</span>';
+  var log = document.getElementById('log');
+  log.appendChild(row);
+  log.scrollTop = log.scrollHeight;
+}
 
-$primera = true;
-$contador = 0;
+function done(ok, dup, total) {
+  document.getElementById('fill').style.width = '100%';
+  document.getElementById('pct').textContent  = '100';
+  document.getElementById('msg').textContent  = 'Importación completada exitosamente';
+  document.getElementById('dot').className    = 'dot done';
+  document.getElementById('status-lbl').textContent = 'Completado';
+  document.getElementById('s-ok').textContent  = ok;
+  document.getElementById('s-dup').textContent = dup;
+  document.getElementById('s-tot').textContent = total;
+  document.getElementById('stats').classList.add('show');
+  document.getElementById('toggle-btn').classList.add('show');
+}
 
-while(($data = fgetcsv($archivo,1000,",")) !== FALSE){
+function toggleLog() {
+  document.getElementById('toggle-btn').classList.toggle('open');
+  document.getElementById('log').classList.toggle('open');
+}
+</script>
 
-    if($primera){
-        $primera = false;
-        continue;
-    }
+<?php
+$url = "https://docs.google.com/spreadsheets/d/1CpdDtlNVQJoSHJ7WAc0BrXP-FIohYWhMB6si1bzmOz0/export?format=csv&gid=1327914009";
 
+$archivo = fopen($url,"r");
+if (!$archivo) {
+    echo "<script>
+      document.getElementById('msg').textContent = 'Error: no se pudo abrir el Google Sheet';
+      document.getElementById('dot').className = 'dot error';
+      document.getElementById('status-lbl').textContent = 'Error';
+    </script>";
+    echo "</body></html>"; exit;
+}
+
+$filas = []; $primera = true;
+while (($data = fgetcsv($archivo, 1000, ",")) !== FALSE) {
+    if ($primera) { $primera = false; continue; }
+    $filas[] = $data;
+}
+fclose($archivo);
+$total = count($filas);
+
+// Actualizar UI con total encontrado
+echo "<script>
+  document.getElementById('dot').className = 'dot';
+  document.getElementById('msg').textContent = 'Conexión OK · $total registros encontrados';
+  document.getElementById('fill').style.width = '5%';
+  document.getElementById('pct').textContent = '5';
+  document.getElementById('status-lbl').textContent = 'Procesando';
+</script>\n";
+if (ob_get_level()) ob_flush(); flush();
+
+/* =====================
+   CATÁLOGOS
+===================== */
+echo "<script>document.getElementById('msg').textContent='Cargando catálogos…';</script>\n";
+if (ob_get_level()) ob_flush(); flush();
+
+$maquinas    = cargarCatalogo($conexion,"MAQUINAS",    "nombre_maquina",   "id_maquina");
+$referencias = cargarCatalogo($conexion,"REFERENCIAS", "nombre_referencia","id_referencia");
+$colores     = cargarCatalogo($conexion,"COLORES",     "nombre_color",     "id_color");
+$turnos      = cargarCatalogo($conexion,"TURNOS",      "nombre_turno",     "id_turno");
+
+/* =====================
+   PROCESAR FILAS
+===================== */
+$contador   = 0;
+$insertados = 0;
+$duplicados = 0;
+
+foreach ($filas as $data) {
     $contador++;
 
-    $marca = convertirMarca($data[0]);
-    $fecha = convertirFecha($data[1]);
-
-    $maquina = limpiarNombre($data[2]);
+    $marca      = convertirMarca($data[0]);
+    $fecha      = convertirFecha($data[1]);
+    $maquina    = limpiarNombre($data[2]);
     $referencia = limpiarNombre($data[3]);
-    $color = limpiarNombre($data[4]);
-
-    $turno = limpiarNombre($data[5]);
-
+    $color      = limpiarNombre($data[4]);
+    $turno      = limpiarNombre($data[5]);
     $peso_rollo = convertirNumero($data[6]);
-    $retal = convertirNumero($data[7]);
+    $retal      = convertirNumero($data[7]);
     $total_roll = 0;
 
-    /* =========================
-    BUSCAR IDS
-    ========================= */
-
-    $id_maquina = $maquinas[$maquina] ?? null;
-    $id_referencia = $referencias[$referencia] ?? null;
-    $id_color = $colores[$color] ?? null;
-    $id_turno = $turnos[$turno] ?? null;
-
-    /* =========================
-    CREAR SI NO EXISTE
-    ========================= */
+    $id_maquina     = $maquinas[$maquina]       ?? null;
+    $id_referencia  = $referencias[$referencia] ?? null;
+    $id_color       = $colores[$color]          ?? null;
+    $id_turno       = $turnos[$turno]           ?? null;
 
     if(!$id_maquina){
         mysqli_query($conexion,"INSERT INTO MAQUINAS(nombre_maquina) VALUES('$maquina')");
@@ -171,25 +270,30 @@ while(($data = fgetcsv($archivo,1000,",")) !== FALSE){
         $turnos[$turno] = $id_turno;
     }
 
-    /* =========================
-    INSERT PRODUCCION ROLLO
-    ========================= */
-
     $sql = "INSERT IGNORE INTO PRODUCCION_ROLLO
-    (marca_temporal,fecha_roll,id_maquina,id_referencia,id_color,id_turno,peso_rollo,retal_roll)
-    VALUES
-    ('$marca','$fecha','$id_maquina','$id_referencia','$id_color','$id_turno','$peso_rollo','$retal')";
+        (marca_temporal,fecha_roll,id_maquina,id_referencia,id_color,id_turno,peso_rollo,retal_roll)
+        VALUES ('$marca','$fecha','$id_maquina','$id_referencia','$id_color','$id_turno','$peso_rollo','$retal')";
 
-    mysqli_query($conexion,$sql);
+    mysqli_query($conexion, $sql);
+    $inserted = mysqli_affected_rows($conexion) > 0;
 
-    if(mysqli_affected_rows($conexion) > 0){
-        echo "✅ Insertado REAL $contador <br>";
-    }else{
-        echo "⚠️ Ignorado duplicado $contador <br>";
-    }
+    if ($inserted) $insertados++; else $duplicados++;
 
+    $tipo   = $inserted ? 'ok' : 'dup';
+    $logMsg = $inserted
+        ? addslashes("✔ Insertado · $fecha")
+        : addslashes("↩ Duplicado · $fecha");
+
+    echo "<script>tick($contador,$total,$insertados,$duplicados,'$logMsg','$tipo');</script>\n";
+    if (ob_get_level()) ob_flush(); flush();
 }
 
-fclose($archivo);
+/* =====================
+   FINALIZAR
+===================== */
+echo "<script>done($insertados,$duplicados,$total);</script>\n";
+if (ob_get_level()) ob_flush(); flush();
+?>
 
-echo "<br>🚀 Importación terminada";
+</body>
+</html>
