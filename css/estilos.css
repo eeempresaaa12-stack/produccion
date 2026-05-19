@@ -98,6 +98,8 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.45);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
 }
+@media (max-width: 720px) {
+}
 
 /* =================================================
    TITULOS
@@ -256,10 +258,23 @@ form select:focus {
 
 @media (max-width: 1280px) {
   .glass-container {
-    width: 430px;
+    width: 420px;
   }
   .glass-container .areas {
     flex-direction: column;
+  }
+}
+@media (max-height: 810px) {
+  .glass-container {
+    font-size: 14px;
+  }
+  .glass-container .areas {
+    align-items: center;
+  }
+}
+@media (max-height: 700px) {
+  .glass-container {
+    font-size: 11px;
   }
 }
 

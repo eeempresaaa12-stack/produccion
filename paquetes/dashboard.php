@@ -188,7 +188,6 @@ $res_tabla_operario = mysqli_query($conexion,$sql_tabla_operario);
         <p>Total histórico</p>
         <h2><?php echo number_format($total); ?></h2>
     </div>
-
     <div class="card-kpi">
         <p>Producción semanal</p>
         <h2><?php echo number_format($semana); ?></h2>
