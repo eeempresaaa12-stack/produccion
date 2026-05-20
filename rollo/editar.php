@@ -100,4 +100,3 @@ value="<?php echo date('Y-m-d\TH:i', strtotime($fila['fecha_roll'])); ?>">
 
 </div>
 
-<?php include("../includes/footer.php"); ?>

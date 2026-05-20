@@ -138,4 +138,3 @@ $selected = ($t['id_turno'] == $fila['id_turno']) ? "selected" : "";
 
 </div>
 
-<?php include("../includes/footer.php"); ?>
