@@ -429,12 +429,11 @@ $total_neto += $row['neto'];
 </div>
 
 <br> <br> <br>
-
-
-<a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSch9DWsxKlht9EWeGYErV7ZpUKCQ0anjesuLoku87wk8ds8Bw/viewform?usp=dialog" target="_blank">Registrar Producción</a>
-<a class="btn" href="lista.php">Ver Historial</a>
-<a class="btn" href="../index.php">Volver al menú</a>
-
+    <div class="acciones">
+        <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSch9DWsxKlht9EWeGYErV7ZpUKCQ0anjesuLoku87wk8ds8Bw/viewform?usp=dialog" target="_blank">Registrar Producción</a>
+        <a class="btn" href="lista.php">Ver Historial</a>
+        <a class="btn" href="../index.php">Volver al menú</a>
+    </div>
 </div>
 
 

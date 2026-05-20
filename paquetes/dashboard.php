@@ -345,17 +345,13 @@ value="<?php echo $_GET['hasta'] ?? date('Y-m-d'); ?>">
 
 <div class="grid-tablas">
 
-<div class="tabla-dashboard">
-
-<h3>Producción por fecha</h3>
-
-<table>
-
-<tr>
-<th>Fecha</th>
-<th>Paquetes producidos</th>
-</tr>
-
+    <div class="tabla-dashboard">
+        <h3>Producción por fecha</h3>
+            <table>
+            <tr>
+            <th>Fecha</th>
+            <th>Paquetes producidos</th>
+            </tr>
 <?php
 $total_fecha = 0;
 
@@ -418,11 +414,11 @@ $total_operario += $row['total'];
 </div>
 
 <br> <br> <br>
-
-<a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdBDR9C7O6HMN1L_pmwnOjqLjT4Ca7vod0XE_l-qjx9jmn9Tg/viewform?usp=dialog" target="_blank">Registrar Producción</a>
-<a class="btn" href="lista.php">Ver Historial</a>
-<a class="btn" href="../index.php">Volver al menú</a>
-
+    <div class="acciones">
+        <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdBDR9C7O6HMN1L_pmwnOjqLjT4Ca7vod0XE_l-qjx9jmn9Tg/viewform?usp=dialog" target="_blank">Registrar Producción</a>
+        <a class="btn" href="lista.php">Ver Historial</a>
+        <a class="btn" href="../index.php">Volver al menú</a>
+    </div>
 </div>
 
 <!---------------------------------------------->
