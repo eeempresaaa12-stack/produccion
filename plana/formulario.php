@@ -92,3 +92,5 @@ $referencias = mysqli_query($conexion,"SELECT * FROM REFERENCIAS");
 </div>
 
 </div>
+
+<?php include("../includes/footer.php"); ?>

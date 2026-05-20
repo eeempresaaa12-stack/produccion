@@ -22,39 +22,82 @@ function obtenerTotal($conexion, $sql){
 
 /* BUSQUEDAAAAAAAS  */
 
+$meses = [
+    1 => 'Enero',
+    2 => 'Febrero',
+    3 => 'Marzo',
+    4 => 'Abril',
+    5 => 'Mayo',
+    6 => 'Junio',
+    7 => 'Julio',
+    8 => 'Agosto',
+    9 => 'Septiembre',
+    10 => 'Octubre',
+    11 => 'Noviembre',
+    12 => 'Diciembre'
+];
+
+$mes_actual = date('n');
+$mes_anterior = date('n', strtotime('-1 month'));
 
 /* TOTAL HISTORICO */
-
 $sql_total = "SELECT SUM(total_plana) total FROM PRODUCCION_PLANA";
 $total = obtenerTotal($conexion, $sql_total);
 
 
 /* PRODUCCION SEMANA ACTUAL */
-
 $sql_semana = "SELECT SUM(total_plana) total
-FROM PRODUCCION_PLANA
-WHERE YEARWEEK(fecha_plana, 1) = YEARWEEK(CURDATE(), 1)";
+                FROM PRODUCCION_PLANA
+                WHERE YEARWEEK(fecha_plana, 1) = YEARWEEK(CURDATE(), 1)";
 $semana = obtenerTotal($conexion, $sql_semana);
 
 
 /* PRODUCCION MES ACTUAL */
-
 $sql_mes = "SELECT SUM(total_plana) total
-FROM PRODUCCION_PLANA
-WHERE MONTH(fecha_plana)=MONTH(CURDATE())
-AND YEAR(fecha_plana)=YEAR(CURDATE())";
+            FROM PRODUCCION_PLANA
+            WHERE MONTH(fecha_plana)=MONTH(CURDATE())
+            AND YEAR(fecha_plana)=YEAR(CURDATE())";
 $mes = obtenerTotal($conexion, $sql_mes);
 
 
-/* CRECIMIENTO */
+/* TOP MAQUINA DEL MES */
+$sql_top_maquina = "SELECT m.nombre_maquina, IFNULL(SUM(p.total_plana),0) total
+                    FROM PRODUCCION_PLANA p
+                    LEFT JOIN MAQUINAS m ON p.id_maquina = m.id_maquina
+                    WHERE MONTH(p.fecha_plana)=MONTH(CURDATE())
+                    AND YEAR(p.fecha_plana)=YEAR(CURDATE())
+                    GROUP BY p.id_maquina
+                    ORDER BY total DESC
+                    LIMIT 1";
 
+$res_top_maquina = mysqli_query($conexion,$sql_top_maquina);
+$top_maquina = ($res_top_maquina && mysqli_num_rows($res_top_maquina) > 0)
+    ? mysqli_fetch_assoc($res_top_maquina)
+    : ["nombre_maquina" => "Sin datos", "total" => 0];
+
+/* TOP MAQUINA MES ANTERIOR */
+$sql_top_maquina_ant = "SELECT m.nombre_maquina, IFNULL(SUM(p.total_plana),0) total
+                    FROM PRODUCCION_PLANA p
+                    LEFT JOIN MAQUINAS m ON p.id_maquina = m.id_maquina
+                    WHERE MONTH(p.fecha_plana)=MONTH(CURDATE()-INTERVAL 1 MONTH)
+                    AND YEAR(p.fecha_plana)=YEAR(CURDATE()-INTERVAL 1 MONTH)
+                    GROUP BY p.id_maquina
+                    ORDER BY total DESC
+                    LIMIT 1";
+$res_top_maquina_ant = mysqli_query($conexion,$sql_top_maquina_ant);
+$top_maquina_ant = ($res_top_maquina_ant && mysqli_num_rows($res_top_maquina_ant) > 0)
+    ? mysqli_fetch_assoc($res_top_maquina_ant)
+    : ["nombre_maquina" => "Sin datos", "total" => 0];
+
+
+/* CRECIMIENTO */
 $sql_actual = "SELECT SUM(total_plana) total FROM PRODUCCION_PLANA
-WHERE MONTH(fecha_plana)=MONTH(CURDATE())
-AND YEAR(fecha_plana)=YEAR(CURDATE())";
+                WHERE MONTH(fecha_plana)=MONTH(CURDATE())
+                AND YEAR(fecha_plana)=YEAR(CURDATE())";
 
 $sql_anterior = "SELECT SUM(total_plana) total FROM PRODUCCION_PLANA
-WHERE MONTH(fecha_plana)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-AND YEAR(fecha_plana)=YEAR(CURDATE()-INTERVAL 1 MONTH)";
+                WHERE MONTH(fecha_plana)=MONTH(CURDATE()-INTERVAL 1 MONTH)
+                AND YEAR(fecha_plana)=YEAR(CURDATE()-INTERVAL 1 MONTH)";
 
 $act = obtenerTotal($conexion, $sql_actual);
 $ant = obtenerTotal($conexion, $sql_anterior);
@@ -63,15 +106,11 @@ $diferencia = ($act ?? 0) - ($ant ?? 0);
 $porcentaje = ($ant > 0) ? (($diferencia / $ant) * 100) : 0;
 
 
-/* RESUMEN BRUTO - RETAL - NETO */
-
-$sql_resumen = "SELECT 
-    SUM(peso_plana) bruto,
-    SUM(retal_plana) retal,
-    SUM(total_plana) neto
-FROM PRODUCCION_PLANA
-WHERE MONTH(fecha_plana)=MONTH(CURDATE())
-AND YEAR(fecha_plana)=YEAR(CURDATE())";
+/* RESUMEN BRUTO - RETAL - NETO MES ACTUAL */
+$sql_resumen = "SELECT SUM(peso_plana) bruto, SUM(retal_plana) retal, SUM(total_plana) neto
+                FROM PRODUCCION_PLANA
+                WHERE MONTH(fecha_plana)=MONTH(CURDATE())
+                AND YEAR(fecha_plana)=YEAR(CURDATE())";
 
 $res_resumen = mysqli_query($conexion,$sql_resumen);
 
@@ -84,21 +123,36 @@ if($res_resumen){
     $bruto = $retal = $neto = 0;
 }
 
+/* RESUMEN BRUTO - RETAL - NETO MES ANTERIOR */
+$sql_resumen_ant = "SELECT SUM(peso_plana) bruto, SUM(retal_plana) retal, SUM(total_plana) neto
+                    FROM PRODUCCION_PLANA
+                    WHERE MONTH(fecha_plana)=MONTH(CURDATE()-INTERVAL 1 MONTH)
+                    AND YEAR(fecha_plana)=YEAR(CURDATE()-INTERVAL 1 MONTH)";
+
+$res_resumen_ant = mysqli_query($conexion,$sql_resumen_ant);
+
+if($res_resumen_ant){
+    $datos_ant = mysqli_fetch_assoc($res_resumen_ant);
+    $bruto_ant = $datos_ant['bruto'] ?? 0;
+    $retal_ant = $datos_ant['retal'] ?? 0;
+    $neto_ant = $datos_ant['neto'] ?? 0;
+}else{
+    $bruto_ant = $retal_ant = $neto_ant = 0;
+}
 
 /* EFICIENCIA */
-
 $eficiencia = ($bruto > 0) ? (($neto / $bruto) * 100) : 0;
+$eficiencia_ant = ($bruto_ant > 0) ? (($neto_ant / $bruto_ant) * 100) : 0;
 
 
-/* MEJOR Y PEOR DIA */
-
+/* MEJOR Y PEOR DIA DEL MES*/
 $sql_dias = "SELECT 
-    DATE(fecha_plana) fecha,
-    SUM(total_plana) total
-FROM PRODUCCION_PLANA
-WHERE MONTH(fecha_plana)=MONTH(CURDATE())
-AND YEAR(fecha_plana)=YEAR(CURDATE())
-GROUP BY DATE(fecha_plana)";
+                DATE(fecha_plana) fecha,
+                SUM(total_plana) total
+            FROM PRODUCCION_PLANA
+            WHERE MONTH(fecha_plana)=MONTH(CURDATE())
+            AND YEAR(fecha_plana)=YEAR(CURDATE())
+            GROUP BY DATE(fecha_plana)";
 
 $res_dias = mysqli_query($conexion,$sql_dias);
 
@@ -123,50 +177,59 @@ if($res_dias && mysqli_num_rows($res_dias) > 0){
     $peor_dia = ["fecha"=>"Sin datos","total"=>0];
 }
 
+/* MEJOR Y PEOR DIA MES ANTERIOR */
+$sql_dias_ant = "SELECT 
+                DATE(fecha_plana) fecha,
+                SUM(total_plana) total
+            FROM PRODUCCION_PLANA
+            WHERE MONTH(fecha_plana)=MONTH(CURDATE()-INTERVAL 1 MONTH)
+            AND YEAR(fecha_plana)=YEAR(CURDATE()-INTERVAL 1 MONTH)
+            GROUP BY DATE(fecha_plana)";
 
-/* MAQUINA TOP */
+$res_dias_ant = mysqli_query($conexion,$sql_dias_ant);
 
-$sql_top_maquina = "SELECT m.nombre_maquina, IFNULL(SUM(p.total_plana),0) total
-FROM PRODUCCION_PLANA p
-LEFT JOIN MAQUINAS m ON p.id_maquina = m.id_maquina
-WHERE MONTH(p.fecha_plana)=MONTH(CURDATE())
-AND YEAR(p.fecha_plana)=YEAR(CURDATE())
-GROUP BY p.id_maquina
-ORDER BY total DESC
-LIMIT 1";
+$mejor_dia_ant = null;
+$peor_dia_ant = null;
 
-$res_top_maquina = mysqli_query($conexion,$sql_top_maquina);
-$top_maquina = ($res_top_maquina && mysqli_num_rows($res_top_maquina) > 0)
-    ? mysqli_fetch_assoc($res_top_maquina)
-    : ["nombre_maquina" => "Sin datos", "total" => 0];
+if($res_dias_ant && mysqli_num_rows($res_dias_ant) > 0){
 
+    while($row = mysqli_fetch_assoc($res_dias_ant)){
+
+        if(!$mejor_dia_ant || $row['total'] > $mejor_dia_ant['total']){
+            $mejor_dia_ant = $row;
+        }
+
+        if(!$peor_dia_ant || $row['total'] < $peor_dia_ant['total']){
+            $peor_dia_ant = $row;
+        }
+    }
+}else{
+    $mejor_dia_ant = ["fecha"=>"Sin datos","total"=>0];
+    $peor_dia_ant = ["fecha"=>"Sin datos","total"=>0];
+}
 
 /* MEJOR OPERARIO (BULTOS) */
-
-$sql_top_operario = "SELECT 
-    p.id_operario,
-    o.nombre,
-    IFNULL(SUM(p.bultos_plana),0) total
-FROM PRODUCCION_PLANA p
-LEFT JOIN OPERARIOS o ON p.id_operario = o.id_operario
-WHERE MONTH(p.fecha_plana)=MONTH(CURDATE())
-AND YEAR(p.fecha_plana)=YEAR(CURDATE())
-GROUP BY p.id_operario
-ORDER BY total DESC
-LIMIT 1";
+$sql_top_operario = "SELECT p.id_operario, o.nombre,
+                        IFNULL(SUM(p.bultos_plana),0) total
+                    FROM PRODUCCION_PLANA p
+                    LEFT JOIN OPERARIOS o ON p.id_operario = o.id_operario
+                    WHERE MONTH(p.fecha_plana)=MONTH(CURDATE())
+                    AND YEAR(p.fecha_plana)=YEAR(CURDATE())
+                    GROUP BY p.id_operario
+                    ORDER BY total DESC
+                    LIMIT 1";
 
 $res_top_operario = mysqli_query($conexion,$sql_top_operario);
 $top_operario = ($res_top_operario && mysqli_num_rows($res_top_operario) > 0)
     ? mysqli_fetch_assoc($res_top_operario)
     : ["nombre" => "Sin datos", "total" => 0];
 
-
+/* FILTRO FECHAS */
 $desde = $_GET['desde'] ?? date('Y-m-01');
 $hasta = $_GET['hasta'] ?? date('Y-m-d');
 
 
-/* tabla fechas */
-
+/* TABLA FECHAS */
 $sql_tabla_fecha = "
 SELECT 
 DATE(p.fecha_plana) fecha,
@@ -183,8 +246,7 @@ ORDER BY fecha DESC
 $res_tabla_fecha = mysqli_query($conexion,$sql_tabla_fecha);
 
 
-/* tabla referencias */
-
+/* TABLA REFERENCIAS */
 $sql_tabla_referencias = "
 SELECT 
 r.nombre_referencia,
@@ -202,8 +264,7 @@ ORDER BY neto DESC
 $res_tabla_referencias = mysqli_query($conexion,$sql_tabla_referencias);
 
 
-/* tabla maquina */
-
+/* TABLA MAQUINAS */
 $sql_tabla_maquina = "
 SELECT 
 m.nombre_maquina,
@@ -260,65 +321,102 @@ $res_tabla_maquina = mysqli_query($conexion,$sql_tabla_maquina);
     </div>
 </div>
 
-<!-- BOTON PARA IMPORTAR DATOS DE GOOGLEEEEE -->
+<div class="resumenes">
+    <div class="resumen-anterior">
 
-<a class="btn" href="http://localhost/CONTROL_PRODUCCION/importar_plana.php" target="_blank">Importar datos del formulario</a>
+        <h3> Resumen de <?php echo $meses[$mes_anterior]; ?></h3>
 
-<div class="resumen-mes">
+        <p>🏭 Producción bruta: <?php echo number_format($bruto_ant); ?> kg</p>
+        <p>♻️ Retal: <?php echo number_format($retal_ant); ?> kg</p>
+        <p>📦 Producción final: <?php echo number_format($neto_ant); ?> kg</p>
+        <p>⚙️ Eficiencia: <?php echo round($eficiencia_ant,1); ?>%</p>
 
-    <h3>📊 Resumen del mes (Plana)</h3>
-
-    <!-- CRECIMIENTO -->
-     
-    <p>
-        <?php 
-        if($diferencia > 0){
-            echo "<span style='color:green'>▲ Subió ".round($porcentaje,1)."% (+" . number_format($diferencia) . " kg)</span>";
-        }elseif($diferencia < 0){
-            echo "<span style='color:red'>▼ Bajó ".round($porcentaje,1)."% (-" . number_format(abs($diferencia)) . " kg)</span>";
-        }else{
-            echo "Sin cambios";
-        }
-        ?>
-    </p>
-
-    <!-- PRODUCCION -->
-
-    <p>🏭 Producción bruta: <?php echo number_format($bruto); ?> kg</p>
-    <p>♻️ Retal: <?php echo number_format($retal); ?> kg</p>
-    <p>✅ Producción final: <?php echo number_format($neto); ?> kg</p>
-    <p>⚙️ Eficiencia: <?php echo round($eficiencia,1); ?>%</p>
-
-    <p>
-        📅 Mejor día: 
-        <?php 
-        echo ($mejor_dia['fecha'] != "Sin datos") 
-            ? date("d M Y", strtotime($mejor_dia['fecha'])) 
-            : "Sin datos"; 
-        ?>
-        (<?php echo number_format($mejor_dia['total']); ?> kg)
-    </p>
-
-    <p>
-        📉 Día más bajo: 
-        <?php 
-            echo ($peor_dia['fecha'] != "Sin datos") 
-                ? date("d M Y", strtotime($peor_dia['fecha'])) 
+        <p>
+            📅 Mejor día: 
+            <?php 
+            echo ($mejor_dia_ant['fecha'] != "Sin datos") 
+                ? date("d M Y", strtotime($mejor_dia_ant['fecha'])) 
                 : "Sin datos"; 
             ?>
-        (<?php echo number_format($peor_dia['total']); ?> kg)
-    </p>
+            (<?php echo number_format($mejor_dia_ant['total']); ?> kg)
+        </p>
 
-    <p>
-        🏭 Máquina más productiva: 
-        <?php echo $top_maquina['nombre_maquina']; ?>
+        <p>
+            📉 Peor día: 
+            <?php 
+                echo ($peor_dia_ant['fecha'] != "Sin datos") 
+                    ? date("d M Y", strtotime($peor_dia_ant['fecha'])) 
+                    : "Sin datos"; 
+                ?>
+            (<?php echo number_format($peor_dia_ant['total']); ?> kg)
+        </p>
 
-        <?php if($top_maquina['total'] > 0){ ?>
-            (<?php echo number_format($top_maquina['total']); ?> kg)
-        <?php } ?>
-    </p>
+        <p>
+            🔧 Mejor máquina: 
+            <?php echo $top_maquina_ant['nombre_maquina']; ?>
 
+            <?php if($top_maquina_ant['total'] > 0){ ?>
+                (<?php echo number_format($top_maquina_ant['total']); ?> kg)
+            <?php } ?>
+        </p>
+
+    </div>
+    <div class="comparacion">
+        <p>
+            <?php 
+            if($diferencia > 0){
+                echo "<span style='color:green'>▲ Subió ".round($porcentaje,1)."% (+" . number_format($diferencia) . " kg)</span>";
+            }elseif($diferencia < 0){
+                echo "<span style='color:red'>▼ Bajó ".round($porcentaje,1)."% (-" . number_format(abs($diferencia)) . " kg)</span>";
+            }else{
+                echo "Sin cambios";
+            }
+            ?>
+        </p>
+    </div>
+    <div class="resumen-actual">
+
+        <h3> Resumen de <?php echo $meses[$mes_actual]; ?></h3>
+
+        <p>🏭 Producción bruta: <?php echo number_format($bruto); ?> kg</p>
+        <p>♻️ Retal: <?php echo number_format($retal); ?> kg</p>
+        <p>📦 Producción final: <?php echo number_format($neto); ?> kg</p>
+        <p>⚙️ Eficiencia: <?php echo round($eficiencia,1); ?>%</p>
+
+        <p>
+            📅 Mejor día: 
+            <?php 
+            echo ($mejor_dia['fecha'] != "Sin datos") 
+                ? date("d M Y", strtotime($mejor_dia['fecha'])) 
+                : "Sin datos"; 
+            ?>
+            (<?php echo number_format($mejor_dia['total']); ?> kg)
+        </p>
+
+        <p>
+            📉 Peor día: 
+            <?php 
+                echo ($peor_dia['fecha'] != "Sin datos") 
+                    ? date("d M Y", strtotime($peor_dia['fecha'])) 
+                    : "Sin datos"; 
+                ?>
+            (<?php echo number_format($peor_dia['total']); ?> kg)
+        </p>
+
+        <p>
+            🔧 Mejor máquina: 
+            <?php echo $top_maquina['nombre_maquina']; ?>
+
+            <?php if($top_maquina['total'] > 0){ ?>
+                (<?php echo number_format($top_maquina['total']); ?> kg)
+            <?php } ?>
+        </p>
+
+    </div>
 </div>
+<!-- BOTON PARA IMPORTAR DATOS DE GOOGLEEEEE -->
+
+<a class="btn" id="btnImportar" href="http://localhost/CONTROL_PRODUCCION/importar_plana.php" target="_blank">Importar Producción</a>
 
 <!-- GRAFICOSS -->
 
@@ -783,3 +881,5 @@ function cargarGraficoMeses(){
 cargarGraficoMeses();
 
 </script>
+</div>
+<?php include("../includes/footer.php"); ?>

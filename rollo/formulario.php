@@ -88,3 +88,4 @@ $colores = mysqli_query($conexion,"SELECT * FROM COLORES");
 
 </div>
 
+<?php include("../includes/footer.php"); ?>

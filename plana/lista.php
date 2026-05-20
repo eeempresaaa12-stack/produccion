@@ -190,3 +190,4 @@ if($pagina < $total_paginas){
 <a class="btn" href="dashboard.php">Volver</a>
 <a class="btn" href="../index.php">Menú</a>
 
+<?php include("../includes/footer.php"); ?>

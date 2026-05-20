@@ -10,16 +10,19 @@
 
 </head>
 
-<body>
+<footer class="footer">
 
-<div class="navbar">
-    <div class="navbar-logo">
-        <a href="../index.php"><img src="../img/logo-plastypetco.png" alt="Logo Plastypetco"></a>
+    <div class="footer-left">
+        <strong>Plastypetco</strong>
+        <span>&nbsp;© 2026</span>
     </div>
-    
-    <h1>Control Producción</h1>
-    
-</div>
 
-<div class="contenido">
+    <div class="footer-center">
+        <span>Control Interno de Producción</span>
+    </div>
 
+    <div class="footer-right">
+        <span>Versión 1.0</span>
+    </div>
+
+</footer>

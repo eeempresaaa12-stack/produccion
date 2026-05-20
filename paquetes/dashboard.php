@@ -22,49 +22,76 @@ function obtenerTotal($conexion, $sql){
 
 /* BUSQUEDAAAAAAAS  */
 
+$meses = [
+    1 => 'Enero',
+    2 => 'Febrero',
+    3 => 'Marzo',
+    4 => 'Abril',
+    5 => 'Mayo',
+    6 => 'Junio',
+    7 => 'Julio',
+    8 => 'Agosto',
+    9 => 'Septiembre',
+    10 => 'Octubre',
+    11 => 'Noviembre',
+    12 => 'Diciembre'
+];
+
+$mes_actual = date('n');
+$mes_anterior = date('n', strtotime('-1 month'));
 
 /* TOTAL HISTORICO */
-
 $sql_total = "SELECT SUM(paquetes_paq) total FROM PRODUCCION_PAQUETES";
 $total = obtenerTotal($conexion, $sql_total);
 
 
 /* PRODUCCION SEMANA ACTUAL */
-
 $sql_semana = "SELECT SUM(paquetes_paq) total
-FROM PRODUCCION_PAQUETES
-WHERE YEARWEEK(fecha_paq, 1) = YEARWEEK(CURDATE(), 1)";
+                FROM PRODUCCION_PAQUETES
+                WHERE YEARWEEK(fecha_paq, 1) = YEARWEEK(CURDATE(), 1)";
 $semana = obtenerTotal($conexion, $sql_semana);
 
 
 /* PRODUCCION MES ACTUAL */
-
 $sql_mes = "SELECT SUM(paquetes_paq) total
-FROM PRODUCCION_PAQUETES
-WHERE MONTH(fecha_paq) = MONTH(CURDATE())
-AND YEAR(fecha_paq) = YEAR(CURDATE())";
+            FROM PRODUCCION_PAQUETES
+            WHERE MONTH(fecha_paq) = MONTH(CURDATE())
+            AND YEAR(fecha_paq) = YEAR(CURDATE())";
 $mes = obtenerTotal($conexion, $sql_mes);
 
 
 /* TOP OPERARIO DEL MES */
-
 $sql_top = "SELECT o.nombre, IFNULL(SUM(p.paquetes_paq),0) total
-FROM PRODUCCION_PAQUETES p
-LEFT JOIN OPERARIOS o ON p.id_operario = o.id_operario
-WHERE MONTH(p.fecha_paq) = MONTH(CURDATE())
-AND YEAR(p.fecha_paq) = YEAR(CURDATE())
-GROUP BY p.id_operario
-ORDER BY total DESC
-LIMIT 1";
+            FROM PRODUCCION_PAQUETES p
+            LEFT JOIN OPERARIOS o ON p.id_operario = o.id_operario
+            WHERE MONTH(p.fecha_paq) = MONTH(CURDATE())
+            AND YEAR(p.fecha_paq) = YEAR(CURDATE())
+            GROUP BY p.id_operario
+            ORDER BY total DESC
+            LIMIT 1";
 
 $res_top = mysqli_query($conexion,$sql_top);
 $top = ($res_top && mysqli_num_rows($res_top) > 0)
     ? mysqli_fetch_assoc($res_top)
     : ["nombre" => "Sin datos", "total" => 0];
 
+/* TOP OPERARIO DEL MES ANTERIOR*/
+$sql_top_ant = "SELECT o.nombre, IFNULL(SUM(p.paquetes_paq),0) total
+                FROM PRODUCCION_PAQUETES p
+                LEFT JOIN OPERARIOS o ON p.id_operario = o.id_operario
+                WHERE MONTH(p.fecha_paq)=MONTH(CURDATE()-INTERVAL 1 MONTH)
+                AND YEAR(p.fecha_paq)=YEAR(CURDATE()-INTERVAL 1 MONTH)
+                GROUP BY p.id_operario
+                ORDER BY total DESC
+                LIMIT 1";
+
+$res_top_ant = mysqli_query($conexion,$sql_top_ant);
+
+$top_ant = ($res_top_ant && mysqli_num_rows($res_top_ant) > 0)
+    ? mysqli_fetch_assoc($res_top_ant)
+    : ["nombre" => "Sin datos", "total" => 0];
 
 /* MEJOR Y PEOR DIA DEL MES */
-
 $sql_dias = "SELECT 
                 DATE(fecha_paq) fecha,
                 SUM(paquetes_paq) total
@@ -104,46 +131,67 @@ if(!$peor_dia){
 
 }
 
+/* MEJOR Y PEOR DIA MES ANTERIOR */
+$sql_dias_ant = "SELECT 
+                    DATE(fecha_paq) fecha,
+                    SUM(paquetes_paq) total
+                FROM PRODUCCION_PAQUETES
+                WHERE MONTH(fecha_paq)=MONTH(CURDATE()-INTERVAL 1 MONTH)
+                AND YEAR(fecha_paq)=YEAR(CURDATE()-INTERVAL 1 MONTH)
+                GROUP BY DATE(fecha_paq)";
+
+$res_dias_ant = mysqli_query($conexion,$sql_dias_ant);
+$mejor_dia_ant = null;
+$peor_dia_ant = null;
+
+while($row = mysqli_fetch_assoc($res_dias_ant)){
+
+    if(!$mejor_dia_ant || $row['total'] > $mejor_dia_ant['total']){
+        $mejor_dia_ant = $row;
+    }
+
+    if(!$peor_dia_ant || $row['total'] < $peor_dia_ant['total']){
+        $peor_dia_ant = $row;
+    }
+}
+
 
 /* MES ACTUAL */
-
 $sql_actual = "SELECT SUM(paquetes_paq) total
-FROM PRODUCCION_PAQUETES
-WHERE MONTH(fecha_paq)=MONTH(CURDATE())
-AND YEAR(fecha_paq)=YEAR(CURDATE())";
+                FROM PRODUCCION_PAQUETES
+                WHERE MONTH(fecha_paq)=MONTH(CURDATE())
+                AND YEAR(fecha_paq)=YEAR(CURDATE())";
 
 
 /* MES ANTERIOR */
-
 $sql_anterior = "SELECT SUM(paquetes_paq) total
-FROM PRODUCCION_PAQUETES
-WHERE MONTH(fecha_paq)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-AND YEAR(fecha_paq)=YEAR(CURDATE()-INTERVAL 1 MONTH)";
+                FROM PRODUCCION_PAQUETES
+                WHERE MONTH(fecha_paq)=MONTH(CURDATE()-INTERVAL 1 MONTH)
+                AND YEAR(fecha_paq)=YEAR(CURDATE()-INTERVAL 1 MONTH)";
 
 $act = obtenerTotal($conexion, $sql_actual);
 $ant = obtenerTotal($conexion, $sql_anterior);
 
 
 /* CALCULOS SEGUROS */
-
 $diferencia = ($act ?? 0) - ($ant ?? 0);
 $porcentaje = ($ant > 0) ? (($diferencia / $ant) * 100) : 0;
 
 
 /* PROMEDIO */
+$dias_mes_ant = date('t', strtotime('-1 month'));
+$promedio_ant = ($ant > 0) ? ($ant / $dias_mes_ant) : 0;
 
 $dias_mes = date('t');
 $promedio = ($act > 0) ? ($act / $dias_mes) : 0;
 
 
-/* filtro fechas */
-
+/* FILTRO FECHAS */
 $desde = $_GET['desde'] ?? date('Y-m-01');
 $hasta = $_GET['hasta'] ?? date('Y-m-d');
 
 
-/* tablas fechas */
-
+/* TABLA FECHAS */
 $sql_tabla_fecha = "
 SELECT 
 DATE(fecha_paq) as fecha,
@@ -157,8 +205,7 @@ ORDER BY fecha DESC
 $res_tabla_fecha = mysqli_query($conexion,$sql_tabla_fecha);
 
 
-/* tabla operador */
-
+/* TABLA OPERARIOS */
 $sql_tabla_operario = "
 SELECT 
 o.nombre,
@@ -174,10 +221,7 @@ $res_tabla_operario = mysqli_query($conexion,$sql_tabla_operario);
 
 ?>
 
-
 <!-- CONTAINER PRINCIPALLL -->
-
-
 <div class="container">
 
 <h2 class="titulo-vista">Producción Paquetes</h2>
@@ -216,59 +260,102 @@ $res_tabla_operario = mysqli_query($conexion,$sql_tabla_operario);
     </div>
 </div>
 
+<div class="resumenes">
+    <div class="resumen-anterior">
+
+        <h3> Resumen de <?php echo $meses[$mes_anterior]; ?></h3>
+
+        <p>
+            📦 Producción total:
+            <?php echo number_format($ant); ?> paquetes
+        </p>
+
+        <p>
+            📅 Mejor día:
+            <?php
+            echo date("d M Y", strtotime($mejor_dia_ant['fecha']));
+            ?>
+            (<?php echo number_format($mejor_dia_ant['total']); ?> paquetes)
+        </p>
+
+        <p>
+            📉 Peor día:
+            <?php
+            echo date("d M Y", strtotime($peor_dia_ant['fecha']));
+            ?>
+            (<?php echo number_format($peor_dia_ant['total']); ?> paquetes)
+        </p>
+
+        <p>
+            📊 Promedio diario:
+            <?php echo round($promedio_ant); ?> paquetes
+        </p>
+
+        <p>
+            👷 Mejor operario:
+            <?php echo $top_ant['nombre']; ?>
+            (<?php echo number_format($top_ant['total']); ?> paquetes)
+        </p>
+
+    </div>
+    <div class="comparacion">
+        <p>
+            <?php 
+            if($diferencia > 0){
+                echo "<span style='color:green'>▲ Subió ".round($porcentaje,1)."% </span>
+                    <span style='color:green'>+" . number_format($diferencia) . " paquetes</span>";
+            }elseif($diferencia < 0){
+                echo "<span style='color:red'>▼ Bajó ".round($porcentaje,1)."% </span>
+                     <span style='color:red'>-" . number_format(abs($diferencia)) . " paquetes</span>";
+            }else{
+                echo "Sin cambios";
+            }
+            ?>
+        </p>
+    </div>
+    <div class="resumen-actual">
+
+        <h3> Resumen de <?php echo $meses[$mes_actual]; ?></h3>
+
+        <p>
+            📦 Producción total:
+            <?php echo number_format($act); ?> paquetes
+        </p>
+
+        <p>
+            📅 Mejor día: <?php 
+                echo ($mejor_dia['fecha'] != "Sin datos" && $mejor_dia['fecha'] != "")
+                    ? date("d M Y", strtotime($mejor_dia['fecha'])) 
+                    : "Sin datos"; 
+                ?>
+            (<?php echo number_format($mejor_dia['total']); ?> paquetes)
+        </p>
+
+        <p>
+            📉 Peor día: <?php 
+                echo ($peor_dia['fecha'] != "Sin datos") 
+                    ? date("d M Y", strtotime($peor_dia['fecha'])) 
+                    : "Sin datos"; 
+                ?>
+            (<?php echo number_format($peor_dia['total']); ?> paquetes)
+        </p>
+
+        <p>
+            📊 Promedio diario: <?php echo round($promedio); ?> paquetes
+        </p>
+
+        <p>
+        👷 Mejor operario: 
+        <?php echo $top['nombre']; ?> 
+        (<?php echo number_format($top['total']); ?> paquetes)
+        </p>
+
+    </div>
+</div>
+
 <!-- BOTON PARA IMPORTAR DATOS DE GOOGLEEEEE -->
 
-<a class="btn" href="http://localhost/CONTROL_PRODUCCION/importar_paquetes.php" target="_blank">Importar datos del formulario</a>
-
-<div class="resumen-mes">
-
-    <h3>📊 Resumen del mes</h3>
-
-    <!-- CRECIMIENTO -->
-
-    <p>
-        <?php 
-        if($diferencia > 0){
-            echo "<span style='color:green'>▲ Subió ".round($porcentaje,1)."% (+" . number_format($diferencia) . " paquetes)</span>";
-        }elseif($diferencia < 0){
-            echo "<span style='color:red'>▼ Bajó ".round($porcentaje,1)."% (-" . number_format(abs($diferencia)) . " paquetes)</span>";
-        }else{
-            echo "Sin cambios";
-        }
-        ?>
-    </p>
-
-    <!-- PRODUCCION -->
-
-    <p>
-        📅 Mejor día: <?php 
-            echo ($mejor_dia['fecha'] != "Sin datos" && $mejor_dia['fecha'] != "")
-                ? date("d M Y", strtotime($mejor_dia['fecha'])) 
-                : "Sin datos"; 
-            ?>
-        (<?php echo number_format($mejor_dia['total']); ?> paquetes)
-    </p>
-
-    <p>
-        📉 Día más bajo: <?php 
-            echo ($peor_dia['fecha'] != "Sin datos") 
-                ? date("d M Y", strtotime($peor_dia['fecha'])) 
-                : "Sin datos"; 
-            ?>
-        (<?php echo number_format($peor_dia['total']); ?> paquetes)
-    </p>
-
-    <p>
-        📊 Promedio diario: <?php echo round($promedio); ?> paquetes
-    </p>
-
-    <p>
-    👷 Mejor operario: 
-    <?php echo $top['nombre']; ?> 
-    (<?php echo number_format($top['total']); ?> paquetes)
-    </p>
-
-</div>
+<a class="btn" id="btnImportar" href="http://localhost/CONTROL_PRODUCCION/importar_paquetes.php" target="_blank">Importar Producción</a>
 
 <!-- GRAFICOSS -->
 
@@ -623,3 +710,4 @@ cargarGraficoMeses();
 
 </script>
 
+<?php include("../includes/footer.php"); ?>

@@ -197,3 +197,5 @@ if($pagina < $total_paginas){
 </div>
 
 </div>
+
+<?php include("../includes/footer.php"); ?>

@@ -102,3 +102,5 @@ while($c = mysqli_fetch_assoc($res)){
 </div>
 
 </div>
+
+<?php include("../includes/footer.php"); ?>

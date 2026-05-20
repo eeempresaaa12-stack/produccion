@@ -183,7 +183,7 @@ form select:focus {
   padding: 12px 20px;
   margin-top: 18px;
   border-radius: 10px;
-  background: linear-gradient(135deg, rgb(120, 210, 220), #164e4e);
+  background: linear-gradient(135deg, rgb(88, 222, 236), #207070);
   border: none;
   color: white;
   font-weight: 600;
@@ -206,6 +206,26 @@ form select:focus {
   margin-top: 20px;
 }
 
+#btnImportar {
+  border-radius: 14px;
+  background: #156626;
+  font-weight: bold;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  font-size: 22px;
+  margin-left: 120px;
+  margin-right: 120px;
+}
+@media (max-width: 700px) {
+  #btnImportar {
+    margin-left: 0;
+    margin-right: 0;
+    height: auto;
+    width: 100%;
+    font-size: 18px;
+  }
+}
 /* =================================================
    TABLAS
 ================================================= */
@@ -456,7 +476,7 @@ form select:focus {
 .card-grafico {
   width: 100%;
   min-width: 0;
-  height: 300px;
+  height: 400px;
   padding: 15px;
 }
 
@@ -485,28 +505,64 @@ canvas {
 }
 
 /* =================================================
-   RESUMEN DEL MES Y TABLAS
+   RESUMENES
 ================================================= */
+.resumenes {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
 
-.resumen-mes {
+.resumen-actual,
+.resumen-anterior {
   background: rgba(255, 255, 255, 0.85);
   border-radius: 15px;
-  padding: 25px;
+  padding: 15px;
   margin: 20px 0;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-  max-width: 700px;
+  width: 370px;
 }
 
-.resumen-mes h3 {
-  margin-bottom: 15px;
+.resumen-actual h3,
+.resumen-anterior h3 {
+  margin-bottom: 12px;
   color: #064e3b;
+  font-size: 21px;
+  justify-self: center;
 }
 
-.resumen-mes p {
-  font-size: 15px;
+.resumen-actual p,
+.resumen-anterior p {
+  font-size: 14px;
   margin: 8px 0;
 }
+.comparacion {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 20px;
+  padding: 10px;
+  height: fit-content;
+  width: 160px;
+  margin: auto;
+}
 
+.comparacion p {
+  font-size: 14px;
+}
+
+@media (max-width: 1000px) {
+  .resumenes {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+  .resumen-actual,
+  .resumen-anterior {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+/* =================================================
+  |TABLAS
+================================================= */
 .tabla-dashboard {
   background: white;
   padding: 20px;
@@ -557,4 +613,32 @@ canvas {
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   margin-top: 30px;
+}
+
+/* =================================================
+   FOOTER
+================================================= */
+
+.footer {
+  width: 100%;
+  margin-top: 50px;
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: rgba(19, 77, 31, 0.9);
+  color: #d1d5db;
+  font-size: 15px;
+}
+
+.footer strong {
+  color: #fff;
+}
+
+.footer-left,
+.footer-center,
+.footer-right {
+  display: flex;
+  align-items: center;
 }
