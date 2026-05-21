@@ -5,14 +5,14 @@ require_once("../conexion.php");
 header('Content-Type: application/json');
 
 $sql = "SELECT 
-    r.nombre_referencia,
-    SUM(p.total_plana) total,
-    SUM(p.bultos_plana) bultos
-FROM PRODUCCION_PLANA p
-LEFT JOIN REFERENCIAS r ON p.id_referencia = r.id_referencia
-GROUP BY p.id_referencia
-ORDER BY total DESC
-LIMIT 10";
+            r.nombre_referencia,
+            SUM(p.total_plana) total,
+            SUM(p.bultos_plana) bultos
+        FROM PRODUCCION_PLANA p
+        LEFT JOIN REFERENCIAS r ON p.id_referencia = r.id_referencia
+        GROUP BY p.id_referencia
+        ORDER BY total DESC
+        LIMIT 10";
 
 $res = mysqli_query($conexion,$sql);
 

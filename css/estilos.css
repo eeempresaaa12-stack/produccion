@@ -183,7 +183,7 @@ form select:focus {
   padding: 12px 20px;
   margin-top: 18px;
   border-radius: 10px;
-  background: linear-gradient(135deg, rgb(88, 222, 236), #207070);
+  background: linear-gradient(135deg, #207070, rgb(88, 222, 236));
   border: none;
   color: white;
   font-weight: 600;
@@ -455,6 +455,63 @@ form select:focus {
   margin-bottom: 15px;
 }
 
+.controles .label {
+  font-family: "Poppins", sans-serif;
+  display: inline-block;
+  padding: 6px 8px;
+  margin-top: 18px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #207070, rgb(88, 222, 236));
+  border: none;
+  color: white;
+  font-weight: 400;
+  text-decoration: none;
+  transition: 0.25s;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  margin-right: 15px;
+}
+
+.label select {
+  margin-left: 8px;
+  padding: 6px 8px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(5px);
+  transition: 0.25s;
+  cursor: pointer;
+  height: 29px;
+}
+
+.label:hover {
+  background: linear-gradient(135deg, #215224, #215224);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+select {
+  border-radius: 20px;
+  font-family: "Poppins", sans-serif;
+  font-size: 11px;
+}
+
+select:hover {
+  background: white;
+}
+
+select option {
+  border-radius: 20px;
+}
+#btnAnio {
+  width: 100px;
+  height: 40px;
+}
+
+.top-card {
+  border-radius: 40px;
+  background: white;
+}
+
 .contenedor-grafico {
   width: 100%;
   height: 350px;
@@ -543,6 +600,7 @@ canvas {
   height: fit-content;
   width: 160px;
   margin: auto;
+  text-align: center;
 }
 
 .comparacion p {

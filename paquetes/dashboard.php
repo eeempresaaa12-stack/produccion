@@ -37,6 +37,14 @@ $meses = [
     12 => 'Diciembre'
 ];
 
+$semanas = [
+    1 => 'Semana 1',
+    2 => 'Semana 2',
+    3 => 'Semana 3',
+    4 => 'Semana 4',
+    5 => 'Semana 5'
+];
+$semana_actual = date('W', strtotime('this week'));
 $mes_actual = date('n');
 $mes_anterior = date('n', strtotime('-1 month'));
 
@@ -141,10 +149,16 @@ $sql_dias_ant = "SELECT
                 GROUP BY DATE(fecha_paq)";
 
 $res_dias_ant = mysqli_query($conexion,$sql_dias_ant);
-$mejor_dia_ant = null;
-$peor_dia_ant = null;
 
-while($row = mysqli_fetch_assoc($res_dias_ant)){
+if(!$res_dias_ant){
+    $mejor_dia_ant = ["fecha"=>"Sin datos","total"=>0];
+    $peor_dia_ant = ["fecha"=>"Sin datos","total"=>0];
+} else {
+
+    $mejor_dia_ant = null;
+    $peor_dia_ant = null;
+
+    while($row = mysqli_fetch_assoc($res_dias_ant)){
 
     if(!$mejor_dia_ant || $row['total'] > $mejor_dia_ant['total']){
         $mejor_dia_ant = $row;
@@ -154,6 +168,16 @@ while($row = mysqli_fetch_assoc($res_dias_ant)){
         $peor_dia_ant = $row;
     }
 }
+
+if(!$mejor_dia_ant){
+    $mejor_dia_ant = ["fecha"=>"Sin datos","total"=>0];
+}
+
+if(!$peor_dia_ant){
+    $peor_dia_ant = ["fecha"=>"Sin datos","total"=>0];
+}
+}
+
 
 
 /* MES ACTUAL */
@@ -271,24 +295,26 @@ $res_tabla_operario = mysqli_query($conexion,$sql_tabla_operario);
         </p>
 
         <p>
-            📅 Mejor día:
-            <?php
-            echo date("d M Y", strtotime($mejor_dia_ant['fecha']));
+            📅 Mejor día: <?php
+            echo $mejor_dia_ant['fecha'] != "Sin datos" && $mejor_dia_ant['fecha'] != "" 
+                ? date("d M Y", strtotime($mejor_dia_ant['fecha'])) 
+                : "Sin datos";
             ?>
             (<?php echo number_format($mejor_dia_ant['total']); ?> paquetes)
         </p>
 
         <p>
-            📉 Peor día:
-            <?php
-            echo date("d M Y", strtotime($peor_dia_ant['fecha']));
+            📉 Peor día: <?php
+            echo $peor_dia_ant['fecha'] != "Sin datos" && $peor_dia_ant['fecha'] != ""
+                ? date("d M Y", strtotime($peor_dia_ant['fecha']))
+                : "Sin datos";
             ?>
             (<?php echo number_format($peor_dia_ant['total']); ?> paquetes)
         </p>
 
         <p>
-            📊 Promedio diario:
-            <?php echo round($promedio_ant); ?> paquetes
+            📊 Promedio diario: <?php 
+            echo round($promedio_ant); ?> paquetes
         </p>
 
         <p>
@@ -302,13 +328,13 @@ $res_tabla_operario = mysqli_query($conexion,$sql_tabla_operario);
         <p>
             <?php 
             if($diferencia > 0){
-                echo "<span style='color:green'>▲ Subió ".round($porcentaje,1)."% </span>
-                    <span style='color:green'>+" . number_format($diferencia) . " paquetes</span>";
+                echo "<span style='color:green; display:block; text-align:center'>▲ Subió ".round($porcentaje,1)."%</span>
+                    <span style='color:green; display:block; text-align:center'>+" . number_format($diferencia) . " paquetes</span>";
             }elseif($diferencia < 0){
-                echo "<span style='color:red'>▼ Bajó ".round($porcentaje,1)."% </span>
-                     <span style='color:red'>-" . number_format(abs($diferencia)) . " paquetes</span>";
+                echo "<span style='color:red; display:block; text-align:center'>▼ Bajó ".round($porcentaje,1)."%</span>
+                    <span style='color:red; display:block; text-align:center'>-" . number_format(abs($diferencia)) . " paquetes</span>";
             }else{
-                echo "Sin cambios";
+                echo "<span style='display:block; text-align:center'>Sin cambios</span>";
             }
             ?>
         </p>
@@ -341,12 +367,14 @@ $res_tabla_operario = mysqli_query($conexion,$sql_tabla_operario);
         </p>
 
         <p>
-            📊 Promedio diario: <?php echo round($promedio); ?> paquetes
+            📊 Promedio diario: <?php 
+            echo round($promedio); 
+            ?> paquetes
         </p>
 
         <p>
-        👷 Mejor operario: 
-        <?php echo $top['nombre']; ?> 
+        👷 Mejor operario: <?php 
+        echo $top['nombre']; ?> 
         (<?php echo number_format($top['total']); ?> paquetes)
         </p>
 
@@ -362,8 +390,33 @@ $res_tabla_operario = mysqli_query($conexion,$sql_tabla_operario);
 <div class="seccion-graficos">
 
     <div class="controles">
-        <button class="btn" onclick="cargarDatos('semana')">Semana</button>
-        <button class="btn" onclick="cargarDatos('mes')">Mes</button>
+        
+        <label class="label" for="filtroMes">
+            Mes:
+            <select id="filtroMes" onchange="actualizarFiltros()">
+                <?php foreach($meses as $num => $nombre){ ?>
+                    <option 
+                        value="<?php echo $num; ?>" 
+                        <?php if($num == $mes_actual) echo "selected"; ?> >
+                        <?php echo $nombre; ?>
+                    </option>
+                <?php } ?>
+            </select>
+        </label>
+        <label class="label" for="filtroSemana">
+            Semana:
+            <select id="filtroSemana" onchange="actualizarFiltros()">
+                <option value = "" <?php if($semana_actual == "") echo "selected"; ?> >
+                    Todas
+                </option>
+                <option value="1" <?php if($semana_actual == 1) echo "selected"; ?>>Semana 1</option>
+                <option value="2" <?php if($semana_actual == 2) echo "selected"; ?>>Semana 2</option>
+                <option value="3" <?php if($semana_actual == 3) echo "selected"; ?>>Semana 3</option>
+                <option value="4" <?php if($semana_actual == 4) echo "selected"; ?>>Semana 4</option>
+                <option value="5" <?php if($semana_actual == 5) echo "selected"; ?>>Semana 5</option>
+            </select>
+        </label>
+        <button class="btn" id="btnAnio" onclick="cargarDatos('anio')">Año</button>
     </div>
 
     <div class="grid-graficos">
@@ -525,15 +578,19 @@ let chartProduccion;
 let chartOperarios;
 
 function cargarDatos(tipo){
+    let mes = document.getElementById("filtroMes").value;
+    let semana = document.getElementById("filtroSemana").value;
 
-    fetch("get_produccion.php?tipo=" + tipo)
+    fetch("get_produccion.php?tipo=" + tipo + "&mes=" + mes + "&semana=" + semana)
     .then(res => res.json())
     .then(data => {
 
         if(chartProduccion) chartProduccion.destroy();
 
+        const tipo_grafico = (tipo === 'anio') ? 'bar' : 'line';
+
         chartProduccion = new Chart(document.getElementById('graficoProduccion'), {
-            type: 'line',
+            type: tipo_grafico,
             data: {
                 labels: data.fechas,
                 datasets: [{
@@ -620,8 +677,17 @@ function cargarDatos(tipo){
     });
 }
 
+function actualizarFiltros(){
+    let semana = document.getElementById("filtroSemana").value;
 
-cargarDatos('semana');
+    if(semana == ""){
+        cargarDatos('mes');
+    } else {
+        cargarDatos('semana');
+    }
+}
+
+actualizarFiltros();
 
 
 let chartMeses;

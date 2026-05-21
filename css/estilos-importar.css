@@ -259,12 +259,12 @@ body {
   border-bottom: none;
 }
 .lr .n {
-  color: #27bec9;
+  color: rgb(20, 80, 30);
   min-width: 26px;
   text-align: right;
 }
 .lr.ok .t {
-  color: rgb(20, 80, 30);
+  color: rgb(28, 109, 41);
 }
 .lr.dup .t {
   color: #ac6802;

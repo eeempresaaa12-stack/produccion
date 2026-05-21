@@ -3,20 +3,41 @@
 
 require_once("../conexion.php");
 
-$tipo = $_GET['tipo'] ?? 'semana';
+$tipo = $_GET['tipo'] ?? "mes";
+$mes = $_GET['mes'] ?? date('m');
+$semana = $_GET['semana'] ?? "";
 
 /* ===== PRODUCCION POR DIA ===== */
 
 if($tipo == "semana"){
-    $sql = "SELECT DATE(fecha_paq) fecha, SUM(paquetes_paq) total
+    if($semana == ""){
+        $sql = "SELECT DATE(fecha_paq) fecha, SUM(paquetes_paq) total
+                FROM PRODUCCION_PAQUETES
+                WHERE MONTH(fecha_paq) = $mes
+                AND YEAR(fecha_paq) = YEAR(CURDATE())
+                GROUP BY DATE(fecha_paq)";
+    } else {
+        $inicio = (($semana - 1) * 7) + 1;
+        $fin = $semana * 7;
+
+        $sql = "SELECT DATE(fecha_paq) fecha, SUM(paquetes_paq) total
+                FROM PRODUCCION_PAQUETES
+                WHERE MONTH(fecha_paq) = $mes
+                AND DAY(fecha_paq) BETWEEN $inicio AND $fin
+                AND YEAR(fecha_paq) = YEAR(CURDATE())
+                GROUP BY DATE(fecha_paq)";
+    }
+} elseif($tipo === 'anio') {
+    $sql = "SELECT CONCAT('Sem ', WEEK(fecha_paq, 1)) fecha, SUM(paquetes_paq) total
             FROM PRODUCCION_PAQUETES
-            WHERE YEARWEEK(fecha_paq,1)=YEARWEEK(CURDATE(),1)
-            GROUP BY DATE(fecha_paq)";
+            WHERE YEAR(fecha_paq) = YEAR(CURDATE())
+            GROUP BY WEEK(fecha_paq, 1), CONCAT('Sem ', WEEK(fecha_paq, 1))
+            ORDER BY WEEK(fecha_paq, 1) ASC";
 }else{
     $sql = "SELECT DATE(fecha_paq) fecha, SUM(paquetes_paq) total
             FROM PRODUCCION_PAQUETES
-            WHERE MONTH(fecha_paq)=MONTH(CURDATE())
-            AND YEAR(fecha_paq)=YEAR(CURDATE())
+            WHERE MONTH(fecha_paq) = $mes
+            AND YEAR(fecha_paq) = YEAR(CURDATE())
             GROUP BY DATE(fecha_paq)";
 }
 
@@ -33,17 +54,42 @@ while($row = mysqli_fetch_assoc($res)){
 /* ===== PRODUCCION POR OPERARIO ===== */
 
 if($tipo == "semana"){
+
+    if($semana == ""){
+
+        $sql2 = "SELECT o.nombre, SUM(p.paquetes_paq) total
+                 FROM PRODUCCION_PAQUETES p
+                 LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario
+                 WHERE MONTH(p.fecha_paq) = $mes
+                 AND YEAR(p.fecha_paq) = YEAR(CURDATE())
+                 GROUP BY p.id_operario";
+
+    } else {
+
+        $inicio = (($semana - 1) * 7) + 1;
+        $fin = $semana * 7;
+
+        $sql2 = "SELECT o.nombre, SUM(p.paquetes_paq) total
+                 FROM PRODUCCION_PAQUETES p
+                 LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario
+                 WHERE MONTH(p.fecha_paq) = $mes
+                 AND DAY(p.fecha_paq) BETWEEN $inicio AND $fin
+                 AND YEAR(p.fecha_paq) = YEAR(CURDATE())
+                 GROUP BY p.id_operario";
+    }
+}elseif($tipo === 'anio') {
     $sql2 = "SELECT o.nombre, SUM(p.paquetes_paq) total
              FROM PRODUCCION_PAQUETES p
              LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario
-             WHERE YEARWEEK(p.fecha_paq,1)=YEARWEEK(CURDATE(),1)
-             GROUP BY p.id_operario";
+             WHERE YEAR(p.fecha_paq) = YEAR(CURDATE())
+             GROUP BY o.nombre
+             ORDER BY total DESC";
 }else{
     $sql2 = "SELECT o.nombre, SUM(p.paquetes_paq) total
              FROM PRODUCCION_PAQUETES p
              LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario
-             WHERE MONTH(p.fecha_paq)=MONTH(CURDATE())
-             AND YEAR(p.fecha_paq)=YEAR(CURDATE())
+             WHERE MONTH(p.fecha_paq) = $mes
+             AND YEAR(p.fecha_paq) = YEAR(CURDATE())
              GROUP BY p.id_operario";
 }
 

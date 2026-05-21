@@ -37,6 +37,14 @@ $meses = [
     12 => 'Diciembre'
 ];
 
+$semanas = [
+    1 => 'Semana 1',
+    2 => 'Semana 2',
+    3 => 'Semana 3',
+    4 => 'Semana 4',
+    5 => 'Semana 5'
+];
+$semana_actual = date('W', strtotime('this week'));
 $mes_actual = date('n');
 $mes_anterior = date('n', strtotime('-1 month'));
 
@@ -423,8 +431,34 @@ $res_tabla_maquina = mysqli_query($conexion,$sql_tabla_maquina);
 <div class="seccion-graficos">
 
     <div class="controles">
-        <button class="btn" onclick="cargarDatos('semana')">Semana</button>
-        <button class="btn" onclick="cargarDatos('mes')">Mes</button>
+        <label class="label" for="filtroMes">
+            Mes:
+            <select id="filtroMes" onchange="cargarDatos('semana')">
+                <?php foreach($meses as $num => $nombre){ ?>
+                <option 
+                    value="<?php echo $num; ?>" 
+                    <?php if($mes_actual == $num) echo "selected"; ?> >
+                    <?php echo $nombre; ?>
+                </option>
+                <?php } ?>
+            </select>
+        </label>
+        <label class="label" for="filtroSemana">
+            Semana:
+            <select id="filtroSemana" onchange="cargarDatos('semana')">
+                <option value = "" <?php if($semana_actual == "") echo "selected"; ?> >
+                    Todas
+                </option>
+                <?php foreach($semanas as $num => $nombre){ ?>
+                <option 
+                    value="<?php echo $num; ?>" 
+                    <?php if($semana_actual == $num) echo "selected"; ?> >
+                    <?php echo $nombre; ?>
+                </option>
+                <?php } ?>
+            </select>
+        </label>
+        <button class ="btn" id="btnAnio" onclick="cargarDatos('anio')">Año</button>
     </div>
 
     <div class="grid-graficos">
@@ -680,15 +714,19 @@ let chartMeses;
 let chartReferencias;
 
 function cargarDatos(tipo){
+    let filtroMes = document.getElementById("filtroMes").value;
+    let filtroSemana = document.getElementById("filtroSemana").value;
 
-    fetch("get_produccion_plana.php?tipo=" + tipo)
+    fetch("get_produccion_plana.php?tipo=" + tipo + "&mes=" + filtroMes + "&semana=" + filtroSemana)
     .then(res => res.json())
     .then(data => {
 
         if(chartProduccion) chartProduccion.destroy();
 
+        const tipo_grafico = (tipo === 'anio') ? 'bar' : 'line';
+
         chartProduccion = new Chart(document.getElementById('graficoProduccion'), {
-            type: 'line',
+            type: tipo_grafico,
             data: {
                 labels: data.fechas,
                 datasets: [{

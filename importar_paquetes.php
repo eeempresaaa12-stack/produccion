@@ -93,7 +93,10 @@ function sendProgress($pct, $msg, $extra = '') {
         <span id="pct">0</span><span class="sign">%</span>
       </div>
       <span id="counter">— / — registros</span>
+      <span id="timer">⏱ 0s </span>
     </div>
+    
+    
 
     <div id="stats">
       <div class="st ok">
@@ -124,6 +127,28 @@ function sendProgress($pct, $msg, $extra = '') {
 </div>
 
 <script>
+var _timerStart = null;
+var _timerInterval = null;
+var _totalEstSeg = null;
+
+function startTimer() {
+  _timerStart = Date.now();
+  _timerInterval = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+  if (!_timerStart) return;
+  var elapsed = Math.floor((Date.now() - _timerStart) / 1000);
+  var sufijo  = _totalEstSeg ? 'de ~' + formatTime(_totalEstSeg) : 'de ~...';
+  document.getElementById('timer').textContent = '⏱ ' + formatTime(elapsed) + ' ' + sufijo;
+}
+
+function formatTime(s) {
+  if (s < 60) return s + 's';
+  var m = Math.floor(s / 60), sec = s % 60;
+  return m + 'm ' +(sec < 10 ? '0' : '') + sec + 's';
+}
+
 function up(pct, msg) {
   document.getElementById('fill').style.width   = pct + '%';
   document.getElementById('pct').textContent    = pct;
@@ -133,13 +158,23 @@ function up(pct, msg) {
 }
 
 function tick(cur, total, ok, dup, msgLog, type) {
+  if(cur === 1) startTimer();
+
   document.getElementById('counter').textContent = cur + ' / ' + total + ' registros';
   var pct = 8 + Math.round((cur / total) * 90);
   document.getElementById('fill').style.width = pct + '%';
   document.getElementById('pct').textContent  = pct;
   document.getElementById('msg').textContent  =
     'Importando \u2026 (' + cur + '\u202f/\u202f' + total + ')';
-  // Log
+  
+  if (_timerStart && cur == 10) {
+    var elapsed = Math.floor((Date.now() - _timerStart) / 1000);
+    var rate = cur / elapsed;
+    _totalEstSeg = Math.round(total / rate);
+    document.getElementById('timer').textContent =
+      '⏱ ' + formatTime(Math.floor(elapsed)) + ' · de ~' + formatTime(_totalEstSeg);
+  }
+     
   var row = document.createElement('div');
   row.className = 'lr ' + type;
   row.innerHTML = '<span class="n">' + cur + '</span>'
@@ -150,6 +185,10 @@ function tick(cur, total, ok, dup, msgLog, type) {
 }
 
 function done(ok, dup, total) {
+  clearInterval(_timerInterval);
+  var totalSeg = _timerStart ? Math.floor((Date.now() - _timerStart) / 1000) : 0;
+  document.getElementById('timer').textContent = '⏱ ' + formatTime(totalSeg) + ' en total';
+
   document.getElementById('fill').style.width = '100%';
   document.getElementById('pct').textContent  = '100';
   document.getElementById('msg').textContent  = 'Importación completada exitosamente';

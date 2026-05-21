@@ -37,6 +37,14 @@ $meses = [
     12 => 'Diciembre'
 ];
 
+$semanas = [
+    1 => 'Semana 1',
+    2 => 'Semana 2',
+    3 => 'Semana 3',
+    4 => 'Semana 4',
+    5 => 'Semana 5'
+];
+$semana_actual = date('W', strtotime('this week'));
 $mes_actual = date('n');
 $mes_anterior = date('n', strtotime('-1 month'));
 
@@ -387,8 +395,32 @@ $res_tabla_maquina = mysqli_query($conexion,$sql_tabla_maquina);
 <div class="seccion-graficos">
 
     <div class="controles">
-        <button class="btn" onclick="cargarDatos('semana')">Semana</button>
-        <button class="btn" onclick="cargarDatos('mes')">Mes</button>
+        <label class="label" for="filtroMes">
+            Mes:
+            <select id="filtroMes" onchange="cargarDatos('semana')">
+                <?php foreach($meses as $num => $nombre){ ?>
+                <option 
+                    value="<?php echo $num; ?>" 
+                    <?php if($num == $mes_actual) echo "selected"; ?>>
+                    <?php echo $nombre; ?>
+                </option>
+                <?php } ?>
+            </select>
+        </label>
+        <label class="label" for="filtroSemana">
+            Semana:
+            <select id="filtroSemana" onchange="cargarDatos('semana')">
+                <option value = "" <?php if($semana_actual == "") echo "selected"; ?> >
+                    Todas
+                </option>
+                <option value = "1" <?php if($semana_actual == "1") echo "selected"; ?> >Semana 1</option>
+                <option value = "2" <?php if($semana_actual == "2") echo "selected"; ?> >Semana 2</option>
+                <option value = "3" <?php if($semana_actual == "3") echo "selected"; ?> >Semana 3</option>
+                <option value = "4" <?php if($semana_actual == "4") echo "selected"; ?> >Semana 4</option>
+                <option value = "5" <?php if($semana_actual == "5") echo "selected"; ?> >Semana 5</option>
+            </select>
+        </label>
+        <button class ="btn" id="btnAnio" onclick="cargarDatos('anio')">Año</button>
     </div>
 
     <div class="grid-graficos">
@@ -570,15 +602,19 @@ let chartProduccion;
 let chartOperarios;
 
 function cargarDatos(tipo){
+    let mes = document.getElementById("filtroMes").value;
+    let semana = document.getElementById("filtroSemana").value;
 
-    fetch("get_produccion_rollo.php?tipo=" + tipo)
+    fetch("get_produccion_rollo.php?tipo=" + tipo + "&mes=" + mes + "&semana=" + semana)
     .then(res => res.json())
     .then(data => {
 
         if(chartProduccion) chartProduccion.destroy();
 
+        const tipo_grafico = (tipo === 'anio') ? 'bar' : 'line';
+
         chartProduccion = new Chart(document.getElementById('graficoProduccion'), {
-            type: 'line',
+            type: tipo_grafico,
             data: {
                 labels: data.fechas,
                 datasets: [{
@@ -635,10 +671,7 @@ function cargarDatos(tipo){
         });
     });
 }
-
-
-cargarDatos('semana');
-
+cargarDatos('semana')
 
 let chartMeses;
 
