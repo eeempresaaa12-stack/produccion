@@ -6,14 +6,21 @@ body {
   background: rgb(20, 80, 33);
   color: white;
   font-family: "Poppins", sans-serif;
-  min-height: 100vh;
+  min-height: 90vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
   background-image: radial-gradient(#1c233340 1px, transparent 1px);
+  overflow: hidden;
 }
 
+
+
+
+/* ================================
+   CONTENEDOR PRINCIPAL
+=================================*/
 .wrapper {
   width: 100%;
   max-width: 540px;
@@ -25,6 +32,9 @@ body {
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
 }
 
+/* ================================
+   ENCABEZADO Y TARJETA
+================================= */
 .top {
   background: rgba(255, 255, 255, 0.75);
   color: #134213;
@@ -57,7 +67,10 @@ body {
   opacity: 0.4;
 }
 
-/* Indicador de estado */
+/*================================
+   INDICADORES DE ESTADO
+=================================*/
+
 .status-row {
   display: flex;
   align-items: center;
@@ -68,25 +81,31 @@ body {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: green;
-  box-shadow: 0 0 8px green;
+  background: #00ff84;
+  box-shadow: 0 0 8px #00ff84;
   animation: blink 1.2s ease-in-out infinite;
   flex-shrink: 0;
 }
 .dot.idle {
   background: #136991;
-  box-shadow: none;
+  box-shadow: 0 0 8px #136991;
   animation: none;
+  width: 8px;
+  height: 8px;
 }
 .dot.done {
-  background: green;
-  box-shadow: 0 0 8px green;
+  background: #00ff84;
+  box-shadow: 0 0 8px #00cc6a;
   animation: none;
+  width: 8px;
+  height: 8px;
 }
 .dot.error {
   background: red;
   box-shadow: 0 0 8px red;
   animation: none;
+  width: 12px;
+  height: 12px;
 }
 @keyframes blink {
   0%,
@@ -100,7 +119,7 @@ body {
 #status-lbl {
   font-family: "Poppins", sans-serif;
   font-size: 0.8rem;
-  color: #27bec9;
+  color: #00cc6a;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -113,7 +132,9 @@ body {
   min-height: 1.5em;
 }
 
-/* BARRA DE CARGA */
+/* ================================
+   BARRA DE PROGRESO
+=================================*/
 .track {
   width: 100%;
   height: 8px;
@@ -131,6 +152,9 @@ body {
   transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ================================
+   NÚMEROS Y ESTADÍSTICAS
+=================================*/
 .num-row {
   display: flex;
   justify-content: space-between;
@@ -160,7 +184,9 @@ body {
   color: #27bec9;
 }
 
-/* AL FINALIZAR */
+/* ================================
+   ESTADÍSTICAS DETALLADAS
+=================================*/
 #stats {
   display: none;
   grid-template-columns: repeat(3, 1fr);
@@ -170,6 +196,10 @@ body {
 #stats.show {
   display: grid;
 }
+.st.tot {
+  grid-column: span 3;
+}
+
 .st {
   background: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.45);
@@ -193,13 +223,20 @@ body {
 .st.ok .v {
   color: #1c8c94;
 }
+.st.upd .v {
+  color: #1c8c94;
+}
 .st.dup .v {
   color: #1c8c94;
 }
-.st.tot .v {
-  color: #1c8c94;
+.st.tot .v,
+.st.tot .l {
+  color: #10501e;
 }
 
+/* ================================
+   VER DETALLES
+=================================*/
 #toggle-btn {
   display: none;
   width: 100%;
@@ -216,6 +253,7 @@ body {
 }
 #toggle-btn:hover {
   color: white;
+  text-decoration: underline;
 }
 #toggle-btn.show {
   display: flex;
@@ -266,6 +304,29 @@ body {
 .lr.ok .t {
   color: rgb(28, 109, 41);
 }
+.lr.upd .t {
+  color: #24788d;
+}
 .lr.dup .t {
   color: #ac6802;
+}
+
+/*================================
+   BOTÓN VOLVER
+=================================*/
+
+#btn-volver {
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  color: white;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+  padding: 15px 21px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 14px;
+  position: fixed;
+  bottom: 25px;
+  right: 35px;
+  text-decoration: none;
 }

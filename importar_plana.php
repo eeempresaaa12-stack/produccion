@@ -64,7 +64,7 @@ function sendProgress($pct, $msg, $extra = '') {
 <title>Importando Maquina Plana</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="./css/estilos-importar.css"> 
+  <link rel="stylesheet" href="./css/estilos_importar.css"> 
 
 </head>
 <body>
@@ -100,6 +100,10 @@ function sendProgress($pct, $msg, $extra = '') {
         <div class="v" id="s-ok">0</div>
         <div class="l">Insertados</div>
       </div>
+      <div class="st upd">
+        <div class="v" id="s-upd">0</div>
+        <div class="l">Actualizados</div>
+      </div>
       <div class="st dup">
         <div class="v" id="s-dup">0</div>
         <div class="l">Duplicados</div>
@@ -132,7 +136,10 @@ function up(pct, msg) {
   document.getElementById('status-lbl').textContent = 'Procesando';
 }
 
-function tick(cur, totalp, ok, dup, msgLog, type) {
+function tick(cur, totalp, ok, upd, dup, msgLog, type) {
+  document.getElementById('s-ok').textContent  = ok;
+  document.getElementById('s-upd').textContent = upd;
+  document.getElementById('s-dup').textContent = dup;
   document.getElementById('counter').textContent = cur + ' / ' + totalp + ' registros';
   var pct = 8 + Math.round((cur / totalp) * 90);
   document.getElementById('fill').style.width = pct + '%';
@@ -149,13 +156,14 @@ function tick(cur, totalp, ok, dup, msgLog, type) {
   log.scrollTop = log.scrollHeight;
 }
 
-function done(ok, dup, totalp) {
+function done(ok, upd, dup, totalp) {
   document.getElementById('fill').style.width = '100%';
   document.getElementById('pct').textContent  = '100';
   document.getElementById('msg').textContent  = 'Importación completada exitosamente';
   document.getElementById('dot').className    = 'dot done';
   document.getElementById('status-lbl').textContent = 'Completado';
   document.getElementById('s-ok').textContent  = ok;
+  document.getElementById('s-upd').textContent = upd;
   document.getElementById('s-dup').textContent = dup;
   document.getElementById('s-tot').textContent = totalp;
   document.getElementById('stats').classList.add('show');
@@ -215,6 +223,7 @@ $turnos = cargarCatalogo($conexion,"TURNOS","nombre_turno","id_turno");
 ===================== */
 $contador   = 0;
 $insertados = 0;
+$actualizados = 0;
 $duplicados = 0;
 
 foreach ($filas as $data) {
@@ -261,27 +270,47 @@ foreach ($filas as $data) {
     }
 
     $sql = "INSERT IGNORE INTO PRODUCCION_PLANA
-        (marca_temporal,fecha_plana,id_operario,id_maquina,id_referencia,id_turno,peso_plana,bultos_plana,retal_plana,total_plana)
-        VALUES ('$marca','$fecha','$id_operario','$id_maquina','$id_referencia','$id_turno','$peso','$bultos','$retal','$total')";
+        (marca_temporal,fecha_plana,id_operario,id_maquina,id_referencia,
+        id_turno,peso_plana,bultos_plana,retal_plana,total_plana)
+          VALUES ('$marca','$fecha','$id_operario','$id_maquina','$id_referencia',
+          '$id_turno','$peso','$bultos','$retal','$total')
+        ON DUPLICATE KEY UPDATE
+          fecha_plana = VALUES(fecha_plana),
+          id_operario = VALUES(id_operario),
+          id_maquina = VALUES(id_maquina),
+          id_referencia = VALUES(id_referencia),
+          id_turno = VALUES(id_turno),
+          peso_plana = VALUES(peso_plana),
+          bultos_plana = VALUES(bultos_plana),
+          retal_plana = VALUES(retal_plana),
+          total_plana = VALUES(total_plana)";
 
     mysqli_query($conexion, $sql);
-    $inserted = mysqli_affected_rows($conexion) > 0;
+    
+    $rows = mysqli_affected_rows($conexion);
+    if ($rows === 1) {
+        $insertados++;
+        $tipo = 'ok';
+        $logMsg = addslashes("✔ Insertado · $fecha");
+    } elseif ($rows === 2) {
+        $actualizados++;
+        $tipo = 'upd';
+        $logMsg = addslashes("↻ Actualizado · $fecha");
+    } else {
+        $duplicados++;
+        $tipo = 'dup';
+        $logMsg = addslashes("↩ Duplicado · $fecha");
+    }
+    
 
-    if ($inserted) $insertados++; else $duplicados++;
-
-    $tipo   = $inserted ? 'ok' : 'dup';
-    $logMsg = $inserted
-        ? addslashes("✔ Insertado · $fecha")
-        : addslashes("↩ Duplicado · $fecha");
-
-    echo "<script>tick($contador,$totalp,$insertados,$duplicados,'$logMsg','$tipo');</script>\n";
+    echo "<script>tick($contador,$totalp,$insertados,$actualizados,$duplicados,'$logMsg','$tipo');</script>\n";
     if (ob_get_level()) ob_flush(); flush();
 }
 
 /* =====================
    FINALIZAR
 ===================== */
-echo "<script>done($insertados,$duplicados,$totalp);</script>\n";
+echo "<script>done($insertados,$actualizados,$duplicados,$totalp);</script>\n";
 if (ob_get_level()) ob_flush(); flush();
 ?>
 

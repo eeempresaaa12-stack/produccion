@@ -75,7 +75,7 @@ function sendProgress($pct, $msg, $extra = '') {
 <title>Importando Rollo</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="./css/estilos-importar.css"> 
+  <link rel="stylesheet" href="./css/estilos_importar.css"> 
 
 </head>
 <body>
@@ -111,6 +111,10 @@ function sendProgress($pct, $msg, $extra = '') {
         <div class="v" id="s-ok">0</div>
         <div class="l">Insertados</div>
       </div>
+      <div class="st upd">
+        <div class="v" id="s-upd">0</div>
+        <div class="l">Actualizados</div>
+      </div>
       <div class="st dup">
         <div class="v" id="s-dup">0</div>
         <div class="l">Duplicados</div>
@@ -143,7 +147,10 @@ function up(pct, msg) {
   document.getElementById('status-lbl').textContent = 'Procesando';
 }
 
-function tick(cur, total, ok, dup, msgLog, type) {
+function tick(cur, total, ok, upd, dup, msgLog, type) {
+  document.getElementById('s-ok').textContent  = ok;
+  document.getElementById('s-upd').textContent = upd;
+  document.getElementById('s-dup').textContent = dup;
   document.getElementById('counter').textContent = cur + ' / ' + total + ' registros';
   var pct = 8 + Math.round((cur / total) * 90);
   document.getElementById('fill').style.width = pct + '%';
@@ -160,13 +167,14 @@ function tick(cur, total, ok, dup, msgLog, type) {
   log.scrollTop = log.scrollHeight;
 }
 
-function done(ok, dup, total) {
+function done(ok, upd, dup, total) {
   document.getElementById('fill').style.width = '100%';
   document.getElementById('pct').textContent  = '100';
   document.getElementById('msg').textContent  = 'Importación completada exitosamente';
   document.getElementById('dot').className    = 'dot done';
   document.getElementById('status-lbl').textContent = 'Completado';
   document.getElementById('s-ok').textContent  = ok;
+  document.getElementById('s-upd').textContent = upd;
   document.getElementById('s-dup').textContent = dup;
   document.getElementById('s-tot').textContent = total;
   document.getElementById('stats').classList.add('show');
@@ -226,6 +234,7 @@ $turnos      = cargarCatalogo($conexion,"TURNOS",      "nombre_turno",     "id_t
 ===================== */
 $contador   = 0;
 $insertados = 0;
+$actualizados = 0;
 $duplicados = 0;
 
 foreach ($filas as $data) {
@@ -271,27 +280,44 @@ foreach ($filas as $data) {
     }
 
     $sql = "INSERT IGNORE INTO PRODUCCION_ROLLO
-        (marca_temporal,fecha_roll,id_maquina,id_referencia,id_color,id_turno,peso_rollo,retal_roll)
-        VALUES ('$marca','$fecha','$id_maquina','$id_referencia','$id_color','$id_turno','$peso_rollo','$retal')";
+        (marca_temporal,fecha_roll,id_maquina,id_referencia,
+        id_color,id_turno,peso_rollo,retal_roll)
+          VALUES ('$marca','$fecha','$id_maquina','$id_referencia',
+          '$id_color','$id_turno','$peso_rollo','$retal')
+        ON DUPLICATE KEY UPDATE
+          fecha_roll    = VALUES(fecha_roll),
+          id_maquina    = VALUES(id_maquina),  
+          id_referencia = VALUES(id_referencia),
+          id_color      = VALUES(id_color),
+          id_turno      = VALUES(id_turno),
+          peso_rollo    = VALUES(peso_rollo),
+          retal_roll    = VALUES(retal_roll)";
 
     mysqli_query($conexion, $sql);
-    $inserted = mysqli_affected_rows($conexion) > 0;
+    
+    $rows = mysqli_affected_rows($conexion);
 
-    if ($inserted) $insertados++; else $duplicados++;
-
-    $tipo   = $inserted ? 'ok' : 'dup';
-    $logMsg = $inserted
-        ? addslashes("✔ Insertado · $fecha")
-        : addslashes("↩ Duplicado · $fecha");
-
-    echo "<script>tick($contador,$total,$insertados,$duplicados,'$logMsg','$tipo');</script>\n";
+    if ($rows === 1) {
+        $insertados++;
+        $tipo = 'ok';
+        $logMsg = addslashes("✔ Insertado · $fecha");
+    } elseif ($rows === 2) {
+        $actualizados++;
+        $tipo = 'upd';
+        $logMsg = addslashes("↻ Actualizado · $fecha");
+    } else {
+        $duplicados++;
+        $tipo = 'dup';
+        $logMsg = addslashes("⚠ Duplicado (ignorado) · $fecha"); 
+    }
+    echo "<script>tick($contador,$total,$insertados,$actualizados,$duplicados,'$logMsg','$tipo');</script>\n";
     if (ob_get_level()) ob_flush(); flush();
 }
 
 /* =====================
    FINALIZAR
 ===================== */
-echo "<script>done($insertados,$duplicados,$total);</script>\n";
+echo "<script>done($insertados,$actualizados,$duplicados,$total);</script>\n";
 if (ob_get_level()) ob_flush(); flush();
 ?>
 

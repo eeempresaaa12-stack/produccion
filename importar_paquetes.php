@@ -17,6 +17,14 @@ define('DB_PASS', 'EagzBrYIJHawioQrQhpqbjYAxXFhMwUU');
 define('DB_NAME', 'CONTROL_PRODUCCION');
 define('DB_PORT', 22573);
 
+$modo = $_GET['modo'] ?? 'nuevos';
+
+$res = mysqli_query($conexion, "SELECT ultima_fecha FROM IMPORTAR WHERE nombre='paquetes'");
+$row = mysqli_fetch_assoc($res);
+$ultima_fecha = $row['ultima_fecha'] ?? '2000-01-01 00:00:00';
+
+
+
 /* =====================
    FUNCIONES
 ===================== */
@@ -33,11 +41,22 @@ function convertirMarca($fecha) {
     $fecha = trim($fecha);
     $f = DateTime::createFromFormat('d/m/Y H:i:s', $fecha);
     if (!$f) $f = DateTime::createFromFormat('d/m/Y G:i:s', $fecha);
+    if (!$f) $f = DateTime::createFromFormat('d/m/Y g:i:s', $fecha);
+    if (!$f) {
+        $fecha = preg_replace('/(\d{2}\/\d{2}\/\d{4}) (\d):/', '$1 0$2:', $fecha);
+        $f = DateTime::createFromFormat('d/m/Y H:i:s', $fecha);
+    }
     return $f ? $f->format('Y-m-d H:i:s') : null;
 }
 
 function convertirFecha($fecha) {
+    $fecha = trim($fecha);
     $f = DateTime::createFromFormat('d/m/Y H:i:s', $fecha);
+    if (!$f) $f = DateTime::createFromFormat('d/m/Y G:i:s', $fecha);
+    if (!$f) {
+        $fecha = preg_replace('/(\d{2}\/\d{2}\/\d{4}) (\d):/', '$1 0$2:', $fecha);
+        $f = DateTime::createFromFormat('d/m/Y H:i:s', $fecha);
+    }
     return $f ? $f->format('Y-m-d H:i:s') : null;
 }
 
@@ -64,7 +83,7 @@ function sendProgress($pct, $msg, $extra = '') {
 <title>Importando Paquetes</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="./css/estilos-importar.css"> 
+  <link rel="stylesheet" href="./css/estilos_importar.css"> 
 
 </head>
 <body>
@@ -93,7 +112,6 @@ function sendProgress($pct, $msg, $extra = '') {
         <span id="pct">0</span><span class="sign">%</span>
       </div>
       <span id="counter">— / — registros</span>
-      <span id="timer">⏱ 0s </span>
     </div>
     
     
@@ -102,6 +120,10 @@ function sendProgress($pct, $msg, $extra = '') {
       <div class="st ok">
         <div class="v" id="s-ok">0</div>
         <div class="l">Insertados</div>
+      </div>
+      <div class="st upd">
+        <div class="v" id="s-upd">0</div>
+        <div class="l">Actualizados</div>
       </div>
       <div class="st dup">
         <div class="v" id="s-dup">0</div>
@@ -125,29 +147,8 @@ function sendProgress($pct, $msg, $extra = '') {
   </div>
 
 </div>
-
+<a id="btn-volver" href="#" onclick="volverAtras(); return false;">← Volver</a>
 <script>
-var _timerStart = null;
-var _timerInterval = null;
-var _totalEstSeg = null;
-
-function startTimer() {
-  _timerStart = Date.now();
-  _timerInterval = setInterval(updateTimer, 1000);
-}
-
-function updateTimer() {
-  if (!_timerStart) return;
-  var elapsed = Math.floor((Date.now() - _timerStart) / 1000);
-  var sufijo  = _totalEstSeg ? 'de ~' + formatTime(_totalEstSeg) : 'de ~...';
-  document.getElementById('timer').textContent = '⏱ ' + formatTime(elapsed) + ' ' + sufijo;
-}
-
-function formatTime(s) {
-  if (s < 60) return s + 's';
-  var m = Math.floor(s / 60), sec = s % 60;
-  return m + 'm ' +(sec < 10 ? '0' : '') + sec + 's';
-}
 
 function up(pct, msg) {
   document.getElementById('fill').style.width   = pct + '%';
@@ -157,23 +158,16 @@ function up(pct, msg) {
   document.getElementById('status-lbl').textContent = 'Procesando';
 }
 
-function tick(cur, total, ok, dup, msgLog, type) {
-  if(cur === 1) startTimer();
-
+function tick(cur, total, ok, upd, dup, msgLog, type) {
+  document.getElementById('s-ok').textContent  = ok;
+  document.getElementById('s-upd').textContent = upd;
+  document.getElementById('s-dup').textContent = dup;
   document.getElementById('counter').textContent = cur + ' / ' + total + ' registros';
   var pct = 8 + Math.round((cur / total) * 90);
   document.getElementById('fill').style.width = pct + '%';
   document.getElementById('pct').textContent  = pct;
   document.getElementById('msg').textContent  =
     'Importando \u2026 (' + cur + '\u202f/\u202f' + total + ')';
-  
-  if (_timerStart && cur == 10) {
-    var elapsed = Math.floor((Date.now() - _timerStart) / 1000);
-    var rate = cur / elapsed;
-    _totalEstSeg = Math.round(total / rate);
-    document.getElementById('timer').textContent =
-      '⏱ ' + formatTime(Math.floor(elapsed)) + ' · de ~' + formatTime(_totalEstSeg);
-  }
      
   var row = document.createElement('div');
   row.className = 'lr ' + type;
@@ -184,10 +178,7 @@ function tick(cur, total, ok, dup, msgLog, type) {
   log.scrollTop = log.scrollHeight;
 }
 
-function done(ok, dup, total) {
-  clearInterval(_timerInterval);
-  var totalSeg = _timerStart ? Math.floor((Date.now() - _timerStart) / 1000) : 0;
-  document.getElementById('timer').textContent = '⏱ ' + formatTime(totalSeg) + ' en total';
+function done(ok, upd,  dup, total) {
 
   document.getElementById('fill').style.width = '100%';
   document.getElementById('pct').textContent  = '100';
@@ -195,15 +186,25 @@ function done(ok, dup, total) {
   document.getElementById('dot').className    = 'dot done';
   document.getElementById('status-lbl').textContent = 'Completado';
   document.getElementById('s-ok').textContent  = ok;
+  document.getElementById('s-upd').textContent = upd;
   document.getElementById('s-dup').textContent = dup;
   document.getElementById('s-tot').textContent = total;
   document.getElementById('stats').classList.add('show');
   document.getElementById('toggle-btn').classList.add('show');
+  document.getElementById('btn-volver').classList.add('show');
 }
 
 function toggleLog() {
   document.getElementById('toggle-btn').classList.toggle('open');
   document.getElementById('log').classList.toggle('open');
+}
+
+function volverAtras() {
+    if (window.history.length > 2) {
+        window.history.back();
+    } else {
+        window.location.href = './paquetes/dashboard.php'; 
+    }
 }
 </script>
 
@@ -220,13 +221,42 @@ if (!$archivo) {
     echo "</body></html>"; exit;
 }
 
-$filas = []; $primera = true;
+$filas = [];
+$primera = true;
+$omitidas = 0;
+
 while (($data = fgetcsv($archivo, 1000, ",")) !== FALSE) {
     if ($primera) { $primera = false; continue; }
+
+    if ($modo === 'nuevos') {
+      $marca_fila = convertirMarca($data[0]);
+      if ($marca_fila !== null && $marca_fila <= $ultima_fecha) {
+          $omitidas++;
+          continue;
+    }
+}
+
     $filas[] = $data;
 }
 fclose($archivo);
 $total = count($filas);
+
+if ($total === 0 && $modo === 'nuevos') {
+    echo "<script>
+      document.getElementById('msg').textContent = 'No hay registros nuevos...';
+      document.getElementById('dot').className = 'dot done';
+      document.getElementById('status-lbl').textContent = 'Completado';
+      document.getElementById('fill').style.width = '100%';
+      document.getElementById('pct').textContent = '100';
+      document.getElementById('counter').textContent = '$omitidas registros importados';
+    </script>\n";
+    if (ob_get_level()) ob_flush(); flush();
+    echo "</body></html>"; exit;
+}
+
+$txt_modo = $modo === 'nuevos'
+    ? "Modo: solo nuevos · $omitidas omitidas · $total a procesar"
+    : "Modo: reimportar todo · $total registros";
 
 // Actualizar UI con total encontrado
 echo "<script>
@@ -255,6 +285,7 @@ $turnos      = cargarCatalogo($conexion,"TURNOS",     "nombre_turno",     "id_tu
 ===================== */
 $contador   = 0;
 $insertados = 0;
+$actualizados = 0;
 $duplicados = 0;
 
 foreach ($filas as $data) {
@@ -276,6 +307,12 @@ foreach ($filas as $data) {
     $id_referencia = $referencias[$referencia] ?? null;
     $id_color      = $colores[$color]          ?? null;
     $id_turno      = $turnos[$turno]           ?? null;
+
+    if ($contador === 1) {
+        echo "<script>console.log('marca raw: " . addslashes($data[0]) . "');</script>\n";
+        echo "<script>console.log('marca convertida: " . ($marca ?? 'NULL') . "');</script>\n";
+        if (ob_get_level()) ob_flush(); flush();
+    }
 
     if(!$id_operario){
         mysqli_query($conexion,"INSERT INTO OPERARIOS(nombre) VALUES('$operario')");
@@ -307,28 +344,72 @@ foreach ($filas as $data) {
         $turnos[$turno] = $id_turno;
     }
 
-    $sql = "INSERT IGNORE INTO PRODUCCION_PAQUETES
-        (marca_temporal,fecha_paq,id_operario,id_maquina,id_referencia,id_color,id_turno,paquetes_paq,observaciones_paq)
-        VALUES ('$marca','$fecha_mysql','$id_operario','$id_maquina','$id_referencia','$id_color','$id_turno','$paquetes','$obs')";
+    if ($modo === 'todo') {
+    $sql = "INSERT INTO PRODUCCION_PAQUETES
+        (marca_temporal,fecha_paq,id_operario,id_maquina,id_referencia,
+         id_color,id_turno,paquetes_paq,observaciones_paq)
+        VALUES ('$marca','$fecha_mysql','$id_operario','$id_maquina',
+                '$id_referencia','$id_color','$id_turno','$paquetes','$obs')
+        ON DUPLICATE KEY UPDATE
+            fecha_paq         = VALUES(fecha_paq),
+            id_operario       = VALUES(id_operario),
+            id_maquina        = VALUES(id_maquina),
+            id_referencia     = VALUES(id_referencia),
+            id_color          = VALUES(id_color),
+            id_turno          = VALUES(id_turno),
+            paquetes_paq      = VALUES(paquetes_paq),
+            observaciones_paq = VALUES(observaciones_paq)";
+    } else {
+        $sql = "INSERT IGNORE INTO PRODUCCION_PAQUETES
+            (marca_temporal,fecha_paq,id_operario,id_maquina,id_referencia,
+            id_color,id_turno,paquetes_paq,observaciones_paq)
+            VALUES ('$marca','$fecha_mysql','$id_operario','$id_maquina',
+                    '$id_referencia','$id_color','$id_turno','$paquetes','$obs')";
+    }
 
     mysqli_query($conexion, $sql);
-    $inserted = mysqli_affected_rows($conexion) > 0;
+    $rows = mysqli_affected_rows($conexion);
+    $inserted = $rows >= 1;
 
-    if ($inserted) $insertados++; else $duplicados++;
+    if ($marca) {
+        if (!isset($nueva_fecha) || $marca > $nueva_fecha) {
+            $nueva_fecha = $marca;
+        }
+    }
+        
+    if ($rows === 1) {
+        $insertados++;
+        $tipo = 'ok';
+        $logMsg = addslashes("✔ Insertado · $fecha");
+    } elseif ($rows === 2) {
+        $actualizados++;
+        $tipo = 'upd';
+        $logMsg = addslashes("↻ Actualizado · $fecha");
+    } else {
+        $duplicados++;
+        $tipo = 'dup';
+        $logMsg = addslashes("⚠ Duplicado (ignorado) · $fecha");
+    }
 
-    $tipo   = $inserted ? 'ok' : 'dup';
-    $logMsg = $inserted
-        ? addslashes("✔ Insertado · $fecha")
-        : addslashes("↩ Duplicado · $fecha");
-
-    echo "<script>tick($contador,$total,$insertados,$duplicados,'$logMsg','$tipo');</script>\n";
+    echo "<script>tick($contador,$total,$insertados,$actualizados,$duplicados,'$logMsg','$tipo');</script>\n";
     if (ob_get_level()) ob_flush(); flush();
 }
 
 /* =====================
    FINALIZAR
 ===================== */
-echo "<script>done($insertados,$duplicados,$total);</script>\n";
+if (!empty($nueva_fecha)) {
+    $sql_upd = "UPDATE IMPORTAR SET ultima_fecha='$nueva_fecha' WHERE nombre='paquetes'";
+    mysqli_query($conexion, $sql_upd);
+    $afectadas = mysqli_affected_rows($conexion);
+    $err = mysqli_error($conexion);
+    echo "<script>console.log('SQL: $sql_upd');</script>\n";
+    echo "<script>console.log('Filas afectadas: $afectadas | Error: $err');</script>\n";
+} else {
+    echo "<script>console.log('nueva_fecha está VACÍA — no se actualizó IMPORTAR');</script>\n";
+}
+
+echo "<script>done($insertados,$actualizados,$duplicados,$total);</script>\n";
 if (ob_get_level()) ob_flush(); flush();
 ?>
 
