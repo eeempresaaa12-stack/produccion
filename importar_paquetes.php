@@ -19,7 +19,7 @@ define('DB_PORT', 22573);
 
 $modo = $_GET['modo'] ?? 'nuevos';
 
-$res = mysqli_query($conexion, "SELECT ultima_fecha FROM IMPORTAR WHERE nombre = 'rollo'");
+$res = mysqli_query($conexion, "SELECT ultima_fecha FROM IMPORTAR WHERE nombre = 'paquetes'");
 $row = mysqli_fetch_assoc($res);
 $ultima_fecha = $row['ultima_fecha'] ?? null;
 
@@ -228,11 +228,6 @@ $omitidas = 0;
 while (($data = fgetcsv($archivo, 1000, ",")) !== FALSE) {
     if ($primera) { $primera = false; continue; }
 
-    if (count($filas) === 0) {
-    $marca_test = convertirMarca($data[0]);
-    echo "<script>console.log('CSV raw: " . addslashes($data[0]) . " | Convertida: " . ($marca_test ?? 'NULL') . " | ultima: $ultima_fecha');</script>\n";
-    if (ob_get_level()) ob_flush(); flush();
-}
     if ($modo === 'nuevos') {
       $marca_fila = convertirMarca($data[0]);
       if ($marca_fila === null || $marca_fila <= $ultima_fecha) {
@@ -403,13 +398,15 @@ foreach ($filas as $data) {
 /* =====================
    FINALIZAR
 ===================== */
-if (!empty($nueva_fecha) && $nueva_fecha > $ultima_fecha) {
-    $sql_upd = "UPDATE IMPORTAR SET ultima_fecha='$nueva_fecha' WHERE nombre='paquetes'";
-    mysqli_query($conexion, $sql_upd);
-    $afectadas = (int)mysqli_affected_rows($conexion);
-    echo "<script>console.log('Fecha guardada: $nueva_fecha | Filas: $afectadas');</script>\n";
+if (!empty($nueva_fecha)) {
+  $sql_upd = "UPDATE IMPORTAR SET ultima_fecha = '$nueva_fecha' WHERE nombre = 'paquetes'";
+  mysqli_query($conexion, $sql_upd);
+  $afectadas = mysqli_affected_rows($conexion);
+  $err_js = addslashes(mysqli_error($conexion));
+  echo "<script>console.log('SQL: $sql_upd');</script>\n";
+  echo "<script>console.log('Filas afectadas: $afectadas || Error: $err_js');</script>\n";
 } else {
-    echo "<script>console.log('Sin fecha nueva que guardar');</script>\n";
+  echo "<script>console.log('nueva_fecha esta VACÍA — no se actualizó IMPORTAR');</script>\n";
 }
 
 echo "<script>done($insertados,$actualizados,$duplicados,$total);</script>\n";
