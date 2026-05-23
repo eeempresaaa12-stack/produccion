@@ -388,7 +388,13 @@ $res_tabla_maquina = mysqli_query($conexion,$sql_tabla_maquina);
 
 <!-- BOTON PARA IMPORTAR DATOS DE GOOGLEEEEE -->
 
-<a class="btn" id="btnImportar" href="http://localhost/CONTROL_PRODUCCION/importar_rollo.php" target="_blank">Importar Producción</a>
+<a class="btn" id="btnImportar" onclick="abrirModal()">Importar Producción</a>
+
+<?php
+$res_importar = mysqli_query($conexion, "SELECT ultima_fecha FROM IMPORTAR WHERE nombre = 'rollo'");
+$row_importar = mysqli_fetch_assoc($res_importar);
+$ultima_fecha = $row_importar['ultima_fecha'] ?? 'Nunca';
+?>
 
 <!-- GRAFICOSS -->
 
@@ -585,18 +591,36 @@ $total_neto += $row['neto'];
     </div>
 </div>
 
-
-<!---------------------------------------------->
-<!--------------- GRAFICOOOOSSS --------------->
-<!---------------------------------------------->
-
-<!---------------------------------------------------------->
-<!-- GRAFICO PRODUCCION, OPERARIO, PRODUCCION POR REFERENCIA Y POR AÑO -->
-<!---------------------------------------------------------->
+<!-- MODAL DE IMPORTACION -->
+ <div class="overlay" id ="modalImportar">
+    <div class="modal">
+        
+        <div class="modal-header">
+            <h2>Importar Rollo</h2>
+            <p>Última importación: <strong><?php echo $ultima_fecha; ?></strong></p>
+            <button id="cerrarBtn" onclick="cerrarModal()">X</button>
+        </div>
+        <div class="btn-row">
+            <a class="btn-nuevos" href="../importar_rollo.php?modo=nuevos" >
+                <div class="btn-text"><span class="btn-icon">🗲</span>Importar Nuevos<span class="btn-arrow">›</span></div>
+            </a>
+            <a class="btn-todo" href="../importar_rollo.php?modo=todo" >
+                <div class="btn-text"><span class="btn-icon">⟳</span>Reimportar Todo<span class="btn-arrow">›</span></div>
+            </a>
+        </div>  
+    </div>
+ </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+function abrirModal(){
+    document.getElementById("modalImportar").style.display = "flex";
+}
+
+function cerrarModal(){
+    document.getElementById("modalImportar").style.display = "none";
+}
 
 let chartProduccion;
 let chartOperarios;

@@ -18,6 +18,12 @@ define('DB_PASS', 'EagzBrYIJHawioQrQhpqbjYAxXFhMwUU');
 define('DB_NAME', 'CONTROL_PRODUCCION');
 define('DB_PORT', 22573);
 
+$modo = $_GET['modo'] ?? 'nuevos';
+
+$res = mysqli_query($conexion, "SELECT ultima_fecha FROM IMPORTAR WHERE nombre='plana'");
+$row = mysqli_fetch_assoc($res);
+$ultima_fecha = $row['ultima_fecha'] ?? '2000-01-01 00:00:00';
+
 /* =========================
 FUNCIONES
 ========================= */
@@ -32,12 +38,25 @@ function convertirNumero($valor){
 }
 
 function convertirMarca($fecha){
-    $f = DateTime::createFromFormat('d/m/Y H:i:s', trim($fecha));
+    $fecha = trim($fecha);
+    $f = DateTime::createFromFormat('d/m/Y H:i:s', $fecha);
+    if (!$f) $f = DateTime::createFromFormat('d/m/Y G:i:s', $fecha);
+    if (!$f) $f = DateTime::createFromFormat('d/m/Y g:i:s', $fecha);
+    if (!$f) {
+        $fecha = preg_replace('/(\d{2}\/\d{2}\/\d{4}) (\d):/', '$1 0$2:', $fecha);
+        $f = DateTime::createFromFormat('d/m/Y H:i:s', $fecha);
+    }
     return $f ? $f->format('Y-m-d H:i:s') : null;
 }
 
 function convertirFecha($fecha){
-    $f = DateTime::createFromFormat('d/m/Y H:i:s', trim($fecha));
+    $fecha = trim($fecha);
+    $f = DateTime::createFromFormat('d/m/Y H:i:s', $fecha);
+    if (!$f) $f = DateTime::createFromFormat('d/m/Y G:i:s', $fecha);
+    if (!$f) {
+        $fecha = preg_replace('/(\d{2}\/\d{2}\/\d{4}) (\d):/', '$1 0$2:', $fecha);
+        $f = DateTime::createFromFormat('d/m/Y H:i:s', $fecha);
+    }
     return $f ? $f->format('Y-m-d H:i:s') : null;
 }
 
@@ -126,7 +145,7 @@ function sendProgress($pct, $msg, $extra = '') {
   </div>
 
 </div>
-
+<a id="btn-volver" href="#" onclick="volverAtras(); return false;">← Volver</a>
 <script>
 function up(pct, msg) {
   document.getElementById('fill').style.width   = pct + '%';
@@ -146,7 +165,7 @@ function tick(cur, totalp, ok, upd, dup, msgLog, type) {
   document.getElementById('pct').textContent  = pct;
   document.getElementById('msg').textContent  =
     'Importando \u2026 (' + cur + '\u202f/\u202f' + totalp + ')';
-  // Log
+  
   var row = document.createElement('div');
   row.className = 'lr ' + type;
   row.innerHTML = '<span class="n">' + cur + '</span>'
@@ -168,11 +187,20 @@ function done(ok, upd, dup, totalp) {
   document.getElementById('s-tot').textContent = totalp;
   document.getElementById('stats').classList.add('show');
   document.getElementById('toggle-btn').classList.add('show');
+  document.getElementById('btn-volver').classList.add('show');
 }
 
 function toggleLog() {
   document.getElementById('toggle-btn').classList.toggle('open');
   document.getElementById('log').classList.toggle('open');
+}
+
+function volverAtras() {
+    if (window.history.length > 2) {
+        window.history.back();
+    } else {
+        window.location.href = './paquetes/dashboard.php'; 
+    }
 }
 </script>
 
@@ -185,19 +213,49 @@ if (!$archivo) {
       document.getElementById('msg').textContent = 'Error: no se pudo abrir el Google Sheet';
       document.getElementById('dot').className = 'dot error';
       document.getElementById('status-lbl').textContent = 'Error';
+      document.getElementById('btn-volver').classList.add('show');
     </script>";
     echo "</body></html>"; exit;
 }
 
-$filas = []; $primera = true;
+$filas = []; 
+$primera = true;
+$omitidas = 0;
 while (($data = fgetcsv($archivo, 1000, ",")) !== FALSE) {
     if ($primera) { $primera = false; continue; }
+
+    if ($modo === 'nuevos') {
+      $marca_fila = convertirMarca($data[0]);
+      if ($marca_fila === null || $marca_fila <= $ultima_fecha) {
+          $omitidas++;
+          continue;
+      }
+    }
+
     $filas[] = $data;
 }
+
 fclose($archivo);
 $totalp = count($filas);
 
-// Actualizar UI con total encontrado
+if ($totalp === 0 && $modo === 'nuevos') {
+    echo "<script>
+      document.getElementById('msg').textContent = 'No hay registros nuevos...';
+      document.getElementById('dot').className = 'dot done';
+      document.getElementById('status-lbl').textContent = 'Completado';
+      document.getElementById('fill').style.width = '100%';
+      document.getElementById('pct').textContent = '100';
+      document.getElementById('counter').textContent = '$omitidas registros importados';
+      document.getElementById('btn-volver').classList.add('show');
+    </script>";
+    if (ob_get_level()) ob_flush(); flush();
+    echo "</body></html>"; exit;
+}
+
+$txt_modo = $modo === 'nuevos' 
+    ? "Modo: solo nuevos · $omitidas omitidas · $totalp a procesar"
+    : "Modo: reimportar todo · $totalp registros";
+
 echo "<script>
   document.getElementById('dot').className = 'dot';
   document.getElementById('msg').textContent = 'Conexión OK · $totalp registros encontrados';
@@ -245,6 +303,11 @@ foreach ($filas as $data) {
     $id_referencia = $referencias[$referencia] ?? null;
     $id_turno = $turnos[$turno] ?? null;
 
+    if ($contador === 1) {
+        echo "<script>console.log('marca raw: " . addslashes($data[0]) . "');</script>\n";
+        echo "<script>console.log('marca convertida: " . ($marca ?? 'NULL') . "');</script>\n";
+        if (ob_get_level()) ob_flush(); flush();
+    } 
     if(!$id_operario){
         mysqli_query($conexion,"INSERT INTO OPERARIOS(nombre) VALUES('$operario')");
         $id_operario = mysqli_insert_id($conexion);
@@ -269,25 +332,40 @@ foreach ($filas as $data) {
         $turnos[$turno] = $id_turno;
     }
 
-    $sql = "INSERT IGNORE INTO PRODUCCION_PLANA
-        (marca_temporal,fecha_plana,id_operario,id_maquina,id_referencia,
-        id_turno,peso_plana,bultos_plana,retal_plana,total_plana)
-          VALUES ('$marca','$fecha','$id_operario','$id_maquina','$id_referencia',
-          '$id_turno','$peso','$bultos','$retal','$total')
-        ON DUPLICATE KEY UPDATE
-          fecha_plana = VALUES(fecha_plana),
-          id_operario = VALUES(id_operario),
-          id_maquina = VALUES(id_maquina),
-          id_referencia = VALUES(id_referencia),
-          id_turno = VALUES(id_turno),
-          peso_plana = VALUES(peso_plana),
-          bultos_plana = VALUES(bultos_plana),
-          retal_plana = VALUES(retal_plana),
-          total_plana = VALUES(total_plana)";
+    if ($modo === 'todo') {
+      $sql = "INSERT INTO PRODUCCION_PLANA
+          (marca_temporal,fecha_plana,id_operario,id_maquina,id_referencia,
+          id_turno,peso_plana,bultos_plana,retal_plana,total_plana)
+            VALUES ('$marca','$fecha','$id_operario','$id_maquina','$id_referencia',
+                    '$id_turno','$peso','$bultos','$retal','$total')
+          ON DUPLICATE KEY UPDATE
+            fecha_plana = VALUES(fecha_plana),
+            id_operario = VALUES(id_operario),
+            id_maquina = VALUES(id_maquina),
+            id_referencia = VALUES(id_referencia),
+            id_turno = VALUES(id_turno),
+            peso_plana = VALUES(peso_plana),
+            bultos_plana = VALUES(bultos_plana),
+            retal_plana = VALUES(retal_plana),
+            total_plana = VALUES(total_plana)";
+    } else {
+      $sql = "INSERT IGNORE INTO PRODUCCION_PLANA
+          (marca_temporal,fecha_plana,id_operario,id_maquina,id_referencia,
+          id_turno,peso_plana,bultos_plana,retal_plana,total_plana)
+            VALUES ('$marca','$fecha','$id_operario','$id_maquina','$id_referencia',
+                    '$id_turno','$peso','$bultos','$retal','$total')";
+    }
 
     mysqli_query($conexion, $sql);
-    
     $rows = mysqli_affected_rows($conexion);
+    $inserted = $rows >= 1;
+
+    if ($marca) {
+      if (!isset($nueva_fecha) || $marca > $nueva_fecha) {
+          $nueva_fecha = $marca;
+      }
+    }
+
     if ($rows === 1) {
         $insertados++;
         $tipo = 'ok';
@@ -310,6 +388,17 @@ foreach ($filas as $data) {
 /* =====================
    FINALIZAR
 ===================== */
+if (!empty($nueva_fecha)) {
+  $sql_upd = "UPDATE IMPORTAR SET ultima_fecha = '$nueva_fecha' WHERE nombre = 'plana'";
+  mysqli_query($conexion, $sql_upd);
+  $afectadas = mysqli_affected_rows($conexion);
+  $err_js = addslashes(mysqli_error($conexion));
+  echo "<script>console.log('SQL: $sql_upd');</script>\n";
+  echo "<script>console.log('Filas afectadas: $afectadas || Error: $err_js');</script>\n";
+} else {
+  echo "<script>console.log('nueva_fecha esta VACÍA — no se actualizó IMPORTAR');</script>\n";
+}
+
 echo "<script>done($insertados,$actualizados,$duplicados,$totalp);</script>\n";
 if (ob_get_level()) ob_flush(); flush();
 ?>

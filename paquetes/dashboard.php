@@ -114,7 +114,6 @@ if(!$res_dias){
     $mejor_dia = ["fecha"=>"Sin datos","total"=>0];
     $peor_dia = ["fecha"=>"Sin datos","total"=>0];
 } else {
-
     $mejor_dia = null;
     $peor_dia = null;
 
@@ -123,20 +122,16 @@ if(!$res_dias){
     if(!$mejor_dia || $row['total'] > $mejor_dia['total']){
         $mejor_dia = $row;
     }
-
     if(!$peor_dia || $row['total'] < $peor_dia['total']){
         $peor_dia = $row;
     }
 }
-
 if(!$mejor_dia){
     $mejor_dia = ["fecha"=>"Sin datos","total"=>0];
 }
-
 if(!$peor_dia){
     $peor_dia = ["fecha"=>"Sin datos","total"=>0];
 }
-
 }
 
 /* MEJOR Y PEOR DIA MES ANTERIOR */
@@ -386,9 +381,9 @@ $res_tabla_operario = mysqli_query($conexion,$sql_tabla_operario);
 <a class="btn" id="btnImportar" onclick="abrirModal()">Importar Producción</a>
 
 <?php
-$res = mysqli_query($conexion, "SELECT ultima_fecha FROM IMPORTAR WHERE nombre='paquetes'");
-$row = mysqli_fetch_assoc($res);
-$ultima_fecha = $row['ultima_fecha'] ?? 'Nunca';
+$res_importar = mysqli_query($conexion, "SELECT ultima_fecha FROM IMPORTAR WHERE nombre = 'paquetes'");
+$row_importar = mysqli_fetch_assoc($res_importar);
+$ultima_fecha = $row_importar['ultima_fecha'] ?? 'Nunca';
 ?>
 
 <!-- GRAFICOSS -->
@@ -581,7 +576,7 @@ $total_operario += $row['total'];
                 <div class="btn-text"><span class="btn-icon">🗲</span>Importar Nuevos<span class="btn-arrow">›</span></div>
             </a>
             <a class="btn-todo" href="../importar_paquetes.php?modo=todo">
-                <div class="btn-text"><span class="btn-icon">↻</span>Reimportar Todo<span class="btn-arrow">›</span></div>
+                <div class="btn-text"><span class="btn-icon">⟳</span>Reimportar Todo<span class="btn-arrow">›</span></div>
             </a>
         </div>
     </div>
@@ -597,8 +592,6 @@ function abrirModal(){
 function cerrarModal(){
     document.getElementById('modalImportar').style.display = 'none';
 }
-
-
 
 let chartProduccion;
 let chartOperarios;

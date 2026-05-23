@@ -19,12 +19,12 @@ define('DB_PORT', 22573);
 
 $modo = $_GET['modo'] ?? 'nuevos';
 
-$res = mysqli_query($conexion, "SELECT ultima_fecha FROM IMPORTAR WHERE nombre='paquetes'");
+$res = mysqli_query($conexion, "SELECT ultima_fecha FROM IMPORTAR WHERE nombre = 'rollo'");
 $row = mysqli_fetch_assoc($res);
-$ultima_fecha = $row['ultima_fecha'] ?? '2000-01-01 00:00:00';
+$ultima_fecha = $row['ultima_fecha'] ?? null;
 
-
-
+echo "<script>console.log('ultima_fecha leida: $ultima_fecha');</script>\n";
+if (ob_get_level()) ob_flush(); flush();
 /* =====================
    FUNCIONES
 ===================== */
@@ -179,7 +179,6 @@ function tick(cur, total, ok, upd, dup, msgLog, type) {
 }
 
 function done(ok, upd,  dup, total) {
-
   document.getElementById('fill').style.width = '100%';
   document.getElementById('pct').textContent  = '100';
   document.getElementById('msg').textContent  = 'Importación completada exitosamente';
@@ -217,6 +216,7 @@ if (!$archivo) {
       document.getElementById('msg').textContent = 'Error: no se pudo abrir el Google Sheet';
       document.getElementById('dot').className = 'dot error';
       document.getElementById('status-lbl').textContent = 'Error';
+      document.getElementById('btn-volver').classList.add('show');
     </script>";
     echo "</body></html>"; exit;
 }
@@ -228,13 +228,18 @@ $omitidas = 0;
 while (($data = fgetcsv($archivo, 1000, ",")) !== FALSE) {
     if ($primera) { $primera = false; continue; }
 
+    if (count($filas) === 0) {
+    $marca_test = convertirMarca($data[0]);
+    echo "<script>console.log('CSV raw: " . addslashes($data[0]) . " | Convertida: " . ($marca_test ?? 'NULL') . " | ultima: $ultima_fecha');</script>\n";
+    if (ob_get_level()) ob_flush(); flush();
+}
     if ($modo === 'nuevos') {
       $marca_fila = convertirMarca($data[0]);
-      if ($marca_fila !== null && $marca_fila <= $ultima_fecha) {
+      if ($marca_fila === null || $marca_fila <= $ultima_fecha) {
           $omitidas++;
           continue;
+      }
     }
-}
 
     $filas[] = $data;
 }
@@ -249,6 +254,7 @@ if ($total === 0 && $modo === 'nuevos') {
       document.getElementById('fill').style.width = '100%';
       document.getElementById('pct').textContent = '100';
       document.getElementById('counter').textContent = '$omitidas registros importados';
+      document.getElementById('btn-volver').classList.add('show');
     </script>\n";
     if (ob_get_level()) ob_flush(); flush();
     echo "</body></html>"; exit;
@@ -258,7 +264,6 @@ $txt_modo = $modo === 'nuevos'
     ? "Modo: solo nuevos · $omitidas omitidas · $total a procesar"
     : "Modo: reimportar todo · $total registros";
 
-// Actualizar UI con total encontrado
 echo "<script>
   document.getElementById('dot').className = 'dot';
   document.getElementById('msg').textContent = 'Conexión OK · $total registros encontrados';
@@ -345,20 +350,20 @@ foreach ($filas as $data) {
     }
 
     if ($modo === 'todo') {
-    $sql = "INSERT INTO PRODUCCION_PAQUETES
-        (marca_temporal,fecha_paq,id_operario,id_maquina,id_referencia,
-         id_color,id_turno,paquetes_paq,observaciones_paq)
-        VALUES ('$marca','$fecha_mysql','$id_operario','$id_maquina',
-                '$id_referencia','$id_color','$id_turno','$paquetes','$obs')
-        ON DUPLICATE KEY UPDATE
-            fecha_paq         = VALUES(fecha_paq),
-            id_operario       = VALUES(id_operario),
-            id_maquina        = VALUES(id_maquina),
-            id_referencia     = VALUES(id_referencia),
-            id_color          = VALUES(id_color),
-            id_turno          = VALUES(id_turno),
-            paquetes_paq      = VALUES(paquetes_paq),
-            observaciones_paq = VALUES(observaciones_paq)";
+      $sql = "INSERT INTO PRODUCCION_PAQUETES
+          (marca_temporal,fecha_paq,id_operario,id_maquina,id_referencia,
+          id_color,id_turno,paquetes_paq,observaciones_paq)
+          VALUES ('$marca','$fecha_mysql','$id_operario','$id_maquina',
+                  '$id_referencia','$id_color','$id_turno','$paquetes','$obs')
+          ON DUPLICATE KEY UPDATE
+              fecha_paq         = VALUES(fecha_paq),
+              id_operario       = VALUES(id_operario),
+              id_maquina        = VALUES(id_maquina),
+              id_referencia     = VALUES(id_referencia),
+              id_color          = VALUES(id_color),
+              id_turno          = VALUES(id_turno),
+              paquetes_paq      = VALUES(paquetes_paq),
+              observaciones_paq = VALUES(observaciones_paq)";
     } else {
         $sql = "INSERT IGNORE INTO PRODUCCION_PAQUETES
             (marca_temporal,fecha_paq,id_operario,id_maquina,id_referencia,
@@ -398,15 +403,13 @@ foreach ($filas as $data) {
 /* =====================
    FINALIZAR
 ===================== */
-if (!empty($nueva_fecha)) {
+if (!empty($nueva_fecha) && $nueva_fecha > $ultima_fecha) {
     $sql_upd = "UPDATE IMPORTAR SET ultima_fecha='$nueva_fecha' WHERE nombre='paquetes'";
     mysqli_query($conexion, $sql_upd);
-    $afectadas = mysqli_affected_rows($conexion);
-    $err = mysqli_error($conexion);
-    echo "<script>console.log('SQL: $sql_upd');</script>\n";
-    echo "<script>console.log('Filas afectadas: $afectadas | Error: $err');</script>\n";
+    $afectadas = (int)mysqli_affected_rows($conexion);
+    echo "<script>console.log('Fecha guardada: $nueva_fecha | Filas: $afectadas');</script>\n";
 } else {
-    echo "<script>console.log('nueva_fecha está VACÍA — no se actualizó IMPORTAR');</script>\n";
+    echo "<script>console.log('Sin fecha nueva que guardar');</script>\n";
 }
 
 echo "<script>done($insertados,$actualizados,$duplicados,$total);</script>\n";
