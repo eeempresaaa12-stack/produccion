@@ -48,15 +48,29 @@ function convertirMarca($fecha){
     return $f ? $f->format('Y-m-d H:i:s') : null;
 }
 
-function convertirFecha($fecha) {
+function convertirFecha($fecha){
     $fecha = trim($fecha);
-    $f = DateTime::createFromFormat('d/m/Y H:i:s', $fecha);
-    if (!$f) $f = DateTime::createFromFormat('d/m/Y G:i:s', $fecha);
-    if (!$f) {
-        $fecha = preg_replace('/(\d{2}\/\d{2}\/\d{4}) (\d):/', '$1 0$2:', $fecha);
-        $f = DateTime::createFromFormat('d/m/Y H:i:s', $fecha);
+    if(empty($fecha)){
+        return null;
     }
-    return $f ? $f->format('Y-m-d H:i:s') : null;
+    $fecha = preg_replace('/\s+/', ' ', $fecha);
+    $formatos = [
+        'j/n/Y',
+        'd/m/Y',
+        'j/n/Y G:i:s',
+        'j/n/Y H:i:s',
+        'd/m/Y G:i:s',
+        'd/m/Y H:i:s'
+    ];
+    foreach($formatos as $formato){
+
+        $f = DateTime::createFromFormat($formato, $fecha);
+
+        if($f !== false){
+            return $f->format('Y-m-d');
+        }
+    }
+    return null;
 }
 
 function convertirNumero($valor){

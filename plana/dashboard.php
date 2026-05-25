@@ -708,7 +708,7 @@ $total_neto += $row['neto'];
         
         <div class="modal-header">
             <h2>Importar Plana</h2>
-            <p>Última importación: <strong><?php echo $ultima_fecha; ?></strong></p>
+            <p>Última Fecha Importada: <strong><?php echo $ultima_fecha; ?></strong></p>
             <button id="cerrarBtn" onclick="cerrarModal()">X</button>
         </div>
         <div class="btn-row">
