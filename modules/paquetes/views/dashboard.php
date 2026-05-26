@@ -166,7 +166,7 @@ include("../../../templates/header.php");
 
 <!-- BOTON PARA IMPORTAR DATOS DE GOOGLEEEEE -->
 
-<a class="btn" id="btnImportar" onclick="abrirModal(modalImportar)">Importar Producción</a>
+<a class="btn" id="btnImportar" onclick="abrirModal('modalImportar')">Importar Producción</a>
 
 <!-- GRAFICOSS -->
 
@@ -342,7 +342,7 @@ $total_operario += $row['total'];
         <a class="btn" href="lista.php">Ver Historial</a>
         <a class="btn" href="../../../index.php">Volver al menú</a>
     </div>
-
+</div>
 
 <!-- MODAL DE IMPORTACION -->
 <div class="overlay" id="modalImportar">
@@ -351,18 +351,17 @@ $total_operario += $row['total'];
         <div class="modal-header">
             <h2>Importar Paquetes</h2>
             <p>Última Fecha Importada: <strong><?php echo $ultima_fecha; ?></strong></p>
-            <button id="cerrarBtn" onclick="cerrarModal(modalImportar)">X</button>
+            <button id="cerrarBtn" onclick="cerrarModal('modalImportar')">X</button>
         </div>
         <div class="btn-row">
-            <a class="btn-nuevos" href="../importar_paquetes.php?modo=nuevos">
+            <a class="btn-nuevos" href="../../../importar/controllers/imp_paquetes.php?modo=nuevos">
                 <div class="btn-text"><span class="btn-icon">🗲</span>Importar Nuevos<span class="btn-arrow">›</span></div>
             </a>
-            <a class="btn-todo" href="../importar_paquetes.php?modo=todo">
+            <a class="btn-todo" href="../../../importar/controllers/imp_paquetes.php?modo=todo">
                 <div class="btn-text"><span class="btn-icon">⟳</span>Reimportar Todo<span class="btn-arrow">›</span></div>
             </a>
         </div>
     </div>
-</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

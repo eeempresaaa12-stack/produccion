@@ -13,8 +13,6 @@ $tipo = $filtros['tipo'];
 $mes = $filtros['mes'];
 $semana = $filtros['semana'];
 
-/* ===== PRODUCCION POR DIA ===== */
-
 if($tipo == "semana"){
     if($semana == ""){
         $sql = "SELECT DATE(fecha_paq) fecha, SUM(paquetes_paq) total
@@ -56,8 +54,6 @@ while($row = mysqli_fetch_assoc($res)){
     $fechas[] = $row['fecha'];
     $totales[] = $row['total'];
 }
-
-/* ===== PRODUCCION POR OPERARIO ===== */
 
 if($tipo == "semana"){
 

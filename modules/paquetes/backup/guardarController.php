@@ -9,7 +9,6 @@ $id_maquina = $_POST['id_maquina'];
 $id_referencia = $_POST['id_referencia'];
 $id_turno = $_POST['id_turno'];
 $id_color = $_POST['id_color'];
-
 $paquetes = $_POST['paquetes_paq'];
 $observaciones = $_POST['observaciones_paq'];
 

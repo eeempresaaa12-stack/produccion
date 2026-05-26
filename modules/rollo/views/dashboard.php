@@ -25,15 +25,16 @@
 /** @var mysqli $conexion */
 /** @var mysqli_result $res_tabla_fecha */
 /** @var mysqli_result $res_tabla_maquina */
+/** @var string $ultima_fecha */
 
-include("../../../templates/header.php");
 require_once("../controllers/dashboardController.php");
+include("../../../templates/header.php");
 ?>
 
 <!-- /* CONTENEDOR PRINCIPAL */ -->
 <div class="container">
 
-<h2 class="titulo-vista">Producción por Rollo</h2>
+<h2 class="titulo-vista">Producción Rollo</h2>
 
 <div class="kpis">
 
@@ -169,13 +170,7 @@ require_once("../controllers/dashboardController.php");
 
 <!-- BOTON PARA IMPORTAR DATOS DE GOOGLEEEEE -->
 
-<a class="btn" id="btnImportar" onclick="abrirModal()">Importar Producción</a>
-
-<?php
-$res_importar = mysqli_query($conexion, "SELECT ultima_fecha FROM IMPORTAR WHERE nombre = 'rollo'");
-$row_importar = mysqli_fetch_assoc($res_importar);
-$ultima_fecha = $row_importar['ultima_fecha'] ?? 'Nunca';
-?>
+<a class="btn" id="btnImportar" onclick="abrirModal('modalImportar')">Importar Producción</a>
 
 <!-- GRAFICOSS -->
 
@@ -368,7 +363,7 @@ $total_neto += $row['neto'];
     <div class="acciones">
         <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSch9DWsxKlht9EWeGYErV7ZpUKCQ0anjesuLoku87wk8ds8Bw/viewform?usp=dialog" target="_blank">Registrar Producción</a>
         <a class="btn" href="lista.php">Ver Historial</a>
-        <a class="btn" href="../index.php">Volver al menú</a>
+        <a class="btn" href="../../../index.php">Volver al menú</a>
     </div>
 </div>
 
@@ -379,13 +374,13 @@ $total_neto += $row['neto'];
         <div class="modal-header">
             <h2>Importar Rollo</h2>
             <p>Última Fecha Importada: <strong><?php echo $ultima_fecha; ?></strong></p>
-            <button id="cerrarBtn" onclick="cerrarModal()">X</button>
+            <button id="cerrarBtn" onclick="cerrarModal('modalImportar')">X</button>
         </div>
         <div class="btn-row">
-            <a class="btn-nuevos" href="../importar_rollo.php?modo=nuevos" >
+            <a class="btn-nuevos" href="../../../importar/controllers/imp_rollo.php?modo=nuevos" >
                 <div class="btn-text"><span class="btn-icon">🗲</span>Importar Nuevos<span class="btn-arrow">›</span></div>
             </a>
-            <a class="btn-todo" href="../importar_rollo.php?modo=todo" >
+            <a class="btn-todo" href="../../../importar/controllers/imp_rollo.php?modo=todo" >
                 <div class="btn-text"><span class="btn-icon">⟳</span>Reimportar Todo<span class="btn-arrow">›</span></div>
             </a>
         </div>  
@@ -394,175 +389,7 @@ $total_neto += $row['neto'];
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-function abrirModal(){
-    document.getElementById("modalImportar").style.display = "flex";
-}
-
-function cerrarModal(){
-    document.getElementById("modalImportar").style.display = "none";
-}
-
-let chartProduccion;
-let chartOperarios;
-
-function cargarDatos(tipo){
-    let mes = document.getElementById("filtroMes").value;
-    let semana = document.getElementById("filtroSemana").value;
-
-    fetch("get_produccion_rollo.php?tipo=" + tipo + "&mes=" + mes + "&semana=" + semana)
-    .then(res => res.json())
-    .then(data => {
-
-        if(chartProduccion) chartProduccion.destroy();
-
-        const tipo_grafico = (tipo === 'anio') ? 'bar' : 'line';
-
-        chartProduccion = new Chart(document.getElementById('graficoProduccion'), {
-            type: tipo_grafico,
-            data: {
-                labels: data.fechas,
-                datasets: [{
-                        label: 'Producción (kg)',
-                        data: data.totales,
-                        tension: 0.3
-                    },
-                    {
-                        label: 'Retal (kg)',
-                        data: data.retales,
-                        tension: 0.3
-                    }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                }
-            }
-        });
-
-        /* MAQUINAS */
-
-// ORDENA MAQUINAS DE MAYOR A MENOR
-        let maquinasOrdenadas = data.operarios.map((maq, i) => ({
-            maquina: maq,
-            total: data.totales_operarios[i]
-        }));
-
-        maquinasOrdenadas.sort((a,b) => b.total - a.total);
-
-        let labelsMaquinas = maquinasOrdenadas.map(m => m.maquina);
-        let datosMaquinas = maquinasOrdenadas.map(m => m.total);
-
-        if(chartOperarios) chartOperarios.destroy();
-
-        chartOperarios = new Chart(document.getElementById('graficoOperarios'), {
-            type: 'bar',
-            data: {
-                labels: labelsMaquinas,
-                datasets: [{
-                    label: 'Producción por máquina',
-                    data: datosMaquinas,
-                    maxBarThickness: 40
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
-    });
-}
-cargarDatos('semana')
-
-let chartMeses;
-
-function cargarGraficoMeses(){
-
-    let anio = document.getElementById("filtroAnioMes").value;
-
-    fetch(`get_produccion_meses_rollo.php?anio=${anio}`)
-    .then(res => res.json())
-    .then(data => {
-
-        if(chartMeses) chartMeses.destroy();
-
-        const nombresMeses = [
-            "Ene","Feb","Mar","Abr","May","Jun",
-            "Jul","Ago","Sep","Oct","Nov","Dic"
-        ];
-
-        chartMeses = new Chart(document.getElementById('graficoMeses'), {
-            type: 'bar',
-            data: {
-                labels: data.meses.map(m => nombresMeses[m-1]),
-                datasets: [{
-                    label: 'Producción mensual (kg)',
-                    data: data.totales
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-
-                plugins: {
-                    legend: {
-                        labels: {
-                            font: {
-                                size: 12
-                            }
-                        }
-                    },
-                    tooltip: {
-                        bodyFont: {
-                            size: 12
-                        },
-                        titleFont: {
-                            size: 12
-                        }
-                    }
-                },
-
-                scales: {
-                    x: {
-                        ticks: {
-                            font: {
-                                size: 13
-                            }
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            font: {
-                                size: 13
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-    });
-    
-    fetch(`get_total_anio_rollo.php?anio=${anio}`)
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById("totalAnio").innerText =
-            "Total: " + Number(data.total).toLocaleString() + " kg";
-    });
-
-}
-
-cargarGraficoMeses();
-
-</script>
+<script src="../../shared/global.js"></script>
+<script src="../scripts/rollo.js"></script>
 
 <?php include("../../../templates/footer.php"); ?>

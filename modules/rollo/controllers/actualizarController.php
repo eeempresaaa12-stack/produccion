@@ -8,21 +8,21 @@ require_once("../models/produccionModel.php");
 $id = $_POST['id'];
 
 $datos = [
-    'fecha' => $_POST['fecha_paq'],
-
-    'id_operario' => $_POST['id_operario'],
+    'fecha' => $_POST['fecha_roll'],
 
     'id_maquina' => $_POST['id_maquina'],
+
+    'id_turno' => $_POST['id_turno'],
 
     'id_referencia' => $_POST['id_referencia'],
 
     'id_color' => $_POST['id_color'],
 
-    'id_turno' => $_POST['id_turno'],
+    'peso' => $_POST['peso_rollo'],
 
-    'paquetes' => $_POST['paquetes_paq'],
+    'retal' => $_POST['retal_roll'],
 
-    'observaciones' => $_POST['observaciones_paq']
+    'total' => $_POST['total_roll']
 ];
 
 actualizarProduccion($conexion, $id, $datos);

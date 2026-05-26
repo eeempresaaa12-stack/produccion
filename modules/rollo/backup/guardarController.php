@@ -1,7 +1,7 @@
 <?php
 /** @var mysqli $conexion */
 
-require_once("../conexion.php");
+require_once("../../includes/conexion.php");
 
 $fecha = $_POST['fecha_roll'] ?? '';
 $id_maquina = $_POST['id_maquina'] ?? '';
@@ -13,11 +13,27 @@ $retal = $_POST['retal_roll'] ?? 0;
 $total = $_POST['total_roll'] ?? 0;
 
 $sql = "INSERT INTO PRODUCCION_ROLLO
-(fecha_roll, id_maquina, id_turno, id_referencia, id_color, peso_rollo, retal_roll, total_roll)
+(
+    fecha_roll, 
+    id_maquina, 
+    id_turno, 
+    id_referencia, 
+    id_color, 
+    peso_rollo, 
+    retal_roll, 
+    total_roll)
 VALUES
-('$fecha','$id_maquina','$id_turno','$id_referencia','$id_color','$peso','$retal','$total')";
+(
+    '$fecha',
+    '$id_maquina',
+    '$id_turno',
+    '$id_referencia',
+    '$id_color',
+    '$peso',
+    '$retal',
+    '$total')";
 
 mysqli_query($conexion,$sql);
 
-header("Location: dashboard.php");
+header("Location: ../views/dashboard.php");
 exit;

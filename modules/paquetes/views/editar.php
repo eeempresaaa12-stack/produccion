@@ -26,8 +26,7 @@ include("../../../templates/header.php");
 <input 
     type="datetime-local"
     name="fecha_paq"
-    value="<?php echo date('Y-m-d\TH:i', strtotime($fila['fecha_paq'])); ?>"
->
+    value="<?php echo date('Y-m-d\TH:i', strtotime($fila['fecha_paq'])); ?>">
 
 <!-- OPERARIO -->
 <label>Operario</label>
@@ -38,8 +37,7 @@ include("../../../templates/header.php");
 
 <option 
     value="<?php echo $op['id_operario']; ?>"
-    <?php echo ($op['id_operario'] == $fila['id_operario']) ? 'selected' : ''; ?>
->
+    <?php echo ($op['id_operario'] == $fila['id_operario']) ? 'selected' : ''; ?>>
     <?php echo $op['nombre']; ?>
 </option>
 
@@ -49,9 +47,7 @@ include("../../../templates/header.php");
 
 <!-- MAQUINA -->
 <label>Máquina</label>
-
 <select name="id_maquina">
-
 <?php while($m = mysqli_fetch_assoc($maquinas)): ?>
 
 <option
@@ -62,14 +58,11 @@ include("../../../templates/header.php");
 </option>
 
 <?php endwhile; ?>
-
 </select>
 
 <!-- REFERENCIA -->
 <label>Referencia</label>
-
 <select name="id_referencia">
-
 <?php while($r = mysqli_fetch_assoc($referencias)): ?>
 
 <option
@@ -80,53 +73,42 @@ include("../../../templates/header.php");
 </option>
 
 <?php endwhile; ?>
-
 </select>
 
 <!-- COLOR -->
 <label>Color</label>
-
 <select name="id_color">
-
 <?php while($c = mysqli_fetch_assoc($colores)): ?>
 
 <option
     value="<?php echo $c['id_color']; ?>"
-    <?php echo ($c['id_color'] == $fila['id_color']) ? 'selected' : ''; ?>
->
+    <?php echo ($c['id_color'] == $fila['id_color']) ? 'selected' : ''; ?>>
     <?php echo $c['nombre_color']; ?>
 </option>
 
 <?php endwhile; ?>
-
 </select>
 
 <!-- TURNO -->
 <label>Turno</label>
-
 <select name="id_turno">
-
 <?php while($t = mysqli_fetch_assoc($turnos)): ?>
 
 <option
     value="<?php echo $t['id_turno']; ?>"
-    <?php echo ($t['id_turno'] == $fila['id_turno']) ? 'selected' : ''; ?>
->
+    <?php echo ($t['id_turno'] == $fila['id_turno']) ? 'selected' : ''; ?>>
     <?php echo $t['nombre_turno']; ?>
 </option>
 
 <?php endwhile; ?>
-
 </select>
 
 <!-- PAQUETES -->
 <label>Paquetes</label>
-
 <input
     type="number"
     name="paquetes_paq"
-    value="<?php echo $fila['paquetes_paq']; ?>"
->
+    value="<?php echo $fila['paquetes_paq']; ?>">
 
 <!-- OBSERVACIONES -->
 <label>Observaciones</label>

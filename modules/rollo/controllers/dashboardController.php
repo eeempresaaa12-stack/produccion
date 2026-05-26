@@ -1,7 +1,7 @@
 <?php
 /** @var mysqli $conexion */
 
-require_once("../../includes/conexion.php");
+require_once("../../../includes/conexion.php");
 
 require_once("../models/dashboardModel.php");
 
@@ -80,5 +80,3 @@ $eficiencia_ant = ($bruto_ant > 0) ? (($neto_ant / $bruto_ant) * 100) : 0;
 
 /* IMPORTACION */
 $ultima_fecha = obtenerUltimaImportacionRollo($conexion);
-
-include("../views/dashboard.php");
