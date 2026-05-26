@@ -1,11 +1,17 @@
 <?php
 /** @var mysqli $conexion */
 
-require_once("../conexion.php");
+require_once("../../../includes/conexion.php");
 
-$tipo = $_GET['tipo'] ?? "mes";
-$mes = $_GET['mes'] ?? date('m');
-$semana = $_GET['semana'] ?? "";
+/* FILTROS */
+$filtros = [
+    "tipo" => $_GET['tipo'] ?? 'mes',
+    "mes" => $_GET['mes'] ?? date('m'),
+    "semana" => $_GET['semana'] ?? ''
+];
+$tipo = $filtros['tipo'];
+$mes = $filtros['mes'];
+$semana = $filtros['semana'];
 
 /* ===== PRODUCCION POR DIA ===== */
 
@@ -103,6 +109,7 @@ while($row = mysqli_fetch_assoc($res2)){
     $totales_op[] = $row['total'];
 }
 
+header('Content-Type: application/json');
 echo json_encode([
     "fechas"=>$fechas,
     "totales"=>$totales,

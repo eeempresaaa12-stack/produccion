@@ -1,14 +1,11 @@
 <?php
 /** @var mysqli $conexion */
 
-require_once("../conexion.php");
+require_once("../includes/conexion.php");
 
 if(isset($_GET['id'])){
-
     $id = intval($_GET['id']);
-
     $sql = "DELETE FROM PRODUCCION_PAQUETES WHERE id = $id";
-
     mysqli_query($conexion,$sql);
 }
 

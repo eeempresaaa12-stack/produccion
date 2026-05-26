@@ -6,8 +6,8 @@
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Control de Producción</title>
 
-    <link rel="icon" type="image/png" href="./img/logo-plastypetco.png">
-    <link rel="stylesheet" href="./css/estilos.css">
+    <link rel="icon" type="image/png" href="assets/img/logo-plastypetco.png">
+    <link rel="stylesheet" href="assets/css/estilos.css">
 
 </head>
 
@@ -19,11 +19,11 @@
 
         <div class="areas">
 
-        <a href="paquetes/dashboard.php" class="area-card">
+        <a href="modules/paquetes/views/dashboard.php" class="area-card">
             <h2>Producción por Paquetes</h2>
             <p>Control de paquetes producidos</p>
         </a>
-        <a href="rollo/dashboard.php" class="area-card">
+        <a href="modules/rollo/views/dashboard.php" class="area-card">
             <h2>Producción por Peso Rollo</h2>
             <p>Control de rollos producidos</p>
         </a>

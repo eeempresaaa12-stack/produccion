@@ -1,4 +1,5 @@
 <?php
+/** @var mysqli $conexion */
 ini_set('memory_limit', '512M');
 set_time_limit(0);
 
@@ -7,7 +8,7 @@ set_time_limit(0);
 @ini_set('zlib.output_compression', 0);
 @ini_set('output_buffering', 0);
 
-include("conexion.php");
+include("../includes/conexion.php");
 mysqli_set_charset($conexion, "utf8mb4");
 
 define('PROGRESS_FILE', __DIR__ . '/importar_paquetes_progress.json');
@@ -83,7 +84,7 @@ function sendProgress($pct, $msg, $extra = '') {
 <title>Importando Paquetes</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="./css/estilos_importar.css"> 
+  <link rel="stylesheet" href="/assets/css/estilos_importar.css"> 
 
 </head>
 <body>

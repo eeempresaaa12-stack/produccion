@@ -1,9 +1,13 @@
 <?php
 /** @var mysqli $conexion */
 
-require_once("../conexion.php");
+require_once("../../../includes/conexion.php");
 
-$anio = $_GET['anio'] ?? date('Y');
+/* FILTRO */
+$filtros = [
+    "anio" => $_GET['anio'] ?? date('Y')
+];
+$anio = $filtros['anio'];
 
 $sql = "SELECT 
             MONTH(fecha_paq) mes,
@@ -23,6 +27,7 @@ while($row = mysqli_fetch_assoc($res)){
     $totales[] = $row['total'];
 }
 
+header('Content-Type: application/json');
 echo json_encode([
     "meses"=>$meses,
     "totales"=>$totales

@@ -1,252 +1,33 @@
 <?php
+/** @var array $meses */
+/** @var int $mes_actual */
+/** @var int $mes_anterior */
+/** @var string|int $semana_actual */
+/** @var float $total */
+/** @var float $semana */
+/** @var float $mes */
+/** @var array $top_maquina */
+/** @var array $top_maquina_ant */
+/** @var float $bruto */
+/** @var float $retal */
+/** @var float $neto */
+/** @var float $eficiencia */
+/** @var float $bruto_ant */
+/** @var float $retal_ant */
+/** @var float $neto_ant */
+/** @var float $eficiencia_ant */
+/** @var array $mejor_dia */
+/** @var array $peor_dia */
+/** @var array $mejor_dia_ant */
+/** @var array $peor_dia_ant */
+/** @var float $diferencia */
+/** @var float $porcentaje */
 /** @var mysqli $conexion */
+/** @var mysqli_result $res_tabla_fecha */
+/** @var mysqli_result $res_tabla_maquina */
 
-include(__DIR__ . "/../includes/header.php");
-require_once(__DIR__ . "/../conexion.php");
-
-/* ACTIVAR ERRORES (solo una vez) */
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-/* FUNCION SEGURA */
-
-function obtenerTotal($conexion, $sql){
-    $res = mysqli_query($conexion,$sql);
-    if(!$res){return 0;}
-
-    $row = mysqli_fetch_assoc($res);
-    return $row['total'] ?? 0;
-}
-
-
-/* BUSQUEDAAAAAAAS  */
-
-$meses = [
-    1 => 'Enero',
-    2 => 'Febrero',
-    3 => 'Marzo',
-    4 => 'Abril',
-    5 => 'Mayo',
-    6 => 'Junio',
-    7 => 'Julio',
-    8 => 'Agosto',
-    9 => 'Septiembre',
-    10 => 'Octubre',
-    11 => 'Noviembre',
-    12 => 'Diciembre'
-];
-
-$semanas = [
-    1 => 'Semana 1',
-    2 => 'Semana 2',
-    3 => 'Semana 3',
-    4 => 'Semana 4',
-    5 => 'Semana 5'
-];
-$semana_actual = date('W', strtotime('this week'));
-$mes_actual = date('n');
-$mes_anterior = date('n', strtotime('-1 month'));
-
-/* TOTAL HISTORICO */
-$sql_total = "SELECT SUM(total_roll) total FROM PRODUCCION_ROLLO";
-$total = obtenerTotal($conexion, $sql_total);
-
-
-/* PRODUCCION SEMANA ACTUAL */
-$sql_semana = "SELECT SUM(total_roll) total
-                FROM PRODUCCION_ROLLO
-                WHERE YEARWEEK(fecha_roll, 1) = YEARWEEK(CURDATE(), 1)";
-$semana = obtenerTotal($conexion, $sql_semana);
-
-
-/* PRODUCCION MES ACTUAL */
-$sql_mes = "SELECT SUM(total_roll) total
-            FROM PRODUCCION_ROLLO
-            WHERE MONTH(fecha_roll)=MONTH(CURDATE())
-            AND YEAR(fecha_roll)=YEAR(CURDATE())";
-$mes = obtenerTotal($conexion, $sql_mes);
-
-
-/* TOP MAQUINA DEL MES */
-$sql_top = "SELECT m.nombre_maquina, IFNULL(SUM(r.total_roll),0) total
-            FROM PRODUCCION_ROLLO r
-            LEFT JOIN MAQUINAS m ON r.id_maquina = m.id_maquina
-            WHERE MONTH(r.fecha_roll)=MONTH(CURDATE())
-            AND YEAR(r.fecha_roll)=YEAR(CURDATE())
-            GROUP BY r.id_maquina
-            ORDER BY total DESC
-            LIMIT 1";
-$res_top = mysqli_query($conexion,$sql_top);
-$top_maquina = ($res_top && mysqli_num_rows($res_top) > 0)
-    ? mysqli_fetch_assoc($res_top)
-    : ["nombre_maquina" => "Sin datos", "total" => 0];
-
-/* TOP MAQUINA DEL MES ANTERIOR */
-$sql_top_ant = "SELECT m.nombre_maquina, IFNULL(SUM(r.total_roll),0) total
-                FROM PRODUCCION_ROLLO r
-                LEFT JOIN MAQUINAS m ON r.id_maquina = m.id_maquina
-                WHERE MONTH(r.fecha_roll)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-                AND YEAR(r.fecha_roll)=YEAR(CURDATE()-INTERVAL 1 MONTH)
-                GROUP BY r.id_maquina
-                ORDER BY total DESC
-                LIMIT 1";
-$res_top_ant = mysqli_query($conexion,$sql_top_ant);
-$top_maquina_ant = ($res_top_ant && mysqli_num_rows($res_top_ant) > 0)
-    ? mysqli_fetch_assoc($res_top_ant)
-    : ["nombre_maquina" => "Sin datos", "total" => 0];
-
-
-/* CRECIMIENTO */
-$sql_actual = "SELECT SUM(total_roll) total FROM PRODUCCION_ROLLO
-                WHERE MONTH(fecha_roll)=MONTH(CURDATE())
-                AND YEAR(fecha_roll)=YEAR(CURDATE())";
-
-$sql_anterior = "SELECT SUM(total_roll) total FROM PRODUCCION_ROLLO
-                WHERE MONTH(fecha_roll)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-                AND YEAR(fecha_roll)=YEAR(CURDATE()-INTERVAL 1 MONTH)";
-
-$act = obtenerTotal($conexion, $sql_actual);
-$ant = obtenerTotal($conexion, $sql_anterior);
-
-$diferencia = ($act ?? 0) - ($ant ?? 0);
-$porcentaje = ($ant > 0) ? (($diferencia / $ant) * 100) : 0;
-
-
-/* RESUMEN BRUTO - RETAL - NETO MES ACTUAL */
-$sql_resumen = "SELECT SUM(peso_rollo) bruto, SUM(retal_roll) retal, SUM(total_roll) neto
-                FROM PRODUCCION_ROLLO
-                WHERE MONTH(fecha_roll)=MONTH(CURDATE())
-                AND YEAR(fecha_roll)=YEAR(CURDATE())";
-
-$res_resumen = mysqli_query($conexion,$sql_resumen);
-
-if($res_resumen){
-    $datos = mysqli_fetch_assoc($res_resumen);
-    $bruto = $datos['bruto'] ?? 0;
-    $retal = $datos['retal'] ?? 0;
-    $neto = $datos['neto'] ?? 0;
-}else{
-    $bruto = $retal = $neto = 0;
-}
-/* RESUMEN BRUTO - RETAL - NETO MES ANTERIOR */
-$sql_resumen_ant = "SELECT SUM(peso_rollo) bruto, SUM(retal_roll) retal, SUM(total_roll) neto
-                    FROM PRODUCCION_ROLLO
-                    WHERE MONTH(fecha_roll)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-                    AND YEAR(fecha_roll)=YEAR(CURDATE()-INTERVAL 1 MONTH)";
-
-$res_resumen_ant = mysqli_query($conexion,$sql_resumen_ant);
-
-if($res_resumen_ant){
-    $datos_ant = mysqli_fetch_assoc($res_resumen_ant);
-    $bruto_ant = $datos_ant['bruto'] ?? 0;
-    $retal_ant = $datos_ant['retal'] ?? 0;
-    $neto_ant = $datos_ant['neto'] ?? 0;
-}else{
-    $bruto_ant = $retal_ant = $neto_ant = 0;
-}
-
-/* EFICIENCIA */
-$eficiencia = ($bruto > 0) ? (($neto / $bruto) * 100) : 0;
-$eficiencia_ant = ($bruto_ant > 0) ? (($neto_ant / $bruto_ant) * 100) : 0;
-
-
-/* MEJOR Y PEOR DIA DEL MES */
-$sql_dias = "SELECT 
-                DATE(fecha_roll) fecha,
-                SUM(total_roll) total
-            FROM PRODUCCION_ROLLO
-            WHERE MONTH(fecha_roll)=MONTH(CURDATE())
-            AND YEAR(fecha_roll)=YEAR(CURDATE())
-            GROUP BY DATE(fecha_roll)";
-
-$res_dias = mysqli_query($conexion,$sql_dias);
-
-$mejor_dia = null;
-$peor_dia = null;
-
-if($res_dias && mysqli_num_rows($res_dias) > 0){
-
-    while($row = mysqli_fetch_assoc($res_dias)){
-
-        if(!$mejor_dia || $row['total'] > $mejor_dia['total']){
-            $mejor_dia = $row;
-        }
-
-        if(!$peor_dia || $row['total'] < $peor_dia['total']){
-            $peor_dia = $row;
-        }
-    }
-
-}else{
-    $mejor_dia = ["fecha"=>"Sin datos","total"=>0];
-    $peor_dia = ["fecha"=>"Sin datos","total"=>0];
-}
-/*MEJOR Y PEOR DIA DEL MES ANTERIOR */
-$sql_dias_ant = "SELECT 
-                    DATE(fecha_roll) fecha,
-                    SUM(total_roll) total
-                FROM PRODUCCION_ROLLO
-                WHERE MONTH(fecha_roll)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-                AND YEAR(fecha_roll)=YEAR(CURDATE()-INTERVAL 1 MONTH)
-                GROUP BY DATE(fecha_roll)";
-$res_dias_ant = mysqli_query($conexion,$sql_dias_ant);
-$mejor_dia_ant = null;
-$peor_dia_ant = null;
-
-if($res_dias_ant && mysqli_num_rows($res_dias_ant) > 0){
-
-    while($row = mysqli_fetch_assoc($res_dias_ant)){
-
-        if(!$mejor_dia_ant || $row['total'] > $mejor_dia_ant['total']){
-            $mejor_dia_ant = $row;
-        }
-
-        if(!$peor_dia_ant || $row['total'] < $peor_dia_ant['total']){
-            $peor_dia_ant = $row;
-        }
-    }
-
-}else{
-    $mejor_dia_ant = ["fecha"=>"Sin datos","total"=>0];
-    $peor_dia_ant = ["fecha"=>"Sin datos","total"=>0];
-}
-
-/* FILTRO FECHAS */
-$desde = $_GET['desde'] ?? date('Y-m-01');
-$hasta = $_GET['hasta'] ?? date('Y-m-d');
-
-
-/* TABLA FECHAS */
-$sql_tabla_fecha = "
-SELECT 
-DATE(p.fecha_roll) fecha,
-SUM(p.peso_rollo) bruto,
-SUM(p.retal_roll) retal,
-SUM(p.total_roll) neto
-FROM PRODUCCION_ROLLO p
-WHERE DATE(p.fecha_roll) BETWEEN '$desde' AND '$hasta'
-GROUP BY DATE(p.fecha_roll)
-ORDER BY fecha DESC
-";
-$res_tabla_fecha = mysqli_query($conexion,$sql_tabla_fecha);
-
-
-/* TABLA MAQUINAS */
-$sql_tabla_maquina = "
-SELECT 
-m.nombre_maquina,
-SUM(p.peso_rollo) bruto,
-SUM(p.retal_roll) retal,
-SUM(p.total_roll) neto
-FROM PRODUCCION_ROLLO p
-LEFT JOIN MAQUINAS m ON p.id_maquina = m.id_maquina
-WHERE DATE(p.fecha_roll) BETWEEN '$desde' AND '$hasta'
-GROUP BY m.id_maquina, m.nombre_maquina
-ORDER BY neto DESC
-";
-$res_tabla_maquina = mysqli_query($conexion,$sql_tabla_maquina);
-
+include("../../../templates/header.php");
+require_once("../controllers/dashboardController.php");
 ?>
 
 <!-- /* CONTENEDOR PRINCIPAL */ -->
@@ -784,4 +565,4 @@ cargarGraficoMeses();
 
 </script>
 
-<?php include("../includes/footer.php"); ?>
+<?php include("../../../templates/footer.php"); ?>

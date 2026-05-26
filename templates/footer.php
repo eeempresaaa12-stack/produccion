@@ -5,8 +5,8 @@
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Control Producción</title>
 
-    <link rel="icon" type="image/png" href="../img/logo-plastypetco.png">    
-    <link rel="stylesheet" href="../css/estilos.css"> 
+    <link rel="icon" type="image/png" href="/CONTROL_PRODUCCION/assets/img/logo-plastypetco.png">    
+    <link rel="stylesheet" href="/CONTROL_PRODUCCION/assets/css/estilos.css"> 
 
 </head>
 

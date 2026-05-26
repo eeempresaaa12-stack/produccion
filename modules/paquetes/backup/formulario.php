@@ -2,7 +2,7 @@
 /** @var mysqli $conexion */
 
 include("../includes/header.php"); 
-require_once("../conexion.php");
+require_once("../includes/conexion.php");
 ?>
 
 <div class="container">
