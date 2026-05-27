@@ -57,7 +57,6 @@ function actualizarProduccion($conexion, $id, $datos){
 
 /* ELIMINAR */
 function eliminarProduccion($conexion, $id){
-    $sql = "DELETE FROM PRODUCCION_PAQUETES
-            WHERE id = $id";
+    $sql = "DELETE FROM PRODUCCION_PAQUETES WHERE id = $id";
     mysqli_query($conexion, $sql);
 }

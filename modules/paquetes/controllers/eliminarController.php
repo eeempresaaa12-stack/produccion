@@ -2,12 +2,10 @@
 /** @var mysqli $conexion */
 
 require_once("../../../includes/conexion.php");
+require_once("../models/produccionModel.php");
 
-if(isset($_GET['id'])){
-    $id = intval($_GET['id']);
-    $sql = "DELETE FROM PRODUCCION_PAQUETES WHERE id = $id";
-    mysqli_query($conexion,$sql);
-}
+$id = intval($_GET['id'] ?? 0);
+eliminarProduccion($conexion, $id);
 
 header("Location: ../views/lista.php");
 exit;

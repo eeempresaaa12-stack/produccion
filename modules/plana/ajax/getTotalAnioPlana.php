@@ -9,14 +9,14 @@ $filtros = [
 ];
 $anio = $filtros['anio'];
 
-$sql = "SELECT SUM(total_roll) total
-        FROM PRODUCCION_ROLLO
-        WHERE YEAR(fecha_roll) = $anio";
+$sql = "SELECT SUM(total_plana) total
+        FROM PRODUCCION_PLANA
+        WHERE YEAR(fecha_plana) = $anio";
 
-$res = mysqli_query($conexion,$sql);
+$res = mysqli_query($conexion, $sql);
 $row = mysqli_fetch_assoc($res);
 
 header('Content-Type: application/json');
 echo json_encode([
-    "total"=>$row['total'] ?? 0
+    'total' => $row['total'] ?? 0
 ]);

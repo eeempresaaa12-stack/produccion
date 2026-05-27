@@ -30,35 +30,37 @@ $mes_actual = date('n');
 $mes_anterior = date('n', strtotime('-1 month'));
 
 /* TOTAL HISTORICO */
-$total = obtenerTotalHistoricoRollo($conexion);
+$total = obtenerTotalHistoricoPlana($conexion);
 
 /* PRODUCCION SEMANA - MES */
-$semana = obtenerProduccionSemanaRollo($conexion);
-$mes = obtenerProduccionMesRollo($conexion);
+$semana = obtenerProduccionSemanaPlana($conexion);
+$mes = obtenerProduccionMesPlana($conexion);
 
-/* TOP MAQUINA */
-$top_maquina = obtenerTopMaquinaRollo($conexion);
-$top_maquina_ant = obtenerTopMaquinaAnteriorRollo($conexion);
+/* TOP OPERARIO */
+$top_operario = obtenerTopOperarioPlana($conexion);
+$top_operario_ant = obtenerTopOperarioAnteriorPlana($conexion);
 
 /* TOTAL MESES */
-$act = obtenerTotalMesActualRollo($conexion);
-$ant = obtenerTotalMesAnteriorRollo($conexion);
+$act = obtenerTotalMesActualPlana($conexion);
+$ant = obtenerTotalMesAnteriorPlana($conexion);
 
 /* RESUMENES */
-$resumen = obtenerResumenMesRollo($conexion);
+$resumen = obtenerResumenMesPlana($conexion);
 $bruto = $resumen['bruto'];
 $retal = $resumen['retal'];
 $neto = $resumen['neto'];
-$resumen_ant = obtenerResumenMesAnteriorRollo($conexion);
+$eficiencia = ($bruto > 0) ? (($neto / $bruto) * 100) : 0;
+$resumen_ant = obtenerResumenMesAnteriorPlana($conexion);
 $bruto_ant = $resumen_ant['bruto'];
 $retal_ant = $resumen_ant['retal'];
 $neto_ant = $resumen_ant['neto'];
+$eficiencia_ant = ($bruto_ant > 0) ? (($neto_ant / $bruto_ant) * 100) : 0;
 
 /* MEJORES Y PEORES DIAS */
-$dias_mes = obtenerMejorPeorDiaMesRollo($conexion);
+$dias_mes = obtenerMejorPeorDiaMesPlana($conexion);
 $mejor_dia = $dias_mes['mejor'];
 $peor_dia = $dias_mes['peor'];
-$dias_ant = obtenerMejorPeorDiaAnteriorRollo($conexion);
+$dias_ant = obtenerMejorPeorDiaAnteriorPlana($conexion);
 $mejor_dia_ant = $dias_ant['mejor'];
 $peor_dia_ant = $dias_ant['peor'];
 
@@ -66,16 +68,13 @@ $peor_dia_ant = $dias_ant['peor'];
 $desde = $_GET['desde'] ?? date('Y-m-01');
 $hasta = $_GET['hasta'] ?? date('Y-m-d');
 /* TABLAS */
-$res_tabla_fecha = obtenerTablaFechasRollo($conexion,$desde,$hasta);
-$res_tabla_maquina = obtenerTablaMaquinasRollo($conexion,$desde,$hasta);
+$res_tabla_fecha = obtenerTablaFechasPlana($conexion, $desde, $hasta);
+$res_tabla_referencias = obtenerTablaReferenciasPlana($conexion, $desde, $hasta);
+$res_tabla_maquina = obtenerTablaMaquinasPlana($conexion, $desde, $hasta);
 
 /* CALCULOS */
 $diferencia = ($act ?? 0) - ($ant ?? 0);
 $porcentaje = ($ant > 0) ? (($diferencia / $ant) * 100) : 0;
 
-/* EFICIENCIA */
-$eficiencia = ($bruto > 0) ? (($neto / $bruto) * 100) : 0;
-$eficiencia_ant = ($bruto_ant > 0) ? (($neto_ant / $bruto_ant) * 100) : 0;
-
 /* IMPORTACION */
-$ultima_fecha = obtenerUltimaImportacionRollo($conexion);
+$ultima_fecha = obtenerUltimaImportacionPlana($conexion);

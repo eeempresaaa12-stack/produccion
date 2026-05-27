@@ -1,7 +1,7 @@
 <?php 
 /** @var mysqli $conexion */
 
-include("../includes/header.php");
+include("../templates/header.php");
 require_once("../conexion.php");
 
 /* CARGAR DATOS PARA SELECTS */

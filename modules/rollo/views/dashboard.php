@@ -31,7 +31,7 @@ require_once("../controllers/dashboardController.php");
 include("../../../templates/header.php");
 ?>
 
-<!-- /* CONTENEDOR PRINCIPAL */ -->
+<!-- CONTENEDOR PRINCIPAL -->
 <div class="container">
 
 <h2 class="titulo-vista">Producción Rollo</h2>
@@ -168,12 +168,10 @@ include("../../../templates/header.php");
     </div>
 </div>
 
-<!-- BOTON PARA IMPORTAR DATOS DE GOOGLEEEEE -->
-
+<!-- BOTON PARA IMPORTAR DATOS DE GOOGLE -->
 <a class="btn" id="btnImportar" onclick="abrirModal('modalImportar')">Importar Producción</a>
 
 <!-- GRAFICOSS -->
-
 <div class="seccion-graficos">
 
     <div class="controles">
@@ -251,8 +249,7 @@ include("../../../templates/header.php");
 
 <br> <br> <br>
 
-<!-- TABLAAAAS -->
-
+<!-- TABLAS -->
 <form class="filtro-fechas" method="GET">
 
 <label>Desde</label>
