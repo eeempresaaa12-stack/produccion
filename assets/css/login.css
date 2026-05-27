@@ -1,0 +1,188 @@
+/* =================================================
+   FUENTE
+================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+/* =================================================
+   RESET
+================================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =================================================
+   BODY
+================================================= */
+body {
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)),
+    url("../img/fondo3.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+/* =================================================
+   LOGIN BOX
+================================================= */
+.login-box {
+  width: 565px;
+  height: 100vh;
+  background: rgba(18, 27, 20, 0.92);
+  backdrop-filter: blur(10px);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.45);
+  padding: 45px 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* =================================================
+   LOGO
+================================================= */
+
+.login-box img {
+  width: 110px;
+  margin: 0 auto 5px auto;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+}
+
+/* =================================================
+   TITULO
+================================================= */
+
+.login-box h1 {
+  text-align: center;
+  color: #258130;
+  font-size: 40px;
+  font-weight: 600;
+  margin-bottom: 35px;
+  letter-spacing: 0.5px;
+}
+
+/* =================================================
+   ERROR
+================================================= */
+.error {
+  background: rgba(255, 71, 71, 0.12);
+  border: 1px solid rgba(255, 71, 71, 0.35);
+  color: #ff8f8f;
+  padding: 14px;
+  border-radius: 14px;
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+/* =================================================
+   FORMULARIO
+================================================= */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* =================================================
+   GRUPOS
+================================================= */
+.grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* =================================================
+   LABELS
+================================================= */
+.grupo label {
+  color: #d7d7d7;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* =================================================
+   INPUTS
+================================================= */
+
+.grupo input {
+  width: 100%;
+  padding: 15px 16px;
+  border: none;
+  outline: none;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+  font-size: 15px;
+  transition: 0.25s;
+}
+
+/* PLACEHOLDER */
+.grupo input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* FOCUS */
+.grupo input:focus {
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 0 0 3px rgba(58, 179, 90, 0.18);
+  transform: translateY(-1px);
+}
+
+/* =================================================
+   BOTON
+================================================= */
+
+.btn {
+  margin-top: 10px;
+  border: none;
+  outline: none;
+  padding: 15px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #1e8340, #209644);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+  box-shadow: 0 10px 25px rgba(27, 179, 73, 0.25);
+}
+
+/* HOVER */
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(27, 179, 73, 0.35);
+}
+
+/* CLICK */
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* =================================================
+   RESPONSIVE
+================================================= */
+
+@media (max-width: 900px) {
+  body {
+    justify-content: center;
+  }
+
+  .login-box {
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    min-height: 100vh;
+    border-left: none;
+  }
+}
