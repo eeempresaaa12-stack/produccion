@@ -11,7 +11,7 @@ include("../../../templates/header.php");
 
 <div class="container">
 
-<h2 class="titulo-vista">Historial Producción Paquetes</h2>
+<h2 class="titulo-vista">Historial Producción Sellado</h2>
 
 <div class="card">
 

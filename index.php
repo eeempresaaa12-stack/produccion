@@ -19,8 +19,8 @@
 
         <div class="areas">
 
-        <a href="modules/paquetes/views/dashboard.php" class="area-card">
-            <h2>Producción por Paquetes</h2>
+        <a href="modules/sellado/views/dashboard.php" class="area-card">
+            <h2>Producción de Sellado</h2>
             <p>Control de paquetes producidos</p>
         </a>
         <a href="modules/rollo/views/dashboard.php" class="area-card">

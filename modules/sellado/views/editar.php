@@ -12,7 +12,7 @@ include("../../../templates/header.php");
 
 <div class="container">
 
-<h2 class="titulo-vista">Editar Producción Paquetes</h2>
+<h2 class="titulo-vista">Editar Producción Sellado</h2>
 
 <div class="card">
 

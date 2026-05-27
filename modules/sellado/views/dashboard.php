@@ -31,7 +31,7 @@ include("../../../templates/header.php");
 <!-- CONTAINER PRINCIPAL -->
 <div class="container">
 
-<h2 class="titulo-vista">Producción Paquetes</h2>
+<h2 class="titulo-vista">Producción Sellado</h2>
 
 <div class="kpis">
 
