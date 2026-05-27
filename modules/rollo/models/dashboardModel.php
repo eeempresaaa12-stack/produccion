@@ -99,42 +99,37 @@ function obtenerTotalMesAnteriorRollo($conexion){
 
 /* RESUMEN MES ACTUAL */
 function obtenerResumenMesRollo($conexion){
-    $sql = "SELECT 
-                SUM(peso_rollo) bruto,
-                SUM(retal_roll) retal,
-                SUM(total_roll) neto
+    $sql = "SELECT SUM(peso_rollo) bruto, SUM(retal_roll) retal, SUM(total_roll) neto
             FROM PRODUCCION_ROLLO
             WHERE MONTH(fecha_roll)=MONTH(CURDATE())
             AND YEAR(fecha_roll)=YEAR(CURDATE())";
     $res = mysqli_query($conexion, $sql);
     if($res){
-        return mysqli_fetch_assoc($res);
+        $row = mysqli_fetch_assoc($res);
+        return [
+            'bruto' => $row['bruto'] ?? null,
+            'retal' => $row['retal'] ?? null,
+            'neto'  => $row['neto']  ?? null
+        ];
     }
-    return [
-        'bruto' => 0,
-        'retal' => 0,
-        'neto' => 0
-    ];
+    return ['bruto' => null, 'retal' => null, 'neto' => null];
 }
-
 /* RESUMEN MES ANTERIOR */
 function obtenerResumenMesAnteriorRollo($conexion){
-    $sql = "SELECT 
-                SUM(peso_rollo) bruto,
-                SUM(retal_roll) retal,
-                SUM(total_roll) neto
+    $sql = "SELECT SUM(peso_rollo) bruto, SUM(retal_roll) retal, SUM(total_roll) neto
             FROM PRODUCCION_ROLLO
             WHERE MONTH(fecha_roll)=MONTH(CURDATE()-INTERVAL 1 MONTH)
             AND YEAR(fecha_roll)=YEAR(CURDATE()-INTERVAL 1 MONTH)";
     $res = mysqli_query($conexion, $sql);
     if($res){
-        return mysqli_fetch_assoc($res);
+        $row = mysqli_fetch_assoc($res);
+        return [
+            'bruto' => $row['bruto'] ?? null,
+            'retal' => $row['retal'] ?? null,
+            'neto'  => $row['neto']  ?? null
+        ];
     }
-    return [
-        'bruto' => 0,
-        'retal' => 0,
-        'neto' => 0
-    ];
+    return ['bruto' => null, 'retal' => null, 'neto' => null];
 }
 
 /* MEJOR Y PEOR DIA MES ACTUAL*/

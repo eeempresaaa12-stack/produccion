@@ -74,8 +74,8 @@ $diferencia = ($act ?? 0) - ($ant ?? 0);
 $porcentaje = ($ant > 0) ? (($diferencia / $ant) * 100) : 0;
 
 /* EFICIENCIA */
-$eficiencia = ($bruto > 0) ? (($neto / $bruto) * 100) : 0;
-$eficiencia_ant = ($bruto_ant > 0) ? (($neto_ant / $bruto_ant) * 100) : 0;
+$eficiencia     = ($bruto !== null && $bruto > 0) ? (($neto / $bruto) * 100) : null;
+$eficiencia_ant = ($bruto_ant !== null && $bruto_ant > 0) ? (($neto_ant / $bruto_ant) * 100) : null;
 
 /* IMPORTACION */
 $ultima_fecha = obtenerUltimaImportacionRollo($conexion);

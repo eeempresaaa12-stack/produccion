@@ -98,13 +98,14 @@ function obtenerResumenMesPlana($conexion){
             AND YEAR(fecha_plana)=YEAR(CURDATE())";
     $res = mysqli_query($conexion, $sql);
     if($res){
-        return mysqli_fetch_assoc($res);
+        $row = mysqli_fetch_assoc($res);
+        return [
+            'bruto' => $row['bruto'] ?? null,
+            'retal' => $row['retal'] ?? null,
+            'neto'  => $row['neto']  ?? null
+        ];
     }
-    return [
-        'bruto' => 0,
-        'retal' => 0,
-        'neto' => 0
-    ];
+    return ['bruto' => null, 'retal' => null, 'neto' => null];
 }
 
 /* RESUMEN MES ANTERIOR */
@@ -115,13 +116,14 @@ function obtenerResumenMesAnteriorPlana($conexion){
             AND YEAR(fecha_plana)=YEAR(CURDATE()-INTERVAL 1 MONTH)";
     $res = mysqli_query($conexion, $sql);
     if($res){
-        return mysqli_fetch_assoc($res);
+        $row = mysqli_fetch_assoc($res);
+        return [
+            'bruto' => $row['bruto'] ?? null,
+            'retal' => $row['retal'] ?? null,
+            'neto'  => $row['neto']  ?? null
+        ];
     }
-    return [
-        'bruto' => 0,
-        'retal' => 0,
-        'neto' => 0
-    ];
+    return ['bruto' => null, 'retal' => null, 'neto' => null];
 }
 
 /* MEJOR Y PEOR DIA MES ACTUAL*/

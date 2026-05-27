@@ -27,7 +27,7 @@
             <h2>Producción por Peso Rollo</h2>
             <p>Control de rollos producidos</p>
         </a>
-        <a href="plana/dashboard.php" class="area-card">
+        <a href="modules/plana/views/dashboard.php" class="area-card">
             <h2>Producción Máquina Plana</h2>
             <p>Control producción máquina plana</p>
         </a>

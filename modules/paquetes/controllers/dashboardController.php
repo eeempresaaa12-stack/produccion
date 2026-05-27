@@ -65,10 +65,10 @@ $diferencia = ($act ?? 0) - ($ant ?? 0);
 $porcentaje = ($ant > 0) ? (($diferencia / $ant) * 100) : 0;
 
 /* PROMEDIO */
-$dias_mes = date('t');
-$promedio = ($act > 0) ? ($act / $dias_mes) : 0;
-$dias_mes_ant = date('t', strtotime('-1 month'));
-$promedio_ant = ($ant > 0) ? ($ant / $dias_mes_ant) : 0;
+$total_dias_mes = date('t');
+$promedio = ($act > 0) ? ($act / $total_dias_mes) : 0;
+$total_dias_mes_ant = date('t', strtotime('-1 month'));
+$promedio_ant = ($ant > 0) ? ($ant / $total_dias_mes_ant) : 0;
 
 /* IMPORTACIÓN */
 $ultima_fecha = obtenerUltimaImportacion($conexion);

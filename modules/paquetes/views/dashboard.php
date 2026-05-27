@@ -101,11 +101,11 @@ include("../../../templates/header.php");
         </p>
 
         <p>
-            👷 Mejor operario:
-            <?php echo $top_ant['nombre']; ?>
-            (<?php echo number_format($top_ant['total']); ?> paquetes)
+            👷 Mejor operario: <?php echo $top_ant['nombre'] ?? 'Sin datos'; ?>
+            <?php if(!empty($top_ant['total']) && $top_ant['total'] > 0){ ?>
+                (<?php echo number_format($top_ant['total']); ?> paquetes)
+            <?php } ?>
         </p>
-
     </div>
     <div class="comparacion">
         <p>
@@ -156,9 +156,10 @@ include("../../../templates/header.php");
         </p>
 
         <p>
-        👷 Mejor operario: <?php 
-        echo $top['nombre']; ?> 
-        (<?php echo number_format($top['total']); ?> paquetes)
+            👷 Mejor operario: <?php echo $top['nombre'] ?? 'Sin datos'; ?>
+            <?php if(!empty($top['total']) && $top['total'] > 0){ ?>
+                (<?php echo number_format($top['total']); ?> paquetes)
+            <?php } ?>
         </p>
 
     </div>

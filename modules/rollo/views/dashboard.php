@@ -72,43 +72,26 @@ include("../../../templates/header.php");
 
 <div class="resumenes">
     <div class="resumen-anterior">
+        <h3>Resumen de <?php echo $meses[$mes_anterior]; ?></h3>
 
-        <h3> Resumen de <?php echo $meses[$mes_anterior]; ?></h3>
+        <p>🏭 Producción bruta: <?php echo $bruto_ant !== null ? number_format($bruto_ant,2).' kg' : 'Sin datos'; ?></p>
+        <p>♻️ Retal: <?php echo $retal_ant !== null ? number_format($retal_ant,2).' kg' : 'Sin datos'; ?></p>
+        <p>📦 Producción final: <?php echo $neto_ant !== null ? number_format($neto_ant,2).' kg' : 'Sin datos'; ?></p>
+        <p>⚙️ Eficiencia: <?php echo $eficiencia_ant !== null ? round($eficiencia_ant,2).'%' : 'Sin datos'; ?></p>
 
-        <p>🏭 Producción bruta: <?php echo number_format($bruto_ant,2); ?> kg</p>
-        <p>♻️ Retal: <?php echo number_format($retal_ant,2); ?> kg</p>
-        <p>📦 Producción final: <?php echo number_format($neto_ant,2); ?> kg</p>
-        <p>⚙️ Eficiencia: <?php echo round($eficiencia_ant,2); ?>%</p>
-
-        <p>
-            📅 Mejor día: 
-            <?php 
-                echo ($mejor_dia_ant['fecha'] != "Sin datos") 
-                    ? date("d M Y", strtotime($mejor_dia_ant['fecha'])) 
-                    : "Sin datos"; 
-                ?>
+        <p>📅 Mejor día: 
+            <?php echo ($mejor_dia_ant['fecha'] != "Sin datos") ? date("d M Y", strtotime($mejor_dia_ant['fecha'])) : "Sin datos"; ?>
             (<?php echo number_format($mejor_dia_ant['total'],2); ?> kg)
         </p>
-
-        <p>
-            📉 Peor día: 
-            <?php 
-                echo ($peor_dia_ant['fecha'] != "Sin datos") 
-                    ? date("d M Y", strtotime($peor_dia_ant['fecha'])) 
-                    : "Sin datos"; 
-                ?>
+        <p>📉 Peor día: 
+            <?php echo ($peor_dia_ant['fecha'] != "Sin datos") ? date("d M Y", strtotime($peor_dia_ant['fecha'])) : "Sin datos"; ?>
             (<?php echo number_format($peor_dia_ant['total'],2); ?> kg)
         </p>
-
-        <p>
-            🔧 Mejor máquina: 
-            <?php echo $top_maquina_ant['nombre_maquina']; ?>
-
-            <?php if($top_maquina_ant['total'] > 0){ ?>
+        <p>🔧 Mejor máquina: <?php echo $top_maquina_ant['nombre_maquina'] ?? 'Sin datos'; ?>
+            <?php if(!empty($top_maquina_ant['total']) && $top_maquina_ant['total'] > 0){ ?>
                 (<?php echo number_format($top_maquina_ant['total'],2); ?> kg)
             <?php } ?>
         </p>
-
     </div>
     <div class="comparacion">
         <p>
@@ -126,45 +109,26 @@ include("../../../templates/header.php");
         </p>
     </div>
     <div class="resumen-actual">
+        <h3>Resumen de <?php echo $meses[$mes_actual]; ?></h3>
 
-        <h3> Resumen de <?php echo $meses[$mes_actual]; ?></h3>
+        <p>🏭 Producción bruta: <?php echo $bruto !== null ? number_format($bruto,2).' kg' : 'Sin datos'; ?></p>
+        <p>♻️ Retal: <?php echo $retal !== null ? number_format($retal,2).' kg' : 'Sin datos'; ?></p>
+        <p>📦 Producción final: <?php echo $neto !== null ? number_format($neto,2).' kg' : 'Sin datos'; ?></p>
+        <p>⚙️ Eficiencia: <?php echo $eficiencia !== null ? round($eficiencia,2).'%' : 'Sin datos'; ?></p>
 
-        
-
-        <p>🏭 Producción bruta: <?php echo number_format($bruto,2); ?> kg</p>
-        <p>♻️ Retal: <?php echo number_format($retal,2); ?> kg</p>
-        <p>📦 Producción final: <?php echo number_format($neto,2); ?> kg</p>
-        <p>⚙️ Eficiencia: <?php echo round($eficiencia,2); ?>%</p>
-
-        <p>
-            📅 Mejor día: 
-            <?php 
-                echo ($mejor_dia['fecha'] != "Sin datos") 
-                    ? date("d M Y", strtotime($mejor_dia['fecha'])) 
-                    : "Sin datos"; 
-                ?>
+        <p>📅 Mejor día: 
+            <?php echo ($mejor_dia['fecha'] != "Sin datos") ? date("d M Y", strtotime($mejor_dia['fecha'])) : "Sin datos"; ?>
             (<?php echo number_format($mejor_dia['total'],2); ?> kg)
         </p>
-
-        <p>
-            📉 Peor día: 
-            <?php 
-                echo ($peor_dia['fecha'] != "Sin datos") 
-                    ? date("d M Y", strtotime($peor_dia['fecha'])) 
-                    : "Sin datos"; 
-                ?>
+        <p>📉 Peor día: 
+            <?php echo ($peor_dia['fecha'] != "Sin datos") ? date("d M Y", strtotime($peor_dia['fecha'])) : "Sin datos"; ?>
             (<?php echo number_format($peor_dia['total'],2); ?> kg)
         </p>
-
-        <p>
-            🔧 Mejor máquina: 
-            <?php echo $top_maquina['nombre_maquina']; ?>
-
-            <?php if($top_maquina['total'] > 0){ ?>
+        <p>🔧 Mejor máquina: <?php echo $top_maquina['nombre_maquina'] ?? 'Sin datos'; ?>
+            <?php if(!empty($top_maquina['total']) && $top_maquina['total'] > 0){ ?>
                 (<?php echo number_format($top_maquina['total'],2); ?> kg)
             <?php } ?>
         </p>
-
     </div>
 </div>
 

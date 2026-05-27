@@ -48,13 +48,13 @@ $ant = obtenerTotalMesAnteriorPlana($conexion);
 $resumen = obtenerResumenMesPlana($conexion);
 $bruto = $resumen['bruto'];
 $retal = $resumen['retal'];
-$neto = $resumen['neto'];
-$eficiencia = ($bruto > 0) ? (($neto / $bruto) * 100) : 0;
+$neto  = $resumen['neto'];
+$eficiencia = ($bruto !== null && $bruto > 0) ? (($neto / $bruto) * 100) : null;
 $resumen_ant = obtenerResumenMesAnteriorPlana($conexion);
 $bruto_ant = $resumen_ant['bruto'];
 $retal_ant = $resumen_ant['retal'];
-$neto_ant = $resumen_ant['neto'];
-$eficiencia_ant = ($bruto_ant > 0) ? (($neto_ant / $bruto_ant) * 100) : 0;
+$neto_ant  = $resumen_ant['neto'];
+$eficiencia_ant = ($bruto_ant !== null && $bruto_ant > 0) ? (($neto_ant / $bruto_ant) * 100) : null;
 
 /* MEJORES Y PEORES DIAS */
 $dias_mes = obtenerMejorPeorDiaMesPlana($conexion);
