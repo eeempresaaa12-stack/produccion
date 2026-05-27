@@ -413,7 +413,6 @@ form select:focus {
 /* =================================================
    CARDS AREAS
 ================================================= */
-
 .areas {
   display: flex;
   gap: 40px;
@@ -453,7 +452,6 @@ form select:focus {
 /* =================================================
    KPI DASHBOARD
 ================================================= */
-
 .kpis {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -775,9 +773,23 @@ canvas {
 }
 
 /* =================================================
+   HISTORIAL
+================================================= */
+#containerHistorial {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#containerHistorial .tabla {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+}
+
+/* =================================================
    FOOTER
 ================================================= */
-
 .footer {
   width: 100%;
   margin-top: 50px;
@@ -800,4 +812,11 @@ canvas {
 .footer-right {
   display: flex;
   align-items: center;
+}
+
+@media (max-width: 780px) {
+  .footer {
+    font-size: 10px;
+    padding: 10px;
+  }
 }

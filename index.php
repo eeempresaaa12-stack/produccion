@@ -24,7 +24,7 @@
             <p>Control de paquetes producidos</p>
         </a>
         <a href="modules/rollo/views/dashboard.php" class="area-card">
-            <h2>Producción por Peso Rollo</h2>
+            <h2>Producción de Rollos</h2>
             <p>Control de rollos producidos</p>
         </a>
         <a href="modules/plana/views/dashboard.php" class="area-card">
