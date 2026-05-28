@@ -1,7 +1,8 @@
 <?php
 /* =================================================
-   CONSULTAS
+   FUNCIÓN BASE
 ================================================= */
+// Ejecutar consulta y retornar valor 'total'
 function obtenerTotal($conexion, $sql){
     $res = mysqli_query($conexion,$sql);
     if(!$res){
@@ -11,22 +12,23 @@ function obtenerTotal($conexion, $sql){
     return $row['total'] ?? 0;
 }
 
-/* TOTAL HISTORICO */
+/* =================================================
+   CONSULTAS DE TOTALES
+================================================= */
+// Total histórico de producción
 function obtenerTotalHistorico($conexion){
     $sql = "SELECT SUM(paquetes_paq) total
             FROM PRODUCCION_PAQUETES";
     return obtenerTotal($conexion, $sql);
 }
-
-/* PRODUCCION SEMANA ACTUAL */
+// Producción de la semana actual
 function obtenerProduccionSemana($conexion){
     $sql = "SELECT SUM(paquetes_paq) total
             FROM PRODUCCION_PAQUETES
             WHERE YEARWEEK(fecha_paq, 1) = YEARWEEK(CURDATE(), 1)";
     return obtenerTotal($conexion, $sql);
 }
-
-/* PRODUCCION MES ACTUAL */
+// Producción del mes actual
 function obtenerProduccionMes($conexion){
     $sql = "SELECT SUM(paquetes_paq) total
             FROM PRODUCCION_PAQUETES
@@ -35,7 +37,10 @@ function obtenerProduccionMes($conexion){
     return obtenerTotal($conexion, $sql);
 }
 
-/* TOP OPERARIO MES ACTUAL */
+/* =================================================
+   TOP OPERARIO
+================================================= */
+// Operario con más producción en el mes actual
 function obtenerTopOperario($conexion){
     $sql = "SELECT o.nombre, IFNULL(SUM(p.paquetes_paq),0) total
             FROM PRODUCCION_PAQUETES p
@@ -55,8 +60,7 @@ function obtenerTopOperario($conexion){
         "total" => 0
     ];
 }
-
-/* TOP OPERARIO MES ANTERIOR*/
+// Operario con más producción en el mes anterior
 function obtenerTopOperarioAnterior($conexion){
     $sql = "SELECT o.nombre, IFNULL(SUM(p.paquetes_paq),0) total
             FROM PRODUCCION_PAQUETES p
@@ -77,7 +81,10 @@ function obtenerTopOperarioAnterior($conexion){
     ];
 }
 
-/* TOTAL MES ACTUAL Y ANTERIOR */
+/* =================================================
+   TOTALES MES ACTUAL Y ANTERIOR
+================================================= */
+// Total de paquetes del mes actual
 function obtenerTotalMesActual($conexion){
     $sql = "SELECT SUM(paquetes_paq) total
             FROM PRODUCCION_PAQUETES
@@ -85,6 +92,7 @@ function obtenerTotalMesActual($conexion){
             AND YEAR(fecha_paq)=YEAR(CURDATE())";
     return obtenerTotal($conexion,$sql);
 }
+// Total de paquetes del mes anterior
 function obtenerTotalMesAnterior($conexion){
     $sql = "SELECT SUM(paquetes_paq) total
             FROM PRODUCCION_PAQUETES
@@ -93,7 +101,10 @@ function obtenerTotalMesAnterior($conexion){
     return obtenerTotal($conexion,$sql);
 }
 
-/* MEJOR Y PEOR DIA MES ACTUAL */
+/* =================================================
+   MEJOR Y PEOR DÍA
+================================================= */
+// Mejor y peor día de producción del mes actual
 function obtenerMejorPeorDiaMes($conexion){
     $sql = "SELECT 
                 DATE(fecha_paq) fecha,
@@ -123,8 +134,7 @@ function obtenerMejorPeorDiaMes($conexion){
         "peor" => $peor_dia
     ];
 }
-
-/* MEJOR Y PEOR DIA MES ANTERIOR */
+// Mejor y peor día de producción del mes anterior
 function obtenerMejorPeorDiaAnterior($conexion){
     $sql = "SELECT 
                 DATE(fecha_paq) fecha,
@@ -155,7 +165,10 @@ function obtenerMejorPeorDiaAnterior($conexion){
     ];
 }
 
-/* TABLAS */
+/* =================================================
+   TABLAS
+================================================= */
+// Producción agrupada por fecha en un rango
 function obtenerTablaFechas($conexion,$desde,$hasta){
     $sql = "
     SELECT 
@@ -168,6 +181,7 @@ function obtenerTablaFechas($conexion,$desde,$hasta){
     ";
     return mysqli_query($conexion,$sql);
 }
+// Producción agrupada por operario en un rango
 function obtenerTablaOperarios($conexion,$desde,$hasta){
     $sql = "
     SELECT 
@@ -183,7 +197,10 @@ function obtenerTablaOperarios($conexion,$desde,$hasta){
     return mysqli_query($conexion,$sql);
 }
 
-/* ULTIMA IMPORTACIÓN */
+/* =================================================
+   IMPORTACIÓN
+================================================= */
+// Fecha de la última importación de paquetes
 function obtenerUltimaImportacion($conexion){
     $sql = "SELECT ultima_fecha 
             FROM IMPORTAR 

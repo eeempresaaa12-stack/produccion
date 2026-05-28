@@ -48,7 +48,6 @@ include("../../../templates/header.php");
             <th>Bultos</th>
             <th>Retal (kg)</th>
             <th>Total (kg)</th>
-            <th>Acciones</th>
             </tr>
         </thead>
         
@@ -65,14 +64,6 @@ include("../../../templates/header.php");
             <td><?php echo $fila['bultos_plana']; ?></td>
             <td><?php echo $fila['retal_plana']; ?></td>
             <td><?php echo $fila['total_plana']; ?></td>
-                <td>
-                    <a class="btn" href="editar.php?id=<?php echo $fila['id']; ?>">Editar</a>
-                    
-                    <a class="btn" href="controllers/eliminarController.php?id=<?php echo $fila['id']; ?>" 
-                    onclick="return confirm('¿Seguro que deseas eliminar este registro?');">
-                    Eliminar
-                    </a>
-                </td>
             </tr>
         <?php endwhile; ?>
         </tbody>

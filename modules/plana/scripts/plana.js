@@ -1,14 +1,19 @@
-window.chartProduccion = window.chartProduccion || null;
-window.chartOperarios = window.chartOperarios || null;
-window.chartMeses = window.chartMeses || null;
+// Variables globales para instancias de gráficos
+window.chartProduccion  = window.chartProduccion  || null;
+window.chartOperarios   = window.chartOperarios   || null;
+window.chartMeses       = window.chartMeses       || null;
 window.chartReferencias = window.chartReferencias || null;
 
+// Cargar gráficos de producción y operarios según filtros
 function cargarDatos(tipo){
-    let filtroMes = document.getElementById("filtroMes").value;
+    let filtroMes    = document.getElementById("filtroMes").value;
     let filtroSemana = document.getElementById("filtroSemana").value;
+
     fetch("../ajax/getProduccionPlana.php?tipo=" + tipo + "&mes=" + filtroMes + "&semana=" + filtroSemana)
     .then(res => res.json())
     .then(data => {
+
+        // Gráfico de producción y retal (línea por mes/semana, barras por año)
         if(chartProduccion) chartProduccion.destroy();
         const tipo_grafico = (tipo === 'anio') ? 'bar' : 'line';
         chartProduccion = new Chart(document.getElementById('graficoProduccion'), {
@@ -31,7 +36,7 @@ function cargarDatos(tipo){
                 plugins: {
                     tooltip: {
                         enabled: true,
-                        bodyFont: { size: 12 },
+                        bodyFont:  { size: 12 },
                         titleFont: { size: 13 },
                         padding: 10,
                         displayColors: false
@@ -40,6 +45,7 @@ function cargarDatos(tipo){
             }
         });
 
+        // Gráfico de bultos por operario
         if(chartOperarios) chartOperarios.destroy();
         chartOperarios = new Chart(document.getElementById('graficoOperarios'), {
             type: 'bar',
@@ -56,7 +62,7 @@ function cargarDatos(tipo){
                 plugins: {
                     tooltip: {
                         enabled: true,
-                        bodyFont: { size: 12 },
+                        bodyFont:  { size: 12 },
                         titleFont: { size: 13 },
                         padding: 10,
                         displayColors: false
@@ -66,6 +72,8 @@ function cargarDatos(tipo){
         });
     });
 }
+
+// Aplicar filtros y recargar gráficos
 function actualizarFiltros(){
     let semana = document.getElementById("filtroSemana").value;
     if(semana == ""){
@@ -76,6 +84,7 @@ function actualizarFiltros(){
 }
 actualizarFiltros();
 
+// Cargar gráfico de producción y bultos por referencia
 function cargarGraficoReferencias(){
     fetch("../ajax/getReferenciasPlana.php")
     .then(res => res.json())
@@ -99,7 +108,7 @@ function cargarGraficoReferencias(){
                 plugins: {
                     tooltip: {
                         enabled: true,
-                        bodyFont: { size: 12 },
+                        bodyFont:  { size: 12 },
                         titleFont: { size: 13 },
                         padding: 10,
                         displayColors: false
@@ -111,6 +120,7 @@ function cargarGraficoReferencias(){
 }
 cargarGraficoReferencias();
 
+// Cargar gráfico de producción mensual por año
 function cargarGraficoMeses(){
     let anio = document.getElementById("filtroAnioMes").value;
 
@@ -118,7 +128,10 @@ function cargarGraficoMeses(){
     .then(res => res.json())
     .then(data => {
         if(chartMeses) chartMeses.destroy();
+
         const meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+
+        // Gráfico de barras por mes
         chartMeses = new Chart(document.getElementById('graficoMeses'), {
             type: 'bar',
             data: {
@@ -131,39 +144,25 @@ function cargarGraficoMeses(){
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
+                interaction: { mode: 'index', intersect: false },
                 plugins: {
-                    legend: {
-                        labels: {
-                            font: {
-                                size: 12
-                            }
-                        }
-                    },
-                    tooltip: {
-                        bodyFont: { size: 12 },
-                        titleFont: { size: 12 }
-                    }
+                    legend:  { labels: { font: { size: 12 } } },
+                    tooltip: { bodyFont: { size: 12 }, titleFont: { size: 12 } }
                 },
                 scales: {
-                    x: {
-                        ticks: { font: { size: 13 } }
-                    },
-                    y: {
-                        ticks: { font: { size: 13 } }
-                    }
+                    x: { ticks: { font: { size: 13 } } },
+                    y: { ticks: { font: { size: 13 } } }
                 }
             }
         });
     });
 
+    // Obtener y mostrar total del año en kg
     fetch(`../ajax/getTotalAnioPlana.php?anio=${anio}`)
     .then(res => res.json())
     .then(data => {
-        document.getElementById("totalAnio").innerText = "Total: " + Number(data.total).toLocaleString() + " kg";
+        document.getElementById("totalAnio").innerText =
+            "Total: " + Number(data.total).toLocaleString() + " kg";
     });
 }
 cargarGraficoMeses();

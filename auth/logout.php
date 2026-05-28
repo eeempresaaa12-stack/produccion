@@ -1,11 +1,12 @@
 <?php
+// Iniciar la sesión si no hay una activa
 if(session_status() === PHP_SESSION_NONE){
     session_start();
 }
 
-/* BORRAR SESION */
+// Borrar la sesión
 session_destroy();
 
-/* VOLVER AL LOGIN */
+// Redirigir al Login
 header("Location: login.php");
 exit;

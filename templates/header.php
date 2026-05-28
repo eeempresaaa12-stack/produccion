@@ -1,33 +1,39 @@
 <?php
+// Obtener rol del usuario en sesión
 $rol = $_SESSION['rol'] ?? 'Sin rol';
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Control Producción</title>
-
+    <!-- Ícono y estilos -->
     <link rel="icon" type="image/png" href="/CONTROL_PRODUCCION/assets/img/logo-plastypetco.png">    
     <link rel="stylesheet" href="/CONTROL_PRODUCCION/assets/css/main.css">
 
 </head>
 
 <body>
+    <!-- Barra de navegación -->
+    <div class="navbar">
 
-<div class="navbar">
-    <div class="navbar-logo">
-        <a href="/CONTROL_PRODUCCION/index.php"><img src="/CONTROL_PRODUCCION/assets/img/logo-plastypetco.png" alt="Logo Plastypetco"></a>
+        <!-- Logo -->
+        <div class="navbar-logo">
+            <a href="/CONTROL_PRODUCCION/index.php"><img src="/CONTROL_PRODUCCION/assets/img/logo-plastypetco.png" alt="Logo Plastypetco"></a>
+        </div>
+        
+        <!-- Título -->
+        <h1>Control Producción</h1>
+
+        <!-- Rol y botón de cerrar sesión -->
+        <div class="cerrar-sesion">
+            <h2>Rol: <?php echo $rol ?></h2>
+            <a id="btnCerrar" href="/CONTROL_PRODUCCION/auth/logout.php">Cerrar Sesión</a>
+        </div>
+        
     </div>
-    
-    <h1>Control Producción</h1>
 
-    <div class="cerrar-sesion">
-        <h2>Rol: <?php echo $rol ?></h2>
-        <a id="btnCerrar" href="/CONTROL_PRODUCCION/auth/logout.php">Cerrar Sesión</a>
-    </div>
-    
-</div>
-
+<!-- Contenido principal -->
 <div class="contenido">
-

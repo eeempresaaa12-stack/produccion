@@ -1,11 +1,15 @@
 <?php
 /** @var mysqli $conexion */
 
+// Importar conexion.php
 require_once("../../../includes/conexion.php");
+// Importar produccionModel.php
 require_once("../models/produccionModel.php");
 
+// Obtener ID del registro a actualizar
 $id = $_POST['id'];
 
+// Recopilar datos del formulario
 $datos = [
     'fecha' => $_POST['fecha_plana'],
 
@@ -26,7 +30,9 @@ $datos = [
     'total' => $_POST['total_plana']
 ];
 
+// Actualizar registro 
 actualizarProduccion($conexion, $id, $datos);
 
+// Redirigir al Lista
 header("Location: ../views/lista.php");
 exit;

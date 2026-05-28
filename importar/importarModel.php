@@ -1,7 +1,5 @@
 <?php
-/* =====================
-   CONFIGURACIÓN
-===================== */
+// Límite de memoria y tiempo de ejecución
 ini_set('memory_limit', '512M');
 set_time_limit(0);
 
@@ -14,6 +12,7 @@ set_time_limit(0);
 /* =====================
    FUNCIONES DE TEXTO
 ===================== */
+// Limpiar nombre: si tiene ' - ', retorna solo la parte derecha
 function limpiarNombre($texto) {
     $texto = trim($texto);
     if (strpos($texto, ' - ') !== false) {
@@ -22,6 +21,7 @@ function limpiarNombre($texto) {
     }
     return $texto;
 }
+// Convertir número con formato colombiano (puntos y comas) a float
 function convertirNumero($valor) {
     $valor = trim($valor);
     if ($valor === '' || $valor === null) {
@@ -36,17 +36,21 @@ function convertirNumero($valor) {
 /* =====================
    FUNCIONES DE FECHA
 ===================== */
+// Convertir marca temporal de Google Sheets a formato MySQL
 function convertirMarca($fecha) {
     $fecha = trim($fecha);
     $f = DateTime::createFromFormat('d/m/Y H:i:s', $fecha);
     if (!$f) $f = DateTime::createFromFormat('d/m/Y G:i:s', $fecha);
     if (!$f) $f = DateTime::createFromFormat('d/m/Y g:i:s', $fecha);
+    // Corregir hora de un solo dígito
     if (!$f) {
         $fecha = preg_replace('/(\d{2}\/\d{2}\/\d{4}) (\d):/', '$1 0$2:', $fecha);
         $f = DateTime::createFromFormat('d/m/Y H:i:s', $fecha);
     }
     return $f ? $f->format('Y-m-d H:i:s') : null;
 }
+
+// Convertir fecha en múltiples formatos posibles a formato MySQL
 function convertirFecha($fecha) {
     $fecha = trim($fecha);
     if (empty($fecha)) {
@@ -76,6 +80,7 @@ function convertirFecha($fecha) {
 /* =====================
    FUNCIONES DE BD
 ===================== */
+// Cargar catálogo como arreglo asociativo [nombre => id]
 function cargarCatalogo($conexion, $tabla, $campo_nombre, $campo_id) {
     $lista = [];
     $res = mysqli_query($conexion, "SELECT $campo_id, $campo_nombre FROM $tabla");
@@ -84,6 +89,7 @@ function cargarCatalogo($conexion, $tabla, $campo_nombre, $campo_id) {
     }
     return $lista;
 }
+// Insertar nuevo registro en catálogo si no existe y retornar su ID
 function autoCrear($conexion, &$catalogo, $tabla, $campo, $valor) {
     $valor_esc = mysqli_real_escape_string($conexion, $valor);
     mysqli_query($conexion, "INSERT INTO $tabla ($campo) VALUES ('$valor_esc')");
@@ -91,11 +97,13 @@ function autoCrear($conexion, &$catalogo, $tabla, $campo, $valor) {
     $catalogo[$valor] = $id;
     return $id;
 }
+// Obtener la última fecha importada del registro de control
 function obtenerUltimaFecha($conexion, $nombre) {
     $res = mysqli_query($conexion, "SELECT ultima_fecha FROM IMPORTAR WHERE nombre = '$nombre'");
     $row = mysqli_fetch_assoc($res);
     return $row['ultima_fecha'] ?? null;
 }
+// Actualizar la última fecha importada en el registro de control
 function actualizarUltimaFecha($conexion, $nombre, $nueva_fecha) {
     $sql = "UPDATE IMPORTAR SET ultima_fecha = '$nueva_fecha' WHERE nombre = '$nombre'";
     mysqli_query($conexion, $sql);
@@ -105,12 +113,14 @@ function actualizarUltimaFecha($conexion, $nombre, $nueva_fecha) {
 /* =====================
    FUNCIONES DE PROGRESO
 ===================== */
+// Enviar actualización de progreso al navegador en tiempo real
 function sendProgress($pct, $msg) {
     $msg = addslashes($msg);
     echo "<script>up($pct,'$msg');</script>\n";
     if (ob_get_level()) ob_flush();
     flush();
 }
+// Leer filas del Google Sheet y filtrar según modo de importación
 function leerSheet($url, $modo, $ultima_fecha) {
     $archivo = fopen($url, 'r');
     if (!$archivo) {
@@ -120,8 +130,9 @@ function leerSheet($url, $modo, $ultima_fecha) {
     $primera  = true;
     $omitidas = 0;
     while (($data = fgetcsv($archivo, 1000, ',')) !== false) {
-        if ($primera) { $primera = false; continue; }
+        if ($primera) { $primera = false; continue; } // Saltar encabezado
 
+        // En modo 'nuevos', omitir filas ya importadas
         if ($modo === 'nuevos') {
             $marca_fila = convertirMarca($data[0]);
             if ($marca_fila === null || $marca_fila <= $ultima_fecha) {
@@ -134,17 +145,17 @@ function leerSheet($url, $modo, $ultima_fecha) {
     fclose($archivo);
     return [$filas, $omitidas];
 }
-
+// Ejecutar SQL, clasificar resultado e informar progreso al navegador
 function procesarFila($conexion, $sql, $marca, &$contador, $total, &$insertados, &$actualizados, &$duplicados, &$nueva_fecha) {
     $contador++;
 
     mysqli_query($conexion, $sql);
     $rows = mysqli_affected_rows($conexion);
-
+    // Actualizar la fecha más reciente procesada
     if ($marca && (!isset($nueva_fecha) || $marca > $nueva_fecha)) {
         $nueva_fecha = $marca;
     }
-
+    // Clasificar resultado según filas afectadas
     if ($rows === 1) {
         $insertados++;
         $tipo   = 'ok';
@@ -158,11 +169,12 @@ function procesarFila($conexion, $sql, $marca, &$contador, $total, &$insertados,
         $tipo   = 'dup';
         $logMsg = addslashes("⚠ Duplicado · $marca");
     }
-
+    // Enviar resultado al navegador en tiempo real
     echo "<script>tick($contador,$total,$insertados,$actualizados,$duplicados,'$logMsg','$tipo');</script>\n";
     if (ob_get_level()) ob_flush();
     flush();
 }
+// Guardar última fecha e enviar señal de finalización al navegador
 function finalizarImportacion($conexion, $nombre, $nueva_fecha, $insertados, $actualizados, $duplicados, $total) {
     if (!empty($nueva_fecha)) {
         actualizarUltimaFecha($conexion, $nombre, $nueva_fecha);

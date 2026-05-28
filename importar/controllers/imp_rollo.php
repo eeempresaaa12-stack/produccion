@@ -1,27 +1,33 @@
 <?php
 /** @var mysqli $conexion */
 
+// Importar conexion.php 
 require_once("../../includes/conexion.php");
-require_once("../importarModel.php");
-
 mysqli_set_charset($conexion, "utf8mb4");
 
+// Importar importarModel.php
+require_once("../importarModel.php");
+
+// Parametros de importación
 $modo         = $_GET['modo'] ?? 'nuevos';
 $ultima_fecha = obtenerUltimaFecha($conexion, 'rollo');
 
+// Fuente de datos
 $url        = "https://docs.google.com/spreadsheets/d/1CpdDtlNVQJoSHJ7WAc0BrXP-FIohYWhMB6si1bzmOz0/export?format=csv&gid=1327914009";
 $titulo     = "Producción de Rollos";
 $subtitulo  = "PRODUCCION_ROLLO";
 $volver_url = "../../modules/rollo/views/dashboard.php";
 
+// Leer filas del Google Sheet
 [$filas, $omitidas] = leerSheet($url, $modo, $ultima_fecha);
 $total = count($filas);
 
+// Importar progreso.php
 include("../views/progreso.php");
 ?>
 
 <?php
-// Sin filas nuevas
+// Sin registros nuevos
 if ($total === 0 && $modo === 'nuevos') {
     echo "<script>
         document.getElementById('msg').textContent        = 'No hay registros nuevos...';
@@ -36,7 +42,7 @@ if ($total === 0 && $modo === 'nuevos') {
     echo "</body></html>"; exit;
 }
 
-// Conexión OK
+// Actualizar barra y conexión exitosa
 echo "<script>
     document.getElementById('dot').className           = 'dot';
     document.getElementById('msg').textContent         = 'Conexión OK · $total registros encontrados';
@@ -46,9 +52,7 @@ echo "<script>
 </script>\n";
 if (ob_get_level()) ob_flush(); flush();
 
-/* =====================
-   CATÁLOGOS
-===================== */
+// Cargar catálogos desde la base de datos
 echo "<script>document.getElementById('msg').textContent='Cargando catálogos…';</script>\n";
 if (ob_get_level()) ob_flush(); flush();
 
@@ -57,9 +61,7 @@ $referencias = cargarCatalogo($conexion, "REFERENCIAS", "nombre_referencia", "id
 $colores     = cargarCatalogo($conexion, "COLORES",     "nombre_color",      "id_color");
 $turnos      = cargarCatalogo($conexion, "TURNOS",      "nombre_turno",      "id_turno");
 
-/* =====================
-   PROCESAR FILAS
-===================== */
+// Contadores de resultado
 $contador     = 0;
 $insertados   = 0;
 $actualizados = 0;
@@ -67,7 +69,7 @@ $duplicados   = 0;
 $nueva_fecha  = null;
 
 foreach ($filas as $data) {
-
+    // Limpiar y convertir datos de cada fila
     $marca      = convertirMarca($data[0]);
     $fecha      = convertirFecha($data[1]) ?? $marca;
     $maquina    = limpiarNombre($data[2]);
@@ -77,11 +79,13 @@ foreach ($filas as $data) {
     $peso_rollo = convertirNumero($data[6]);
     $retal      = convertirNumero($data[7]);
 
+    // Obtener IDs de catálogos o crearlos si no existen
     $id_maquina    = $maquinas[$maquina]       ?? autoCrear($conexion, $maquinas,    "MAQUINAS",    "nombre_maquina",    $maquina);
     $id_referencia = $referencias[$referencia] ?? autoCrear($conexion, $referencias, "REFERENCIAS", "nombre_referencia", $referencia);
     $id_color      = $colores[$color]          ?? autoCrear($conexion, $colores,     "COLORES",     "nombre_color",      $color);
     $id_turno      = $turnos[$turno]           ?? autoCrear($conexion, $turnos,      "TURNOS",      "nombre_turno",      $turno);
 
+    // Modo 'todo': Insertar o actualizar si ya existe
     if ($modo === 'todo') {
         $sql = "INSERT INTO PRODUCCION_ROLLO
                     (marca_temporal,fecha_roll,id_maquina,id_referencia,
@@ -97,6 +101,7 @@ foreach ($filas as $data) {
                     id_turno      = VALUES(id_turno),
                     peso_rollo    = VALUES(peso_rollo),
                     retal_roll    = VALUES(retal_roll)";
+    // Modo 'nuevos': Insertar solo si no existe
     } else {
         $sql = "INSERT IGNORE INTO PRODUCCION_ROLLO
                     (marca_temporal,fecha_roll,id_maquina,id_referencia,
@@ -105,15 +110,10 @@ foreach ($filas as $data) {
                     ('$marca','$fecha','$id_maquina','$id_referencia',
                     '$id_color','$id_turno','$peso_rollo','$retal')";
     }
-
+    // Ejecutar inserción y actualizar progreso
     procesarFila($conexion, $sql, $marca, $contador, $total, $insertados, $actualizados, $duplicados, $nueva_fecha);
 }
 
-/* =====================
-   FINALIZAR
-===================== */
+// Al finalizar: Mostrar contadores y guardar última fecha
 finalizarImportacion($conexion, 'rollo', $nueva_fecha, $insertados, $actualizados, $duplicados, $total);
 ?>
-
-</body>
-</html>

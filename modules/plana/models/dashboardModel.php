@@ -1,7 +1,8 @@
 <?php
 /* =================================================
-   CONSULTAS
+   FUNCIÓN BASE
 ================================================= */
+// Ejecutar consulta y retornar valor 'total'
 function obtenerTotalPlana($conexion, $sql){
     $res = mysqli_query($conexion, $sql);
     if(!$res){
@@ -11,21 +12,22 @@ function obtenerTotalPlana($conexion, $sql){
     return $row['total'] ?? 0;
 }
 
-/* TOTAL HISTORICO */
+/* =================================================
+   CONSULTAS DE TOTALES
+================================================= */
+// Total histórico de producción
 function obtenerTotalHistoricoPlana($conexion){
     $sql = "SELECT SUM(total_plana) total FROM PRODUCCION_PLANA";
     return obtenerTotalPlana($conexion, $sql);
 }
-
-/* PRODUCCION SEMANA */
+// Producción de la semana actual
 function obtenerProduccionSemanaPlana($conexion){
     $sql = "SELECT SUM(total_plana) total
             FROM PRODUCCION_PLANA
             WHERE YEARWEEK(fecha_plana, 1) = YEARWEEK(CURDATE(), 1)";
     return obtenerTotalPlana($conexion, $sql);
 }
-
-/* PRODUCCION MES */
+// Producción del mes actual
 function obtenerProduccionMesPlana($conexion){
     $sql = "SELECT SUM(total_plana) total
             FROM PRODUCCION_PLANA
@@ -34,7 +36,10 @@ function obtenerProduccionMesPlana($conexion){
     return obtenerTotalPlana($conexion, $sql);
 }
 
-/* TOP OPERARIO MES ACTUAL */
+/* =================================================
+   TOP OPERARIO
+================================================= */
+// Operario con más producción en el mes actual
 function obtenerTopOperarioPlana($conexion){
     $sql = "SELECT o.nombre, IFNULL(SUM(p.bultos_plana),0) total
             FROM PRODUCCION_PLANA p
@@ -53,8 +58,7 @@ function obtenerTopOperarioPlana($conexion){
         'total' => 0
     ];
 }
-
-/* TOP OPERARIO MES ANTERIOR */
+// Operario con más producción en el mes anterior
 function obtenerTopOperarioAnteriorPlana($conexion){
     $sql = "SELECT o.nombre, IFNULL(SUM(p.bultos_plana),0) total
             FROM PRODUCCION_PLANA p
@@ -74,7 +78,10 @@ function obtenerTopOperarioAnteriorPlana($conexion){
     ];
 }
 
-/* TOTAL MES ACTUAL Y ANTERIOR */
+/* =================================================
+   TOTALES MES ACTUAL Y ANTERIOR
+================================================= */
+// Total de paquetes del mes actual
 function obtenerTotalMesActualPlana($conexion){
     $sql = "SELECT SUM(total_plana) total
             FROM PRODUCCION_PLANA
@@ -82,6 +89,7 @@ function obtenerTotalMesActualPlana($conexion){
             AND YEAR(fecha_plana)=YEAR(CURDATE())";
     return obtenerTotalPlana($conexion, $sql);
 }
+// Total de paquetes del mes anterior
 function obtenerTotalMesAnteriorPlana($conexion){
     $sql = "SELECT SUM(total_plana) total
             FROM PRODUCCION_PLANA
@@ -90,7 +98,10 @@ function obtenerTotalMesAnteriorPlana($conexion){
     return obtenerTotalPlana($conexion, $sql);
 }
 
-/* RESUMEN MES ACTUAL */
+/* =================================================
+   RESUMENES
+================================================= */
+// Resumen de producción del mes actual
 function obtenerResumenMesPlana($conexion){
     $sql = "SELECT SUM(peso_plana) bruto, SUM(retal_plana) retal, SUM(total_plana) neto
             FROM PRODUCCION_PLANA
@@ -107,8 +118,7 @@ function obtenerResumenMesPlana($conexion){
     }
     return ['bruto' => null, 'retal' => null, 'neto' => null];
 }
-
-/* RESUMEN MES ANTERIOR */
+// Resumen de producción del mes anterior
 function obtenerResumenMesAnteriorPlana($conexion){
     $sql = "SELECT SUM(peso_plana) bruto, SUM(retal_plana) retal, SUM(total_plana) neto
             FROM PRODUCCION_PLANA
@@ -126,7 +136,10 @@ function obtenerResumenMesAnteriorPlana($conexion){
     return ['bruto' => null, 'retal' => null, 'neto' => null];
 }
 
-/* MEJOR Y PEOR DIA MES ACTUAL*/
+/* =================================================
+   MEJOR Y PEOR DÍA
+================================================= */
+// Mejor y peor día de producción del mes actual
 function obtenerMejorPeorDiaMesPlana($conexion){
     $sql = "SELECT DATE(fecha_plana) fecha, SUM(total_plana) total
             FROM PRODUCCION_PLANA
@@ -151,8 +164,7 @@ function obtenerMejorPeorDiaMesPlana($conexion){
         'peor' => $peor
     ];
 }
-
-/* MEJOR Y PEOR DIA MES ANTERIOR */
+// Mejor y peor día de producción del mes anterior
 function obtenerMejorPeorDiaAnteriorPlana($conexion){
     $sql = "SELECT DATE(fecha_plana) fecha, SUM(total_plana) total
             FROM PRODUCCION_PLANA
@@ -178,7 +190,10 @@ function obtenerMejorPeorDiaAnteriorPlana($conexion){
     ];
 }
 
-/* TABLAS */
+/* =================================================
+   TABLAS
+================================================= */
+// Producción agrupada por fecha en un rango
 function obtenerTablaFechasPlana($conexion, $desde, $hasta){
     $sql = "SELECT DATE(fecha_plana) fecha, SUM(peso_plana) bruto, SUM(bultos_plana) bultos, SUM(retal_plana) retal, SUM(total_plana) neto
             FROM PRODUCCION_PLANA
@@ -187,6 +202,7 @@ function obtenerTablaFechasPlana($conexion, $desde, $hasta){
             ORDER BY fecha DESC";
     return mysqli_query($conexion, $sql);
 }
+// Producción por referencias en un rango
 function obtenerTablaReferenciasPlana($conexion, $desde, $hasta){
     $sql = "SELECT r.nombre_referencia, SUM(p.peso_plana) bruto, SUM(p.bultos_plana) bultos, SUM(p.retal_plana) retal, SUM(p.total_plana) neto
             FROM PRODUCCION_PLANA p
@@ -196,6 +212,7 @@ function obtenerTablaReferenciasPlana($conexion, $desde, $hasta){
             ORDER BY neto DESC";
     return mysqli_query($conexion, $sql);
 }
+// Producción agrupada por máquina en un rango
 function obtenerTablaMaquinasPlana($conexion, $desde, $hasta){
     $sql = "SELECT m.nombre_maquina, SUM(p.peso_plana) bruto, SUM(p.bultos_plana) bultos, SUM(p.retal_plana) retal, SUM(p.total_plana) neto
             FROM PRODUCCION_PLANA p
@@ -206,7 +223,10 @@ function obtenerTablaMaquinasPlana($conexion, $desde, $hasta){
     return mysqli_query($conexion, $sql);
 }
 
-/* ULTIMA IMPORTACION */
+/* =================================================
+   IMPORTACIÓN
+================================================= */
+// Fecha de la última importación de máquina plana
 function obtenerUltimaImportacionPlana($conexion){
     $sql = "SELECT ultima_fecha FROM IMPORTAR WHERE nombre = 'plana'";
     $res = mysqli_query($conexion, $sql);

@@ -4,23 +4,27 @@
 
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Control Producción</title>
-
+    <!-- Ícono y estilos -->
     <link rel="icon" type="image/png" href="/CONTROL_PRODUCCION/assets/img/logo-plastypetco.png">    
     <link rel="stylesheet" href="/CONTROL_PRODUCCION/assets/css/estilos.css"> 
 
 </head>
 
+<!-- Pie de página -->
 <footer class="footer">
 
+    <!-- Nombre de la empresa -->
     <div class="footer-left">
         <strong>Plastypetco</strong>
         <span>&nbsp;© 2026</span>
     </div>
 
+    <!-- Nombre del sistema -->
     <div class="footer-center">
         <span>Control Interno de Producción</span>
     </div>
 
+    <!-- Versión -->
     <div class="footer-right">
         <span>Versión 1.0</span>
     </div>

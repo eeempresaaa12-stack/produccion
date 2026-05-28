@@ -1,7 +1,8 @@
 <?php
 /* =================================================
-   CONSULTAS
+   FUNCIÓN BASE
 ================================================= */
+// Ejecutar consulta y retornar valor 'total'
 function obtenerTotalRollo($conexion, $sql){
     $res = mysqli_query($conexion, $sql);
     if(!$res){
@@ -11,22 +12,23 @@ function obtenerTotalRollo($conexion, $sql){
     return $row['total'] ?? 0;
 }
 
-/* TOTAL HISTORICO */
+/* =================================================
+   CONSULTAS DE TOTALES
+================================================= */
+// Total histórico de producción
 function obtenerTotalHistoricoRollo($conexion){
     $sql = "SELECT SUM(total_roll) total
             FROM PRODUCCION_ROLLO";
     return obtenerTotalRollo($conexion, $sql);
 }
-
-/* PRODUCCION SEMANA */
+// Producción de la semana actual
 function obtenerProduccionSemanaRollo($conexion){
     $sql = "SELECT SUM(total_roll) total
             FROM PRODUCCION_ROLLO
             WHERE YEARWEEK(fecha_roll,1)=YEARWEEK(CURDATE(),1)";
     return obtenerTotalRollo($conexion, $sql);
 }
-
-/* PRODUCCION MES */
+// Producción del mes actual
 function obtenerProduccionMesRollo($conexion){
     $sql = "SELECT SUM(total_roll) total
             FROM PRODUCCION_ROLLO
@@ -35,7 +37,10 @@ function obtenerProduccionMesRollo($conexion){
     return obtenerTotalRollo($conexion, $sql);
 }
 
-/* TOP MAQUINA MES ACTUAL */
+/* =================================================
+   TOP MÁQUINA
+================================================= */
+// Máquina con más producción en el mes actual
 function obtenerTopMaquinaRollo($conexion){
     $sql = "SELECT 
                 m.nombre_maquina,
@@ -57,8 +62,7 @@ function obtenerTopMaquinaRollo($conexion){
         "total" => 0
     ];
 }
-
-/* TOP MAQUINA MES ANTERIOR */
+// Máquina con más producción en el mes anterior
 function obtenerTopMaquinaAnteriorRollo($conexion){
     $sql = "SELECT 
                 m.nombre_maquina,
@@ -81,7 +85,10 @@ function obtenerTopMaquinaAnteriorRollo($conexion){
     ];
 }
 
-/* TOTAL MES ACTUAL Y ANTERIOR */
+/* =================================================
+   TOTALES MES ACTUAL Y ANTERIOR
+================================================= */
+// Total de paquetes del mes actual
 function obtenerTotalMesActualRollo($conexion){
     $sql = "SELECT SUM(total_roll) total
             FROM PRODUCCION_ROLLO
@@ -89,6 +96,7 @@ function obtenerTotalMesActualRollo($conexion){
             AND YEAR(fecha_roll)=YEAR(CURDATE())";
     return obtenerTotalRollo($conexion, $sql);
 }
+// Total de paquetes del mes anterior
 function obtenerTotalMesAnteriorRollo($conexion){
     $sql = "SELECT SUM(total_roll) total
             FROM PRODUCCION_ROLLO
@@ -97,7 +105,10 @@ function obtenerTotalMesAnteriorRollo($conexion){
     return obtenerTotalRollo($conexion, $sql);
 }
 
-/* RESUMEN MES ACTUAL */
+/* =================================================
+   TOTALES MES ACTUAL Y ANTERIOR
+================================================= */
+// Total de paquetes del mes actual
 function obtenerResumenMesRollo($conexion){
     $sql = "SELECT SUM(peso_rollo) bruto, SUM(retal_roll) retal, SUM(total_roll) neto
             FROM PRODUCCION_ROLLO
@@ -114,7 +125,7 @@ function obtenerResumenMesRollo($conexion){
     }
     return ['bruto' => null, 'retal' => null, 'neto' => null];
 }
-/* RESUMEN MES ANTERIOR */
+// Resumen de producción del mes anterior
 function obtenerResumenMesAnteriorRollo($conexion){
     $sql = "SELECT SUM(peso_rollo) bruto, SUM(retal_roll) retal, SUM(total_roll) neto
             FROM PRODUCCION_ROLLO
@@ -132,7 +143,10 @@ function obtenerResumenMesAnteriorRollo($conexion){
     return ['bruto' => null, 'retal' => null, 'neto' => null];
 }
 
-/* MEJOR Y PEOR DIA MES ACTUAL*/
+/* =================================================
+   MEJOR Y PEOR DÍA
+================================================= */
+// Mejor y peor día de producción del mes actual
 function obtenerMejorPeorDiaMesRollo($conexion){
     $sql = "SELECT 
                 DATE(fecha_roll) fecha,
@@ -168,8 +182,7 @@ function obtenerMejorPeorDiaMesRollo($conexion){
         'peor' => $peor
     ];
 }
-
-/* MEJOR Y PEOR DIA MES ANTERIOR */
+// Mejor y peor día de producción del mes anterior
 function obtenerMejorPeorDiaAnteriorRollo($conexion){
     $sql = "SELECT 
                 DATE(fecha_roll) fecha,
@@ -206,7 +219,10 @@ function obtenerMejorPeorDiaAnteriorRollo($conexion){
     ];
 }
 
-/* TABLAS */
+/* =================================================
+   TABLAS
+================================================= */
+// Producción agrupada por fecha en un rango
 function obtenerTablaFechasRollo($conexion, $desde, $hasta){
     $sql = "SELECT 
                 DATE(p.fecha_roll) fecha,
@@ -220,6 +236,7 @@ function obtenerTablaFechasRollo($conexion, $desde, $hasta){
             ORDER BY fecha DESC";
     return mysqli_query($conexion, $sql);
 }
+// Producción agrupada por máquina en un rango
 function obtenerTablaMaquinasRollo($conexion, $desde, $hasta){
     $sql = "SELECT 
                 m.nombre_maquina,
@@ -236,7 +253,10 @@ function obtenerTablaMaquinasRollo($conexion, $desde, $hasta){
     return mysqli_query($conexion, $sql);
 }
 
-/* ULTIMA IMPORTACION */
+/* =================================================
+   IMPORTACIÓN
+================================================= */
+// Fecha de la última importación de rollos
 function obtenerUltimaImportacionRollo($conexion){
     $sql = "SELECT ultima_fecha
             FROM IMPORTAR

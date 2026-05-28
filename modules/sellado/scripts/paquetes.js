@@ -1,13 +1,18 @@
+// Variables globales para instancias de gráficos
 window.chartProduccion = window.chartProduccion || null;
-window.chartOperarios = window.chartOperarios || null;
-window.chartMeses = window.chartMeses || null;
+window.chartOperarios  = window.chartOperarios  || null;
+window.chartMeses      = window.chartMeses      || null;
 
+// Cargar gráficos de producción y operarios según el tipo de filtro
 function cargarDatos(tipo){
-    let mes = document.getElementById("filtroMes").value;
+    let mes    = document.getElementById("filtroMes").value;
     let semana = document.getElementById("filtroSemana").value;
+
     fetch("../ajax/getProduccion.php?tipo=" + tipo + "&mes=" + mes + "&semana=" + semana)
     .then(res => res.json())
     .then(data => {
+
+        // Gráfico de producción (línea por mes/semana, barras por año)
         if(chartProduccion) chartProduccion.destroy();
         const tipo_grafico = (tipo === 'anio') ? 'bar' : 'line';
         chartProduccion = new Chart(document.getElementById('graficoProduccion'), {
@@ -25,35 +30,29 @@ function cargarDatos(tipo){
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-            },
-            plugins: {
-                tooltip: {
-                    enabled: true,
-                    bodyFont: {
-                        size: 12
-                    },
-                    titleFont: {
-                        size: 13
-                    },
-                    padding: 10,
-                    displayColors: false
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    tooltip: {
+                        enabled: true,
+                        bodyFont:  { size: 12 },
+                        titleFont: { size: 13 },
+                        padding: 10,
+                        displayColors: false
                     }
                 }
             }
         });
 
-        // OPERARIOS
+        // Ordenar operarios de mayor a menor producción
         let combinado = data.operarios.map((operario, i) => ({
             nombre: operario,
-            total: data.totales_operarios[i]
+            total:  data.totales_operarios[i]
         }));
         combinado.sort((a, b) => b.total - a.total);
         let operariosOrdenados = combinado.map(o => o.nombre);
-        let totalesOrdenados = combinado.map(o => o.total);
+        let totalesOrdenados   = combinado.map(o => o.total);
+
+        // Gráfico de operarios
         if(chartOperarios) chartOperarios.destroy();
         chartOperarios = new Chart(document.getElementById('graficoOperarios'), {
             type: 'bar',
@@ -68,32 +67,24 @@ function cargarDatos(tipo){
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
+                interaction: { mode: 'index', intersect: false },
                 plugins: {
                     tooltip: {
                         enabled: true,
-                        bodyFont: {
-                            size: 12
-                        },
-                        titleFont: {
-                            size: 13
-                        },
+                        bodyFont:  { size: 12 },
+                        titleFont: { size: 13 },
                         padding: 10,
                         displayColors: false
                     }
                 }
             }
         });
-
     });
 }
 
+// Aplicar filtros y recargar gráficos
 function actualizarFiltros(){
     let semana = document.getElementById("filtroSemana").value;
-
     if(semana == ""){
         cargarDatos('mes');
     } else {
@@ -102,22 +93,30 @@ function actualizarFiltros(){
 }
 actualizarFiltros();
 
+// Cargar gráfico de producción mensual por año
 function cargarGraficoMeses(){
     let anio = document.getElementById("filtroAnioMes").value;
+
     fetch(`../ajax/getProduccionMeses.php?anio=${anio}`)
     .then(res => res.json())
     .then(data => {
+
         if(chartMeses) chartMeses.destroy();
+
         const nombresMeses = [
             "Ene","Feb","Mar","Abr","May","Jun",
             "Jul","Ago","Sep","Oct","Nov","Dic"
         ];
-    fetch(`../ajax/getTotalAnio.php?anio=${anio}`)
-    .then(res => res.json())
-    .then(data => {
+
+        // Obtener y mostrar total del año
+        fetch(`../ajax/getTotalAnio.php?anio=${anio}`)
+        .then(res => res.json())
+        .then(data => {
             document.getElementById("totalAnio").innerText =
                 "Total: " + Number(data.total).toLocaleString();
         });
+
+        // Gráfico de barras por mes
         chartMeses = new Chart(document.getElementById('graficoMeses'), {
             type: 'bar',
             data: {
@@ -130,46 +129,17 @@ function cargarGraficoMeses(){
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
+                interaction: { mode: 'index', intersect: false },
                 plugins: {
-                    legend: {
-                        labels: {
-                            font: {
-                                size: 12
-                            }
-                        }
-                    },
-                    tooltip: {
-                        bodyFont: {
-                            size: 12
-                        },
-                        titleFont: {
-                            size: 12
-                        }
-                    }
+                    legend:  { labels: { font: { size: 12 } } },
+                    tooltip: { bodyFont: { size: 12 }, titleFont: { size: 12 } }
                 },
                 scales: {
-                    x: {
-                        ticks: {
-                            font: {
-                                size: 13
-                            }
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            font: {
-                                size: 13
-                            }
-                        }
-                    }
+                    x: { ticks: { font: { size: 13 } } },
+                    y: { ticks: { font: { size: 13 } } }
                 }
             }
         });
-
     });
 }
 cargarGraficoMeses();

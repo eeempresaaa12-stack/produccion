@@ -1,47 +1,49 @@
 <?php
 /** @var mysqli $conexion */
+// Iniciar la sesión si no hay una activa
 if(session_status() === PHP_SESSION_NONE){
     session_start();
 }
 
+// Importar conexion.php
 require_once("../includes/conexion.php");
 
-/* DATOS DEL FORMULARIO */
+// Datos del formulario
 $usuario = trim($_POST['usuario'] ?? '');
 $contrasena = trim($_POST['contrasena'] ?? '');
 
-/* VALIDAR VACIOS */
+// Validar campos vacíos
 if(empty($usuario) || empty($contrasena)){
     header("Location: login.php?error=1");
     exit;
 }
 
-/* BUSCAR USUARIO */
+// Buscar usuario en la base de datos
 $sql = "SELECT * FROM USUARIOS
         WHERE usuario = '$usuario'
         LIMIT 1";
 $res = mysqli_query($conexion, $sql);
 
-/* SI NO EXISTE */
+// Redirigir al Login si el usuario no existe
 IF(!$res || mysqli_num_rows($res) === 0){
     header("Location: login.php?error=1");
     exit;
 }
 
-/* OBTENER USUARIO */
+// Obtener datos del usuario
 $row = mysqli_fetch_assoc($res);
 
-/* VALIDAR CONTRASEÑA */
+// Validar la contraseña
 if($contrasena != $row['contrasena']){
     header("Location: login.php?error=1");
     exit;
 }
 
-/* CREAR SESION */
+// Crear sesión con datos del usuario
 $_SESSION['usuario'] = $row['usuario'];
 $_SESSION['rol'] = $row['rol'];
 $_SESSION['id_usuario'] = $row['id_usuario'];
 
-/* ENTRAR */
+// Redirigir al Index
 header("Location: ../index.php");
 exit;

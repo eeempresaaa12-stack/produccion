@@ -1,12 +1,7 @@
 /* =================================================
-   FUENTE
+   TIPOGRAFIA + RESET
 ================================================= */
-
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
-
-/* =================================================
-   RESET
-================================================= */
 
 * {
   margin: 0;
@@ -32,7 +27,7 @@ body {
 }
 
 /* =================================================
-   LOGIN BOX
+   CONTENEDOR DE INICIO
 ================================================= */
 .login-box {
   width: 565px;
@@ -46,11 +41,22 @@ body {
   flex-direction: column;
   justify-content: center;
 }
+@media (max-width: 900px) {
+  body {
+    justify-content: center;
+  }
 
+  .login-box {
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    min-height: 100vh;
+    border-left: none;
+  }
+}
 /* =================================================
    LOGO
 ================================================= */
-
 .login-box img {
   width: 110px;
   margin: 0 auto 5px auto;
@@ -60,7 +66,6 @@ body {
 /* =================================================
    TITULO
 ================================================= */
-
 .login-box h1 {
   text-align: center;
   color: #258130;
@@ -93,18 +98,12 @@ form {
   gap: 22px;
 }
 
-/* =================================================
-   GRUPOS
-================================================= */
 .grupo {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-/* =================================================
-   LABELS
-================================================= */
 .grupo label {
   color: #d7d7d7;
   font-size: 14px;
@@ -114,7 +113,6 @@ form {
 /* =================================================
    INPUTS
 ================================================= */
-
 .grupo input {
   width: 100%;
   padding: 15px 16px;
@@ -167,22 +165,4 @@ form {
 /* CLICK */
 .btn:active {
   transform: scale(0.98);
-}
-
-/* =================================================
-   RESPONSIVE
-================================================= */
-
-@media (max-width: 900px) {
-  body {
-    justify-content: center;
-  }
-
-  .login-box {
-    width: 100%;
-    max-width: 450px;
-    height: auto;
-    min-height: 100vh;
-    border-left: none;
-  }
 }

@@ -356,10 +356,10 @@ $total_operario += $row['total'];
             <button id="cerrarBtn" onclick="cerrarModal('modalImportar')">X</button>
         </div>
         <div class="btn-row">
-            <a class="btn-nuevos" href="../../../importar/controllers/imp_paquetes.php?modo=nuevos">
+            <a class="btn-nuevos" href="../../../importar/controllers/imp_sellado.php?modo=nuevos">
                 <div class="btn-text"><span class="btn-icon">🗲</span>Importar Nuevos<span class="btn-arrow">›</span></div>
             </a>
-            <a class="btn-todo" href="../../../importar/controllers/imp_paquetes.php?modo=todo">
+            <a class="btn-todo" href="../../../importar/controllers/imp_sellado.php?modo=todo">
                 <div class="btn-text"><span class="btn-icon">⟳</span>Reimportar Todo<span class="btn-arrow">›</span></div>
             </a>
         </div>

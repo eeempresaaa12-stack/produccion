@@ -45,7 +45,6 @@ include("../../../templates/header.php");
             <th>Referencia</th>
             <th>Color</th>
             <th>Paquetes</th>
-            <th>Acciones</th>
             </tr>
         </thead>
 
@@ -60,14 +59,6 @@ include("../../../templates/header.php");
             <td><?php echo $fila['nombre_referencia']; ?></td>
             <td><?php echo $fila['nombre_color']; ?></td>
             <td><?php echo $fila['paquetes_paq']; ?></td>
-                <td>
-                    <a class="btn" href="editar.php?id=<?php echo $fila['id']; ?>">Editar</a>
-
-                    <a class="btn" href="../controllers/eliminar.php?id=<?php echo $fila['id']; ?>" 
-                    onclick="return confirm('¿Seguro que deseas eliminar este registro?');">
-                    Eliminar
-                    </a>
-                </td>
             </tr>
         <?php endwhile; ?>
         </tbody>

@@ -1,7 +1,17 @@
 /* =================================================
-   IMPORTAR
+   TIPOGRAFIA + RESET
 ================================================= */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =================================================
+   BODY
+================================================= */
 body {
   background: rgb(20, 80, 33);
   color: white;
@@ -40,7 +50,7 @@ body {
 }
 
 /* ================================
-   ENCABEZADO Y TARJETA
+   ENCABEZADO 
 ================================= */
 .top {
   background: rgba(255, 255, 255, 0.75);
@@ -54,6 +64,9 @@ body {
   border: 1px solid #134413;
 }
 
+/* ================================
+   TARJETA 
+================================= */
 .card {
   background: rgba(17, 73, 29, 0.9);
   border: 1px solid #0e4112;
