@@ -1,3 +1,7 @@
+<?php
+$soloAdmin = true;
+require_once("../auth/proteger.php");
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>

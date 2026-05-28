@@ -5,6 +5,7 @@
 /** @var mysqli_result $operarios */
 /** @var mysqli_result $referencias */
 
+require_once("../../../auth/proteger.php");
 require_once("../controllers/editarController.php");
 include("../../../templates/header.php");
 ?>

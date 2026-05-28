@@ -5,6 +5,7 @@
 /** @var string $busqueda */
 /** @var string $fecha */
 
+require_once("../../../auth/proteger.php");
 require_once("../controllers/listaController.php");
 include("../../../templates/header.php");
 ?>
@@ -12,6 +13,8 @@ include("../../../templates/header.php");
 <div class="container" id="containerHistorial">
 
     <h2 class="titulo-vista">Historial Producción Máquina Plana</h2>
+
+    <a class="btn" id="btnRegistrar" href="https://docs.google.com/forms/d/e/1FAIpQLSfaRx43KiOMm9vi_y_TB46Mw2c-obkC9RCe7aMIZfdR2ACYcA/viewform?usp=dialog" target="_blank">Registrar Producción</a>
 
     <div class="card">
 
@@ -114,7 +117,9 @@ include("../../../templates/header.php");
 
 <div class="acciones">
 
-    <a class="btn" href="dashboard.php">Volver al dashboard</a>
+    <?php if($_SESSION['rol'] == 'admin'){ ?>
+        <a class="btn" href="dashboard.php">Volver al Dashboard</a>
+    <?php } ?>
     <a class="btn" href="../index.php">Volver al menú</a>
 
 </div>

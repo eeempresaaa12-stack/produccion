@@ -1,3 +1,9 @@
+<?php
+session_start();
+
+require_once("auth/proteger.php");
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -19,15 +25,29 @@
 
         <div class="areas">
 
-        <a href="modules/sellado/views/dashboard.php" class="area-card">
+        <a href="<?php
+            echo ($_SESSION['rol'] == 'admin')
+                ? 'modules/sellado/views/dashboard.php'
+                : 'modules/sellado/views/lista.php';
+        ?>" class="area-card">
             <h2>Producción de Sellado</h2>
             <p>Control de paquetes producidos</p>
         </a>
-        <a href="modules/rollo/views/dashboard.php" class="area-card">
+
+        <a href="<?php
+            echo ($_SESSION['rol'] == 'admin')
+                ? 'modules/rollo/views/dashboard.php'
+                : 'modules/rollo/views/lista.php';
+        ?>" class="area-card">
             <h2>Producción de Rollos</h2>
             <p>Control de rollos producidos</p>
         </a>
-        <a href="modules/plana/views/dashboard.php" class="area-card">
+
+        <a href="<?php
+            echo ($_SESSION['rol'] == 'admin')
+                ? 'modules/plana/views/dashboard.php'
+                : 'modules/plana/views/lista.php';
+        ?>" class="area-card">
             <h2>Producción Máquina Plana</h2>
             <p>Control producción máquina plana</p>
         </a>

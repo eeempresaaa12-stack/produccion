@@ -1,5 +1,8 @@
 <?php
 /** @var mysqli $conexion */
+
+$soloAdmin = true;
+require_once("../../../auth/proteger.php");
 require_once("../../../includes/conexion.php");
 
 $sql = "SELECT r.nombre_referencia, 

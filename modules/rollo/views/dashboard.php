@@ -27,6 +27,8 @@
 /** @var mysqli_result $res_tabla_maquina */
 /** @var string $ultima_fecha */
 
+$soloAdmin = true;
+require_once("../../../auth/proteger.php");
 require_once("../controllers/dashboardController.php");
 include("../../../templates/header.php");
 ?>
@@ -322,7 +324,6 @@ $total_neto += $row['neto'];
 
 <br> <br> <br>
     <div class="acciones">
-        <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSch9DWsxKlht9EWeGYErV7ZpUKCQ0anjesuLoku87wk8ds8Bw/viewform?usp=dialog" target="_blank">Registrar Producción</a>
         <a class="btn" href="lista.php">Ver Historial</a>
         <a class="btn" href="../../../index.php">Volver al menú</a>
     </div>

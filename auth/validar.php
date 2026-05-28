@@ -1,6 +1,8 @@
 <?php
 /** @var mysqli $conexion */
-session_start();
+if(session_status() === PHP_SESSION_NONE){
+    session_start();
+}
 
 require_once("../includes/conexion.php");
 

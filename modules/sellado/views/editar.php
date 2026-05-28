@@ -6,6 +6,7 @@
 /** @var mysqli_result $colores */
 /** @var mysqli_result $turnos */
 
+require_once("../../../auth/proteger.php");
 require_once("../controllers/dashboardController.php");
 include("../../../templates/header.php");
 ?>

@@ -5,6 +5,7 @@
 /** @var mysqli_result $referencias */
 /** @var mysqli_result $colores */
 
+require_once("../../../auth/proteger.php");
 require_once("../controllers/dashboardController.php");
 include("../../../templates/header.php");
 ?>

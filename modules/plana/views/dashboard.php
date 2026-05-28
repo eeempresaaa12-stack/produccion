@@ -30,6 +30,8 @@
 /** @var string $hasta */
 /** @var string $ultima_fecha */
 
+$soloAdmin = true;
+require_once("../../../auth/proteger.php");
 require_once("../controllers/dashboardController.php");
 include("../../../templates/header.php");
 ?>
@@ -341,7 +343,6 @@ while($row = mysqli_fetch_assoc($res_tabla_maquina)){
 
 <br><br><br>
     <div class="acciones">
-        <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfaRx43KiOMm9vi_y_TB46Mw2c-obkC9RCe7aMIZfdR2ACYcA/viewform?usp=dialog" target="_blank">Registrar Producción</a>
         <a class="btn" href="lista.php">Ver Historial</a>
         <a class="btn" href="../../../index.php">Volver al menú</a>
     </div>

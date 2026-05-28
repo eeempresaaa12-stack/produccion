@@ -1,3 +1,6 @@
+<?php
+$rol = $_SESSION['rol'] ?? 'Sin rol';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -18,6 +21,11 @@
     </div>
     
     <h1>Control Producción</h1>
+
+    <div class="cerrar-sesion">
+        <h2>Rol: <?php echo $rol ?></h2>
+        <a id="btnCerrar" href="/CONTROL_PRODUCCION/auth/logout.php">Cerrar Sesión</a>
+    </div>
     
 </div>
 

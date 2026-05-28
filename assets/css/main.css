@@ -40,6 +40,38 @@ body {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 }
 
+.cerrar-sesion {
+  position: absolute;
+  right: 20px;
+}
+
+.cerrar-sesion h2 {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 4px 10px;
+  margin-bottom: 5px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: fit-content;
+  justify-self: center;
+}
+
+@media (max-width: 850px) {
+  .cerrar-sesion {
+    right: 2px;
+  }
+
+  .cerrar-sesion h2 {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+}
 /* =================================================
    LOGO
 ================================================= */
@@ -60,17 +92,23 @@ body {
   width: auto;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 850px) {
   .navbar {
     height: 70px;
     padding: 10px;
   }
   .navbar-logo img {
-    height: 50px;
+    height: 42px;
   }
   .navbar h1 {
     font-size: 22px;
-    margin-left: 15px;
+    margin-right: 30px;
+  }
+}
+
+@media (max-width: 400px) {
+  .navbar h1 {
+    font-size: 18px;
   }
 }
 /* =================================================
@@ -217,6 +255,39 @@ form select:focus {
   margin-left: 120px;
   margin-right: 120px;
 }
+
+#btnRegistrar {
+  border-radius: 14px;
+  background: #156626;
+  font-weight: bold;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  font-size: 22px;
+  margin-left: 120px;
+  margin-right: 120px;
+  margin-top: 35px;
+  margin-bottom: 20px;
+}
+#btnCerrar {
+  display: inline-block;
+  padding: 7px 15px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #207070, rgb(88, 222, 236));
+  border: none;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.25s;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+#btnCerrar:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #086168, #086168);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
 @media (max-width: 700px) {
   #btnImportar {
     margin-left: 0;
@@ -224,6 +295,19 @@ form select:focus {
     height: auto;
     width: 100%;
     font-size: 18px;
+  }
+  #btnRegistrar {
+    margin-left: 0;
+    margin-right: 0;
+    height: auto;
+    width: 100%;
+    font-size: 18px;
+  }
+}
+@media (max-width: 850px) {
+  #btnCerrar {
+    font-size: 12px;
+    padding: 4px 8px;
   }
 }
 /* ===============================
