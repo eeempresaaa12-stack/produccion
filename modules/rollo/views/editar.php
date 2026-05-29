@@ -13,7 +13,7 @@ require_once("../controllers/editarController.php");
 include("../../../templates/header.php");
 ?>
 
-<!-- Contenedor Principal -->
+<!-- Contenedor de Editar -->
 <div class="container">
     <!-- Título -->
     <h2 class="titulo-vista">Editar Producción Rollo</h2>

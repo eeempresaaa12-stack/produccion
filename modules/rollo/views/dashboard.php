@@ -27,317 +27,371 @@
 /** @var mysqli_result $res_tabla_maquina */
 /** @var string $ultima_fecha */
 
+// Restringir acceso solo a administradores
 $soloAdmin = true;
+// Importar proteger.php
 require_once("../../../auth/proteger.php");
+// Importar dashboardController.php
 require_once("../controllers/dashboardController.php");
+// Importar header.php
 include("../../../templates/header.php");
 ?>
 
-<!-- CONTENEDOR PRINCIPAL -->
+<!-- Contenedor Principal -->
 <div class="container">
+    <!-- Título -->
+    <h2 class="titulo-vista">Producción Rollo</h2>
 
-<h2 class="titulo-vista">Producción Rollo</h2>
-
-<div class="kpis">
-
-    <div class="card-kpi">
-        <p>Total histórico</p>
-        <h2><?php echo number_format($total,2); ?> kg</h2>
+    <!-- KPIs principales -->
+    <div class="kpis">
+        <!-- KPI de total historico de producción -->
+        <div class="card-kpi">
+            <p>Total histórico</p>
+            <h2><?php echo number_format($total,2); ?> kg</h2>
+        </div>
+        <!-- KPI de producción de la semana actual -->
+        <div class="card-kpi">
+            <p>Producción semanal</p>
+            <h2><?php echo number_format($semana,2); ?> kg</h2>
+        </div>
+        <!-- KPI de producción del mes actual -->
+        <div class="card-kpi">
+            <p>Producción del mes</p>
+            <h2><?php echo number_format($mes,2); ?> kg</h2>
+        </div>
     </div>
 
-    <div class="card-kpi">
-        <p>Producción semanal</p>
-        <h2><?php echo number_format($semana,2); ?> kg</h2>
+    <!-- Top máquina del mes -->
+    <div class="top-container">
+        <div class="card-kpi top-card">
+            <p>Top maquina del mes</p>
+            <h2>
+                <?php 
+                if(!empty($top_maquina)){
+                    echo $top_maquina['nombre_maquina'] . "<br><span style='font-size:14px'>(".$top_maquina['total']." kg)</span>";
+                }else{
+                    echo "Sin datos";
+                }
+                ?>
+            </h2>
+        </div>
     </div>
 
-    <div class="card-kpi">
-        <p>Producción del mes</p>
-        <h2><?php echo number_format($mes,2); ?> kg</h2>
-    </div>
-
-</div>
-
-<div class="top-container">
-    <div class="card-kpi top-card">
-        <p>Top maquina del mes</p>
-        <h2>
-            <?php 
-            if(!empty($top_maquina)){
-                echo $top_maquina['nombre_maquina'] . "<br><span style='font-size:14px'>(".$top_maquina['total']." kg)</span>";
-            }else{
-                echo "Sin datos";
-            }
-            ?>
-        </h2>
-    </div>
-</div>
-
-<div class="resumenes">
-    <div class="resumen-anterior">
-        <h3>Resumen de <?php echo $meses[$mes_anterior]; ?></h3>
-
-        <p>🏭 Producción bruta: <?php echo $bruto_ant !== null ? number_format($bruto_ant,2).' kg' : 'Sin datos'; ?></p>
-        <p>♻️ Retal: <?php echo $retal_ant !== null ? number_format($retal_ant,2).' kg' : 'Sin datos'; ?></p>
-        <p>📦 Producción final: <?php echo $neto_ant !== null ? number_format($neto_ant,2).' kg' : 'Sin datos'; ?></p>
-        <p>⚙️ Eficiencia: <?php echo $eficiencia_ant !== null ? round($eficiencia_ant,2).'%' : 'Sin datos'; ?></p>
-
-        <p>📅 Mejor día: 
-            <?php echo ($mejor_dia_ant['fecha'] != "Sin datos") ? date("d M Y", strtotime($mejor_dia_ant['fecha'])) : "Sin datos"; ?>
-            (<?php echo number_format($mejor_dia_ant['total'],2); ?> kg)
-        </p>
-        <p>📉 Peor día: 
-            <?php echo ($peor_dia_ant['fecha'] != "Sin datos") ? date("d M Y", strtotime($peor_dia_ant['fecha'])) : "Sin datos"; ?>
-            (<?php echo number_format($peor_dia_ant['total'],2); ?> kg)
-        </p>
-        <p>🔧 Mejor máquina: <?php echo $top_maquina_ant['nombre_maquina'] ?? 'Sin datos'; ?>
-            <?php if(!empty($top_maquina_ant['total']) && $top_maquina_ant['total'] > 0){ ?>
-                (<?php echo number_format($top_maquina_ant['total'],2); ?> kg)
-            <?php } ?>
-        </p>
-    </div>
-    <div class="comparacion">
-        <p>
-            <?php 
-            if($diferencia > 0){
-                echo "<span style='color:green'>▲ Subió ".round($porcentaje,1)."% </span>
-                    <span style='color:green'>+" . number_format($diferencia) . " kg</span>";
-            }elseif($diferencia < 0){
-                echo "<span style='color:red'>▼ Bajó ".round($porcentaje,1)."% 
-                    <span style='color:red'>-" . number_format(abs($diferencia)) . " kg</span>";
-            }else{
-                echo "Sin cambios";
-            }
-            ?>
-        </p>
-    </div>
-    <div class="resumen-actual">
-        <h3>Resumen de <?php echo $meses[$mes_actual]; ?></h3>
-
-        <p>🏭 Producción bruta: <?php echo $bruto !== null ? number_format($bruto,2).' kg' : 'Sin datos'; ?></p>
-        <p>♻️ Retal: <?php echo $retal !== null ? number_format($retal,2).' kg' : 'Sin datos'; ?></p>
-        <p>📦 Producción final: <?php echo $neto !== null ? number_format($neto,2).' kg' : 'Sin datos'; ?></p>
-        <p>⚙️ Eficiencia: <?php echo $eficiencia !== null ? round($eficiencia,2).'%' : 'Sin datos'; ?></p>
-
-        <p>📅 Mejor día: 
-            <?php echo ($mejor_dia['fecha'] != "Sin datos") ? date("d M Y", strtotime($mejor_dia['fecha'])) : "Sin datos"; ?>
-            (<?php echo number_format($mejor_dia['total'],2); ?> kg)
-        </p>
-        <p>📉 Peor día: 
-            <?php echo ($peor_dia['fecha'] != "Sin datos") ? date("d M Y", strtotime($peor_dia['fecha'])) : "Sin datos"; ?>
-            (<?php echo number_format($peor_dia['total'],2); ?> kg)
-        </p>
-        <p>🔧 Mejor máquina: <?php echo $top_maquina['nombre_maquina'] ?? 'Sin datos'; ?>
-            <?php if(!empty($top_maquina['total']) && $top_maquina['total'] > 0){ ?>
-                (<?php echo number_format($top_maquina['total'],2); ?> kg)
-            <?php } ?>
-        </p>
-    </div>
-</div>
-
-<!-- BOTON PARA IMPORTAR DATOS DE GOOGLE -->
-<a class="btn" id="btnImportar" onclick="abrirModal('modalImportar')">Importar Producción</a>
-
-<!-- GRAFICOSS -->
-<div class="seccion-graficos">
-
-    <div class="controles">
-        <label class="label" for="filtroMes">
-            Mes:
-            <select id="filtroMes" onchange="cargarDatos('semana')">
-                <?php foreach($meses as $num => $nombre){ ?>
-                <option 
-                    value="<?php echo $num; ?>" 
-                    <?php if($num == $mes_actual) echo "selected"; ?>>
-                    <?php echo $nombre; ?>
-                </option>
+    <!-- Comparativo mes anterior vs mes actual -->
+    <div class="resumenes">
+        <!-- Resumen mes anterior -->
+        <div class="resumen-anterior">
+            <h3>Resumen de <?php echo $meses[$mes_anterior]; ?></h3>
+            <p>
+                🏭 Producción bruta: <?php 
+                echo $bruto_ant !== null 
+                    ? number_format($bruto_ant,2).' kg' 
+                    : 'Sin datos'; 
+                ?>
+            </p>
+            <p>
+                ♻️ Retal: <?php 
+                echo $retal_ant !== null 
+                    ? number_format($retal_ant,2).' kg' 
+                    : 'Sin datos'; 
+                ?>
+            </p>
+            <p>
+                📦 Producción final: <?php 
+                echo $neto_ant !== null 
+                    ? number_format($neto_ant,2).' kg' 
+                    : 'Sin datos'; 
+                ?>
+            </p>
+            <p>
+                ⚙️ Eficiencia: <?php 
+                echo $eficiencia_ant !== null 
+                    ? round($eficiencia_ant,2).'%' 
+                    : 'Sin datos'; 
+                ?>
+            </p>
+            <p>
+                📅 Mejor día: <?php 
+                echo ($mejor_dia_ant['fecha'] != "Sin datos") 
+                    ? date("d M Y", strtotime($mejor_dia_ant['fecha'])) 
+                    : "Sin datos"; 
+                ?>
+                (<?php echo number_format($mejor_dia_ant['total'],2); ?> kg)
+            </p>
+            <p>
+                📉 Peor día: <?php 
+                echo ($peor_dia_ant['fecha'] != "Sin datos") 
+                    ? date("d M Y", strtotime($peor_dia_ant['fecha'])) 
+                    : "Sin datos"; 
+                ?>
+                (<?php echo number_format($peor_dia_ant['total'],2); ?> kg)
+            </p>
+            <p>
+                🔧 Mejor máquina: <?php 
+                echo $top_maquina_ant['nombre_maquina'] ?? 'Sin datos'; ?>
+                <?php if(!empty($top_maquina_ant['total']) && $top_maquina_ant['total'] > 0){ ?>
+                    (<?php echo number_format($top_maquina_ant['total'],2); ?> kg)
                 <?php } ?>
-            </select>
-        </label>
-        <label class="label" for="filtroSemana">
-            Semana:
-            <select id="filtroSemana" onchange="cargarDatos('semana')">
-                <option value = "" <?php if($semana_actual == "") echo "selected"; ?> >
-                    Todas
-                </option>
-                <option value = "1" <?php if($semana_actual == "1") echo "selected"; ?> >Semana 1</option>
-                <option value = "2" <?php if($semana_actual == "2") echo "selected"; ?> >Semana 2</option>
-                <option value = "3" <?php if($semana_actual == "3") echo "selected"; ?> >Semana 3</option>
-                <option value = "4" <?php if($semana_actual == "4") echo "selected"; ?> >Semana 4</option>
-                <option value = "5" <?php if($semana_actual == "5") echo "selected"; ?> >Semana 5</option>
-            </select>
-        </label>
-        <button class ="btn" id="btnAnio" onclick="cargarDatos('anio')">Año</button>
-    </div>
-
-    <div class="grid-graficos">
-
-        <div class="card-grafico">
-
-            <h3>Producción por rollo</h3>
-
-            <canvas id="graficoProduccion"></canvas>
-
+            </p>
         </div>
 
-        <div class="card-grafico">
-            
-            <h3>Producción por máquina  </h3>
-
-            <canvas id="graficoOperarios"></canvas>
-
+        <!-- Indicador de variación entre meses -->
+        <div class="comparacion">
+            <p>
+                <?php 
+                if($diferencia > 0){
+                    echo "<span style='color:green'>▲ Subió ".round($porcentaje,1)."% </span>
+                        <span style='color:green'>+" . number_format($diferencia) . " kg</span>";
+                }elseif($diferencia < 0){
+                    echo "<span style='color:red'>▼ Bajó ".round($porcentaje,1)."% 
+                        <span style='color:red'>-" . number_format(abs($diferencia)) . " kg</span>";
+                }else{
+                    echo "Sin cambios";
+                }
+                ?>
+            </p>
         </div>
 
-    </div>
-
-</div>
-
-<br><br><br>
-
-<div class="contenedor-grafico">
-
-    <h3>Producción por año (Rollo)</h3>
-
-        <div class="header-grafico-meses">
-
-            <select id="filtroAnioMes" onchange="cargarGraficoMeses()">
-                <?php for($i=date('Y'); $i>=2023; $i--){ ?>
-                <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+        <!-- Resumen mes actual -->
+        <div class="resumen-actual">
+            <h3>Resumen de <?php echo $meses[$mes_actual]; ?></h3>
+            <p>
+                🏭 Producción bruta: <?php 
+                echo $bruto !== null 
+                    ? number_format($bruto,2).' kg' 
+                    : 'Sin datos'; 
+                ?>
+            </p>
+            <p>
+                ♻️ Retal: <?php 
+                echo $retal !== null 
+                    ? number_format($retal,2).' kg' 
+                    : 'Sin datos'; 
+                ?>
+            </p>
+            <p>
+                📦 Producción final: <?php 
+                echo $neto !== null 
+                    ? number_format($neto,2).' kg' 
+                    : 'Sin datos'; 
+                ?>
+            </p>
+            <p>
+                ⚙️ Eficiencia: <?php 
+                echo $eficiencia !== null 
+                    ? round($eficiencia,2).'%' 
+                    : 'Sin datos'; 
+                ?>
+            </p>
+            <p>
+                📅 Mejor día: <?php 
+                echo ($mejor_dia['fecha'] != "Sin datos") 
+                    ? date("d M Y", strtotime($mejor_dia['fecha'])) 
+                    : "Sin datos"; 
+                ?>
+                (<?php echo number_format($mejor_dia['total'],2); ?> kg)
+            </p>
+            <p>
+                📉 Peor día: <?php 
+                echo ($peor_dia['fecha'] != "Sin datos") 
+                    ? date("d M Y", strtotime($peor_dia['fecha'])) 
+                    : "Sin datos"; 
+                ?>
+                (<?php echo number_format($peor_dia['total'],2); ?> kg)
+            </p>
+            <p>
+                🔧 Mejor máquina: <?php 
+                echo $top_maquina['nombre_maquina'] ?? 'Sin datos'; ?>
+                <?php if(!empty($top_maquina['total']) && $top_maquina['total'] > 0){ ?>
+                    (<?php echo number_format($top_maquina['total'],2); ?> kg)
                 <?php } ?>
-            </select>
+            </p>
+        </div>
+    </div>
 
-            <div id="totalAnio" class="total-anio">Total: 0 kg</div>
+    <!-- Botón para abrir modal de importación -->
+    <a class="btn" id="btnImportar" onclick="abrirModal('modalImportar')">Importar Producción</a>
 
+    <!-- Sección de gráficos -->
+    <div class="seccion-graficos">
+
+        <!-- Filtros -->
+        <div class="controles">
+            <!-- Filtrar por mes -->
+            <label class="label" for="filtroMes">
+                Mes:
+                <select id="filtroMes" onchange="cargarDatos('semana')">
+                    <?php foreach($meses as $num => $nombre){ ?>
+                    <option 
+                        value="<?php echo $num; ?>" 
+                        <?php if($num == $mes_actual) echo "selected"; ?>>
+                        <?php echo $nombre; ?>
+                    </option>
+                    <?php } ?>
+                </select>
+            </label>
+            <!-- Filtrar por semana segun mes -->
+            <label class="label" for="filtroSemana">
+                Semana:
+                <select id="filtroSemana" onchange="cargarDatos('semana')">
+                    <!-- Todas las semanas del mes seleccionado-->
+                    <option value = "" <?php if($semana_actual == "") echo "selected"; ?> >
+                        Todas
+                    </option>
+                    <option value = "1" <?php if($semana_actual == "1") echo "selected"; ?> >Semana 1</option>
+                    <option value = "2" <?php if($semana_actual == "2") echo "selected"; ?> >Semana 2</option>
+                    <option value = "3" <?php if($semana_actual == "3") echo "selected"; ?> >Semana 3</option>
+                    <option value = "4" <?php if($semana_actual == "4") echo "selected"; ?> >Semana 4</option>
+                    <option value = "5" <?php if($semana_actual == "5") echo "selected"; ?> >Semana 5</option>
+                </select>
+            </label>
+            <!-- Filtro de año agrupado por semanas -->
+            <button class ="btn" id="btnAnio" onclick="cargarDatos('anio')">Año</button>
         </div>
 
-    <canvas id="graficoMeses"></canvas>
+        <!-- Gráficos de producción y maquina -->
+        <div class="grid-graficos">
+            <div class="card-grafico">
+                <h3>Producción por rollo</h3>
+                <canvas id="graficoProduccion"></canvas>
+            </div>
 
-</div>
+            <div class="card-grafico">   
+                <h3>Producción por máquina  </h3>
+                <canvas id="graficoOperarios"></canvas>
+            </div>
+        </div>
 
-<br> <br> <br>
+    </div>
 
-<!-- TABLAS -->
-<form class="filtro-fechas" method="GET">
+    <br><br><br>
 
-<label>Desde</label>
-<input type="date" name="desde"
-value="<?php echo $_GET['desde'] ?? date('Y-m-01'); ?>">
+    <!-- Gráfico de producción mensual por año -->
+    <div class="contenedor-grafico">
+        <h3>Producción por año (Rollo)</h3>
+            <div class="header-grafico-meses">
+                <!-- Selector de año -->
+                <select id="filtroAnioMes" onchange="cargarGraficoMeses()">
+                    <?php for($i=date('Y'); $i>=2023; $i--){ ?>
+                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                    <?php } ?>
+                </select>
 
-<label>Hasta</label>
-<input type="date" name="hasta"
-value="<?php echo $_GET['hasta'] ?? date('Y-m-d'); ?>">
+                <div id="totalAnio" class="total-anio">Total: 0 kg</div>
 
-<button class="btn" type="submit">Filtrar</button>
+            </div>
+        <canvas id="graficoMeses"></canvas>
+    </div>
 
-</form>
+    <br> <br> <br>
 
-<div class="tabla-dashboard">
+    <!-- Tablas -->
+    <form class="filtro-fechas" method="GET">
+        <!-- Filtros de fechas -->
+        <label>Desde</label>
+            <input type="date" name="desde"
+                value="<?php echo $_GET['desde'] ?? date('Y-m-01'); ?>">
+        <label>Hasta</label>
+            <input type="date" name="hasta"
+                value="<?php echo $_GET['hasta'] ?? date('Y-m-d'); ?>">
+        <!-- Botón de filtrar -->
+        <button class="btn" type="submit">Filtrar</button>
+    </form>
 
-<h3>Producción por fecha</h3>
+    <div class="tabla-dashboard">
+        <!-- Tabla de producción por fecha -->
+        <h3>Producción por fecha</h3>
+        <table>
+            <tr>
+                <th>Fecha</th>
+                <th>Bruto (kg)</th>
+                <th>Retal (kg)</th>
+                <th>Neto (kg)</th>
+            </tr>
+            <?php
+            $total_bruto = 0;
+            $total_retal = 0;
+            $total_neto = 0;
+            while($row = mysqli_fetch_assoc($res_tabla_fecha)){
+            $total_bruto += $row['bruto'];
+            $total_retal += $row['retal'];
+            $total_neto += $row['neto'];
+            ?>
+            <tr>
+                <td><?php echo date("d M Y", strtotime($row['fecha'])); ?></td>
+                <td><?php echo number_format($row['bruto'],2); ?></td>
+                <td><?php echo number_format($row['retal'],2); ?></td>
+                <td><?php echo number_format($row['neto'],2); ?></td>
+            </tr>
+            <?php } ?>
+            <!-- Fila de total -->
+            <tr class="fila-total">
+                <td><strong>TOTAL</strong></td>
+                <td><strong><?php echo number_format($total_bruto,2); ?></strong></td>
+                <td><strong><?php echo number_format($total_retal,2); ?></strong></td>
+                <td><strong><?php echo number_format($total_neto,2); ?></strong></td>
+            </tr>
+        </table>
+    </div>
 
-<table>
+    <br><br>
 
-<tr>
-<th>Fecha</th>
-<th>Bruto (kg)</th>
-<th>Retal (kg)</th>
-<th>Neto (kg)</th>
-</tr>
+    <!-- Tabla de producción por operario -->
+    <div class="tabla-dashboard">
+        <h3>Producción por máquina</h3>
+        <table>
+            <tr>
+                <th>Máquina</th>
+                <th>Bruto (kg)</th>
+                <th>Retal (kg)</th>
+                <th>Neto (kg)</th>
+            </tr>
+            <?php
+            $total_bruto = 0;
+            $total_retal = 0;
+            $total_neto = 0;
+            while($row = mysqli_fetch_assoc($res_tabla_maquina)){
+            $total_bruto += $row['bruto'];
+            $total_retal += $row['retal'];
+            $total_neto += $row['neto'];
+            ?>
+            <tr>
+                <td><?php echo $row['nombre_maquina']; ?></td>
+                <td><?php echo number_format($row['bruto'],2); ?></td>
+                <td><?php echo number_format($row['retal'],2); ?></td>
+                <td><?php echo number_format($row['neto'],2); ?></td>
+            </tr>
+            <?php } ?>
+            <tr class="fila-total">
+                <td><strong>TOTAL</strong></td>
+                <td><strong><?php echo number_format($total_bruto,2); ?></strong></td>
+                <td><strong><?php echo number_format($total_retal,2); ?></strong></td>
+                <td><strong><?php echo number_format($total_neto,2); ?></strong></td>
+            </tr>
+        </table>
+    </div>
 
-<?php
-$total_bruto = 0;
-$total_retal = 0;
-$total_neto = 0;
+    <br><br><br>
 
-while($row = mysqli_fetch_assoc($res_tabla_fecha)){
-
-$total_bruto += $row['bruto'];
-$total_retal += $row['retal'];
-$total_neto += $row['neto'];
-?>
-
-<tr>
-<td><?php echo date("d M Y", strtotime($row['fecha'])); ?></td>
-<td><?php echo number_format($row['bruto'],2); ?></td>
-<td><?php echo number_format($row['retal'],2); ?></td>
-<td><?php echo number_format($row['neto'],2); ?></td>
-</tr>
-
-<?php } ?>
-
-<tr class="fila-total">
-<td><strong>TOTAL</strong></td>
-<td><strong><?php echo number_format($total_bruto,2); ?></strong></td>
-<td><strong><?php echo number_format($total_retal,2); ?></strong></td>
-<td><strong><?php echo number_format($total_neto,2); ?></strong></td>
-</tr>
-
-</table>
-
-</div>
-
-<br><br>
-
-<div class="tabla-dashboard">
-
-<h3>Producción por máquina</h3>
-
-<table>
-
-<tr>
-<th>Máquina</th>
-<th>Bruto (kg)</th>
-<th>Retal (kg)</th>
-<th>Neto (kg)</th>
-</tr>
-
-<?php
-$total_bruto = 0;
-$total_retal = 0;
-$total_neto = 0;
-
-while($row = mysqli_fetch_assoc($res_tabla_maquina)){
-
-$total_bruto += $row['bruto'];
-$total_retal += $row['retal'];
-$total_neto += $row['neto'];
-?>
-
-<tr>
-<td><?php echo $row['nombre_maquina']; ?></td>
-<td><?php echo number_format($row['bruto'],2); ?></td>
-<td><?php echo number_format($row['retal'],2); ?></td>
-<td><?php echo number_format($row['neto'],2); ?></td>
-</tr>
-
-<?php } ?>
-
-<tr class="fila-total">
-<td><strong>TOTAL</strong></td>
-<td><strong><?php echo number_format($total_bruto,2); ?></strong></td>
-<td><strong><?php echo number_format($total_retal,2); ?></strong></td>
-<td><strong><?php echo number_format($total_neto,2); ?></strong></td>
-</tr>
-
-</table>
-
-</div>
-
-<br> <br> <br>
+    <!-- Botones de navegación -->
     <div class="acciones">
+        <!-- Redirigir al Lista -->
         <a class="btn" href="lista.php">Ver Historial</a>
+        <!-- Redirigir al Index -->
         <a class="btn" href="../../../index.php">Volver al menú</a>
     </div>
+
 </div>
 
-<!-- MODAL DE IMPORTACION -->
+<!-- Modal de importación -->
  <div class="overlay" id ="modalImportar">
     <div class="modal">
-        
         <div class="modal-header">
             <h2>Importar Rollo</h2>
             <p>Última Fecha Importada: <strong><?php echo $ultima_fecha; ?></strong></p>
             <button id="cerrarBtn" onclick="cerrarModal('modalImportar')">X</button>
         </div>
+        <!-- Opciones de importación -->
         <div class="btn-row">
             <a class="btn-nuevos" href="../../../importar/controllers/imp_rollo.php?modo=nuevos" >
                 <div class="btn-text"><span class="btn-icon">🗲</span>Importar Nuevos<span class="btn-arrow">›</span></div>
@@ -349,9 +403,12 @@ $total_neto += $row['neto'];
     </div>
  </div>
 
+ <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script src="../../shared/global.js"></script>
 <script src="../scripts/rollo.js"></script>
 
-<?php include("../../../templates/footer.php"); ?>
+<?php 
+// Importar footer.php
+include("../../../templates/footer.php"); 
+?>
