@@ -29,11 +29,23 @@ $rol = $_SESSION['rol'] ?? 'Sin rol';
 
         <!-- Rol y botón de cerrar sesión -->
         <div class="cerrar-sesion">
-            <h2>Rol: <?php echo $rol ?></h2>
-            <a id="btnCerrar" href="/CONTROL_PRODUCCION/auth/logout.php">Cerrar Sesión</a>
+            <a id="btnRol" href="<?php
+                echo ($_SESSION['rol'] == 'admin')
+                    ? '/CONTROL_PRODUCCION/auth/views/usuarios.php'
+                    : '';
+            ?>"><h2>Rol: <?php echo $rol ?></h2></a>
+            <a id="btnCerrar" href="/CONTROL_PRODUCCION/auth/controllers/logout.php">Cerrar Sesión</a>
         </div>
         
     </div>
+    <?php if($_SESSION['rol'] == 'admin'){ ?>
+
+<a class="btn"
+   href="/CONTROL_PRODUCCION/auth/views/usuarios.php">
+   Usuarios
+</a>
+
+<?php } ?>
 
 <!-- Contenido principal -->
 <div class="contenido">

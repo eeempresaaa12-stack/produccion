@@ -7,7 +7,7 @@ if(session_status() === PHP_SESSION_NONE){
 
 // Redirigir al Login si no hay sesión activa
 if(!isset($_SESSION['usuario'])){
-    header("Location: /CONTROL_PRODUCCION/auth/login.php");
+    header("Location: /CONTROL_PRODUCCION/auth/views/login.php");
     exit;
 }
 

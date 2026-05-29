@@ -6,7 +6,7 @@ if(session_status() === PHP_SESSION_NONE){
 }
 
 // Importar conexion.php
-require_once("../includes/conexion.php");
+require_once("../../includes/conexion.php");
 
 // Datos del formulario
 $usuario = trim($_POST['usuario'] ?? '');
@@ -14,7 +14,7 @@ $contrasena = trim($_POST['contrasena'] ?? '');
 
 // Validar campos vacíos
 if(empty($usuario) || empty($contrasena)){
-    header("Location: login.php?error=1");
+    header("Location: /CONTROL_PRODUCCION/auth/views/login.php?error=1");
     exit;
 }
 
@@ -26,7 +26,7 @@ $res = mysqli_query($conexion, $sql);
 
 // Redirigir al Login si el usuario no existe
 IF(!$res || mysqli_num_rows($res) === 0){
-    header("Location: login.php?error=1");
+    header("Location: /CONTROL_PRODUCCION/auth/views/login.php?error=1");
     exit;
 }
 
@@ -35,7 +35,7 @@ $row = mysqli_fetch_assoc($res);
 
 // Validar la contraseña
 if($contrasena != $row['contrasena']){
-    header("Location: login.php?error=1");
+    header("Location: /CONTROL_PRODUCCION/auth/views/login.php?error=1");
     exit;
 }
 
@@ -45,5 +45,5 @@ $_SESSION['rol'] = $row['rol'];
 $_SESSION['id_usuario'] = $row['id_usuario'];
 
 // Redirigir al Index
-header("Location: ../index.php");
+header("Location: /CONTROL_PRODUCCION/index.php");
 exit;

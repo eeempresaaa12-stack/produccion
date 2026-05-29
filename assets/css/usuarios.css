@@ -1,0 +1,324 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Fondos */
+  --fondo: linear-gradient(#e4ebefbf, #d5dde2d9);
+
+  /* Paleta Base */
+  --teal: #134e4a;
+  --teal-frio: #24726d;
+  --jade: #00a86b;
+  --turquesa: #14b8a6;
+  --naturaleza: #134e4a, #00a86b;
+
+  /* Estados */
+  --activo: 34, 139, 34;
+  --inactivo: 139, 0, 0;
+
+  /* Fuentes */
+  --fuente: "Poppins", sans-serif;
+}
+body {
+  font-family: var(--fuente-principal);
+  min-height: 100vh;
+
+  background: var(--fondo), url("../img/fondo2.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+
+  padding: 40px;
+}
+
+/* ===========================
+   CONTENEDOR
+=========================== */
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(18px);
+
+  border-radius: 24px;
+
+  padding: 35px;
+
+  border: 1px solid rgba(255, 255, 255, 0.4);
+
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+}
+
+/* ===========================
+   TITULO
+=========================== */
+
+.titulo-vista {
+  text-align: center;
+
+  font-size: 34px;
+  font-weight: 700;
+
+  color: var(--teal);
+
+  margin-bottom: 30px;
+
+  position: relative;
+}
+
+.titulo-vista::after {
+  content: "";
+
+  display: block;
+
+  width: 120px;
+  height: 4px;
+
+  margin: 12px auto 0;
+
+  border-radius: 20px;
+
+  background: linear-gradient(90deg, var(--naturaleza));
+}
+
+/* ===========================
+   BOTON CREAR
+=========================== */
+
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 25px;
+}
+
+.btn {
+  text-decoration: none;
+
+  border: none;
+
+  padding: 12px 24px;
+
+  border-radius: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  color: white;
+
+  background: linear-gradient(135deg, var(--teal-frio), var(--turquesa));
+
+  transition: 0.25s;
+
+  box-shadow: 0 8px 20px rgba(15, 118, 110, 0.25);
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 12px 24px rgba(15, 118, 110, 0.35);
+}
+
+/* ===========================
+   TABLA
+=========================== */
+
+#containerHistorial {
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  min-width: 800px;
+
+  border-collapse: collapse;
+
+  overflow: hidden;
+
+  border-radius: 20px;
+
+  background: white;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.tabla thead {
+  background: linear-gradient(135deg, #14532d, #0f766e);
+}
+
+.tabla th {
+  color: white;
+
+  padding: 18px;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tabla td {
+  padding: 16px;
+
+  text-align: center;
+
+  border-bottom: 1px solid #edf2f7;
+}
+
+.tabla tbody tr {
+  transition: 0.25s;
+}
+
+.tabla tbody tr:hover {
+  background: rgba(15, 118, 110, 0.05);
+}
+
+/* ===========================
+   ESTADOS
+=========================== */
+
+.estado {
+  display: inline-block;
+
+  min-width: 90px;
+
+  padding: 8px 14px;
+
+  border-radius: 30px;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.estado.activo {
+  background: rgb(var(--activo), 0.15);
+
+  color: rgb(var(--activo));
+
+  border: 1px solid rgb(var(--activo), 0.3);
+}
+
+.estado.inactivo {
+  background: rgb(var(--inactivo), 0.15);
+
+  color: rgb(var(--inactivo));
+
+  border: 1px solid rgb(var(--inactivo), 0.3);
+}
+
+/* ===========================
+   ROL
+=========================== */
+
+.tabla td:nth-child(3) {
+  font-weight: 600;
+  color: #0f766e;
+}
+
+/* ===========================
+   BOTON EDITAR
+=========================== */
+
+.tabla .btn {
+  padding: 8px 18px;
+
+  border-radius: 10px;
+
+  font-size: 13px;
+
+  background: linear-gradient(135deg, #0369a1, #06b6d4);
+
+  box-shadow: 0 8px 18px rgba(6, 182, 212, 0.2);
+}
+
+.tabla .btn:hover {
+  background: linear-gradient(135deg, #075985, #0891b2);
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  .titulo-vista {
+    font-size: 26px;
+  }
+
+  .acciones {
+    justify-content: center;
+  }
+
+  .acciones .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ===========================
+   MODALES
+=========================== */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+
+.modal {
+  background: rgba(11, 61, 18, 0.7);
+  backdrop-filter: blur(12px);
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  text-align: center;
+  position: relative;
+  border: 1px solid rgba(15, 56, 13, 0.45);
+}
+
+.modal button {
+  display: grid;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 5px 18px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: none;
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  transition: 0.25s;
+  height: 60px;
+  align-items: center;
+}
+
+.modal button:hover {
+  background: rgba(241, 241, 241, 0.8);
+  box-shadow: 0 4px 12px rgba(209, 209, 209, 0.4);
+  color: rgb(17, 56, 22);
+  border: none;
+}

@@ -6,7 +6,7 @@ if(session_status() === PHP_SESSION_NONE){
 
 // Redirigir al Index si yá inició sesión
 if(isset($_SESSION['usuario'])){
-    header("Location: ../index.php");
+    header("Location: ../../index.php");
     exit;
 }
 ?>
@@ -19,8 +19,8 @@ if(isset($_SESSION['usuario'])){
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Iniciar Sesión</title>
     <!-- Ícono y estilos -->
-    <link rel="icon" type="image/png" href="../assets/img/logo-plastypetco.png">
-    <link rel="stylesheet" href="../assets/css/login.css">
+    <link rel="icon" type="image/png" href="../../assets/img/logo-plastypetco.png">
+    <link rel="stylesheet" href="../../assets/css/login.css">
 
 </head>
 
@@ -40,7 +40,7 @@ if(isset($_SESSION['usuario'])){
         <?php } ?>
 
         <!-- Formulario de autenticación -->
-        <form action="validar.php" method="POST">
+        <form action="/CONTROL_PRODUCCION/auth/controllers/validar.php" method="POST">
 
             <!-- Campo usuario -->
             <div class="grupo">

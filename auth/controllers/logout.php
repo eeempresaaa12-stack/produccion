@@ -8,5 +8,5 @@ if(session_status() === PHP_SESSION_NONE){
 session_destroy();
 
 // Redirigir al Login
-header("Location: login.php");
+header("Location: /CONTROL_PRODUCCION/auth/views/login.php");
 exit;
