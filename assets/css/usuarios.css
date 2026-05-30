@@ -1,98 +1,94 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  border: 0px solid white;
 }
 
 :root {
-  /* Fondos */
-  --fondo: linear-gradient(#e4ebefbf, #d5dde2d9);
-
-  /* Paleta Base */
+  /* ==========================
+     COLORES CORPORATIVOS
+  ========================== */
   --teal: #134e4a;
   --teal-frio: #24726d;
   --jade: #00a86b;
   --turquesa: #14b8a6;
-  --naturaleza: #134e4a, #00a86b;
+  --verde: #14532d;
+  --azul: #0369a1;
+  --cian: #06b6d4;
 
-  /* Estados */
-  --activo: 34, 139, 34;
-  --inactivo: 139, 0, 0;
+  /* ==========================
+     FONDOS OSCUROS
+  ========================== */
+  --fondo-body: linear-gradient(rgba(37, 37, 37, 0.4), rgba(71, 71, 71, 0.6));
+  --fondo-panel: rgba(20, 12, 12, 0.6);
+  --fondo-card: rgba(40, 110, 110, 0.3);
+  --fondo-hover: rgba(20, 184, 166, 0.08);
+  --fondo-borde: rgba(20, 184, 166, 0.12);
 
-  /* Fuentes */
+  /* ==========================
+     TEXTO
+  ========================== */
+  --texto-titulo: #38c495;
+  --texto: #f8fafc;
+
+  /* ==========================
+     ESTADOS
+  ========================== */
+  --activo: #4ade80;
+  --inactivo: #f87171;
+
+  /* ==========================
+     SOMBRAS
+  ========================== */
+  --shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+  --shadow-btn: 0 10px 25px rgba(20, 184, 166, 0.25);
+  --shadow-btn-h: 0 15px 35px rgba(20, 184, 166, 0.4);
+
+  /* ==========================
+     FUENTE
+  ========================== */
   --fuente: "Poppins", sans-serif;
 }
+
 body {
-  font-family: var(--fuente-principal);
+  font-family: var(--fuente);
   min-height: 100vh;
-
-  background: var(--fondo), url("../img/fondo2.jpg");
-
+  background: var(--fondo-body), url("../img/fondo1.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-
   padding: 40px;
 }
-
 /* ===========================
    CONTENEDOR
 =========================== */
-
 .container {
   max-width: 1200px;
   margin: auto;
-
-  background: rgba(255, 255, 255, 0.55);
+  margin-top: 80px;
+  background: var(--fondo-panel);
   backdrop-filter: blur(18px);
-
   border-radius: 24px;
-
   padding: 35px;
-
-  border: 1px solid rgba(255, 255, 255, 0.4);
-
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--fondo-borde);
+  box-shadow: var(--shadow);
+  color: var(--texto);
 }
 
 /* ===========================
    TITULO
 =========================== */
-
 .titulo-vista {
   text-align: center;
-
   font-size: 34px;
   font-weight: 700;
-
-  color: var(--teal);
-
+  color: var(--texto);
   margin-bottom: 30px;
-
   position: relative;
 }
-
-.titulo-vista::after {
-  content: "";
-
-  display: block;
-
-  width: 120px;
-  height: 4px;
-
-  margin: 12px auto 0;
-
-  border-radius: 20px;
-
-  background: linear-gradient(90deg, var(--naturaleza));
-}
-
 /* ===========================
    BOTON CREAR
 =========================== */
-
 .acciones {
   display: flex;
   justify-content: flex-end;
@@ -101,36 +97,24 @@ body {
 
 .btn {
   text-decoration: none;
-
   border: none;
-
   padding: 12px 24px;
-
   border-radius: 14px;
-
   font-weight: 600;
-
   cursor: pointer;
-
-  color: white;
-
+  color: var(--fuente);
   background: linear-gradient(135deg, var(--teal-frio), var(--turquesa));
-
   transition: 0.25s;
-
-  box-shadow: 0 8px 20px rgba(15, 118, 110, 0.25);
+  box-shadow: var(--shadow-btn);
 }
 
 .btn:hover {
-  transform: translateY(-3px);
-
-  box-shadow: 0 12px 24px rgba(15, 118, 110, 0.35);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-btn-h);
 }
-
 /* ===========================
    TABLA
 =========================== */
-
 #containerHistorial {
   overflow-x: auto;
 }
@@ -138,37 +122,28 @@ body {
 .tabla {
   width: 100%;
   min-width: 800px;
-
   border-collapse: collapse;
-
   overflow: hidden;
-
   border-radius: 20px;
-
-  background: white;
-
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  background: var(--fondo-card);
 }
 
 .tabla thead {
-  background: linear-gradient(135deg, #14532d, #0f766e);
+  background: linear-gradient(135deg, var(--verde), var(--teal-frio));
 }
 
 .tabla th {
-  color: white;
-
+  color: var(--texto);
   padding: 18px;
-
   font-size: 14px;
   font-weight: 600;
 }
 
 .tabla td {
+  color: var(--texto);
   padding: 16px;
-
   text-align: center;
-
-  border-bottom: 1px solid #edf2f7;
+  border-bottom: 1px solid var(--fondo-borde);
 }
 
 .tabla tbody tr {
@@ -176,75 +151,58 @@ body {
 }
 
 .tabla tbody tr:hover {
-  background: rgba(15, 118, 110, 0.05);
+  background: var(--fondo-hover);
+}
+/* ===========================
+   ROL
+=========================== */
+.tabla td:nth-child(3) {
+  font-weight: 600;
+  color: var(--turquesa);
 }
 
 /* ===========================
    ESTADOS
 =========================== */
-
 .estado {
   display: inline-block;
-
   min-width: 90px;
-
   padding: 8px 14px;
-
   border-radius: 30px;
-
   font-size: 13px;
   font-weight: 600;
 }
 
 .estado.activo {
-  background: rgb(var(--activo), 0.15);
-
-  color: rgb(var(--activo));
-
-  border: 1px solid rgb(var(--activo), 0.3);
+  background: rgba(74, 222, 128, 0.15);
+  color: var(--activo);
+  border: 1px solid rgba(74, 222, 128, 0.25);
 }
 
 .estado.inactivo {
-  background: rgb(var(--inactivo), 0.15);
-
-  color: rgb(var(--inactivo));
-
-  border: 1px solid rgb(var(--inactivo), 0.3);
-}
-
-/* ===========================
-   ROL
-=========================== */
-
-.tabla td:nth-child(3) {
-  font-weight: 600;
-  color: #0f766e;
+  background: rgba(248, 113, 113, 0.15);
+  color: var(--inactivo);
+  border: 1px solid rgba(248, 113, 113, 0.25);
 }
 
 /* ===========================
    BOTON EDITAR
 =========================== */
-
 .tabla .btn {
   padding: 8px 18px;
-
   border-radius: 10px;
-
   font-size: 13px;
-
-  background: linear-gradient(135deg, #0369a1, #06b6d4);
-
-  box-shadow: 0 8px 18px rgba(6, 182, 212, 0.2);
+  background: linear-gradient(135deg, var(--azul), var(--cian));
+  box-shadow: var(--shadow-btn);
 }
 
 .tabla .btn:hover {
-  background: linear-gradient(135deg, #075985, #0891b2);
+  background: linear-gradient(135deg, var(--azul), var(--azul));
 }
 
 /* ===========================
    RESPONSIVE
 =========================== */
-
 @media (max-width: 768px) {
   body {
     padding: 15px;
@@ -283,17 +241,16 @@ body {
   align-items: center;
   z-index: 20;
 }
-
 .modal {
-  background: rgba(11, 61, 18, 0.7);
-  backdrop-filter: blur(12px);
-  padding: 20px;
-  border-radius: 10px;
-  width: 400px;
+  background: rgba(12, 18, 17, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 25px;
+  width: 450px;
   max-width: 90%;
-  text-align: center;
-  position: relative;
-  border: 1px solid rgba(15, 56, 13, 0.45);
+  border: 1px solid rgba(20, 184, 166, 0.15);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+  color: var(--texto);
 }
 
 .modal button {
@@ -321,4 +278,32 @@ body {
   box-shadow: 0 4px 12px rgba(209, 209, 209, 0.4);
   color: rgb(17, 56, 22);
   border: none;
+}
+
+/*================================
+   BOTÓN VOLVER
+=================================*/
+#btn-volver {
+  background: var(--fondo-panel);
+  cursor: pointer;
+  font-family: var(--fuente);
+  font-size: 18px;
+  color: var(--texto);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+  padding: 15px 21px;
+  border: 1px solid var(--fondo-borde);
+  border-radius: 14px;
+  position: fixed;
+  bottom: 25px;
+  right: 35px;
+  text-decoration: none;
+}
+@media (max-width: 480px) {
+  #btn-volver {
+    top: 20px;
+    right: 20px;
+    bottom: auto;
+    padding: 12px 18px;
+    font-size: 16px;
+  }
 }

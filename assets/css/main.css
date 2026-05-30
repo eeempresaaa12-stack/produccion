@@ -15,8 +15,8 @@
 body {
   font-family: "Poppins", sans-serif;
   background:
-    linear-gradient(rgb(229, 234, 235, 0.4), rgba(255, 255, 255, 0.6)),
-    url("../img/fondo2.jpg");
+    linear-gradient(rgba(32, 32, 32, 0.4), rgba(78, 78, 78, 0.6)),
+    url("../img/fondo1.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -26,7 +26,7 @@ body {
    NAVBAR
 ================================================= */
 .navbar {
-  background: rgba(19, 77, 31, 0.9);
+  background: linear-gradient(90deg, #14532d, #24726d);
   padding: 12px 25px;
   height: 90px;
   width: 100%;
@@ -635,6 +635,7 @@ form select:focus {
 
 .seccion-graficos {
   margin-top: 30px;
+  color: white;
 }
 
 .controles {

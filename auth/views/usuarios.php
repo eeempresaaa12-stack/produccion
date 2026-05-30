@@ -173,4 +173,7 @@ $res = mysqli_query($conexion, $sql);
 
 </div>
 
+<!-- Botón para volver -->
+<a id="btn-volver" href="/CONTROL_PRODUCCION/index.php">← Volver</a>
+
 <script src="../shared/auth.js"></script>
