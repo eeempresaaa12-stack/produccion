@@ -92,85 +92,89 @@ $res = mysqli_query($conexion, $sql);
 
 <!-- Modal de Crear -->
 <div class="overlay" id="modalCrear">
-    <!-- Título -->
-    <h2 class="titulo-vista">Crear Usuario</h2>
+    <div class="modal">
+        <!-- Título -->
+        <h2 class="titulo-vista">Crear Usuario</h2>
 
-    <!-- Formulario de creación -->
-    <form action="../controllers/guardarUsuario.php" method="POST">
-        <!-- Campo usuario -->
-        <label>Usuario</label>
-        <input type="text" name="usuario" required>
+        <!-- Formulario de creación -->
+        <form action="../controllers/guardarUsuario.php" method="POST">
+            <!-- Campo usuario -->
+            <label>Usuario</label>
+            <input type="text" name="usuario" required>
 
-        <!-- Campo contraseña -->
-        <label>Contraseña</label>
-        <input type="text" name="contrasena" required>
+            <!-- Campo contraseña -->
+            <label>Contraseña</label>
+            <input type="text" name="contrasena" required>
 
-        <!-- Selector de rol -->
-        <label>Rol</label>
-        <select name="rol" required>
-            <option value="operador">Operador</option>
-            <option value="admin">Administrador</option>
-        </select>
+            <!-- Selector de rol -->
+            <label>Rol</label>
+            <select name="rol" required>
+                <option value="operador">Operador</option>
+                <option value="admin">Administrador</option>
+            </select>
 
-        <!-- Botones de acción -->
-        <div class="acciones">
-            <button class="btn" type="submit" onclick="cerrarModal('modalCrear')">
-                Guardar Usuario
-            </button>
+            <!-- Botones de acción -->
+            <div class="accionesModal">
+                <button class="btn" type="submit" onclick="cerrarModal('modalCrear')">
+                    Guardar
+                </button>
 
-            <button class="btn" onclick="cerrarModal('modalCrear')">
-                Cancelar
-            </button>
-        </div>
-    </form>
+                <button class="btn" onclick="cerrarModal('modalCrear')">
+                    Cancelar
+                </button>
+            </div>
+        </form>
 
+    </div>
 </div>
 
 <!-- Modal de Editar -->
 <div class="overlay" id="modalEditar">
-    <!-- Título -->
-    <h2 class="titulo-vista">Editar Usuario</h2>
+    <div class="modal">
+        <!-- Título -->
+        <h2 class="titulo-vista">Editar Usuario</h2>
 
-    <!-- Formulario de edición -->
-    <form action="../controllers/actualizarUsuario.php" method="POST">
-        <!-- ID del usuario a actualizar -->    
-        <input type="hidden" id="edit_id" name="id_usuario">
+        <!-- Formulario de edición -->
+        <form action="../controllers/actualizarUsuario.php" method="POST">
+            <!-- ID del usuario a actualizar -->    
+            <input type="hidden" id="edit_id" name="id_usuario">
 
-        <!-- Campo usuario -->
-        <label>Usuario</label>
-        <input type="text" id="edit_usuario" name="usuario"
-            required>
+            <!-- Campo usuario -->
+            <label>Usuario</label>
+            <input type="text" id="edit_usuario" name="usuario"
+                required>
 
-        <!-- Campo contraseña (opcional) -->
-        <label>Nueva Contraseña</label>
-        <input type="text" id="edit_contrasena" name="contrasena" placeholder="Opcional">
+            <!-- Campo contraseña (opcional) -->
+            <label>Nueva Contraseña</label>
+            <input type="text" id="edit_contrasena" name="contrasena" placeholder="Opcional">
 
-        <!-- Selector de rol -->
-        <label>Nuevo Rol</label>
-        <select id="edit_rol" name="rol">
-            <option value="operador">Operador</option>
-            <option value="admin">Administrador</option>
-        </select>
+            <!-- Selector de rol -->
+            <label>Nuevo Rol</label>
+            <select id="edit_rol" name="rol">
+                <option value="operador">Operador</option>
+                <option value="admin">Administrador</option>
+            </select>
 
-        <!-- Selector de estado -->
-        <label>Estado</label>
-        <select id="edit_estado" name="estado">
-            <option value="1">Activo</option>
-            <option value="0">Inactivo</option>
-        </select>
+            <!-- Selector de estado -->
+            <label>Estado</label>
+            <select id="edit_estado" name="estado">
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+            </select>
 
-        <!-- Botones de acción -->
-        <div class="acciones">
-            <button class="btn" type="submit" onclick="cerrarModal('modalEditar')">
-                Guardar Cambios
-            </button>
+            <!-- Botones de acción -->
+            <div class="accionesModal">
+                <button class="btn" type="submit" onclick="cerrarModal('modalEditar')">
+                    Guardar
+                </button>
 
-            <button class="btn" onclick="cerrarModal('modalEditar')">
-                Cancelar
-            </button>
-        </div>
-    </form>
+                <button class="btn" onclick="cerrarModal('modalEditar')">
+                    Cancelar
+                </button>
+            </div>
+        </form>
 
+    </div>
 </div>
 
 <!-- Botón para volver -->
