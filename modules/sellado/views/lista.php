@@ -23,6 +23,8 @@ include("../../../templates/header.php");
             Registrar Producción
         </a>
 
+        <br> <br>
+
         <!-- Tarjeta -->
         <div class="card">
             <!-- Filtros de búsqueda -->
@@ -75,7 +77,7 @@ include("../../../templates/header.php");
     <br>
 
 <!-- Paginación -->
-<div class="card" style="text-align:center;">
+<div class="paginacion" style="text-align:center;">
     <?php
         // Rango de páginas visibles en la paginación
         $rango = 5;

@@ -40,11 +40,6 @@ $rol = $_SESSION['rol'] ?? 'Sin rol';
     </div>
     <?php if($_SESSION['rol'] == 'admin'){ ?>
 
-<a class="btn"
-   href="/CONTROL_PRODUCCION/auth/views/usuarios.php">
-   Usuarios
-</a>
-
 <?php } ?>
 
 <!-- Contenido principal -->

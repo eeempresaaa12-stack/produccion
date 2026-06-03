@@ -30,7 +30,6 @@
   /* ==========================
      TEXTO
   ========================== */
-  --texto-titulo: #38c495;
   --texto: #f8fafc;
 
   /* ==========================
@@ -55,7 +54,9 @@
 body {
   font-family: var(--fuente);
   min-height: 100vh;
-  background: var(--fondo-body), url("../img/fondo1.jpg");
+  background:
+    linear-gradient(rgba(238, 237, 237, 0.6), rgba(214, 214, 214, 0.5)),
+    url("../img/fondo1.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -69,13 +70,13 @@ body {
   max-width: 1200px;
   margin: auto;
   margin-top: 80px;
-  background: var(--fondo-panel);
-  backdrop-filter: blur(18px);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
   border-radius: 24px;
   padding: 35px;
   border: 1px solid var(--fondo-borde);
-  box-shadow: var(--shadow);
-  color: var(--texto);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
 }
 
 /* ===========================
@@ -85,7 +86,7 @@ body {
   text-align: center;
   font-size: 34px;
   font-weight: 700;
-  color: var(--texto);
+  color: #1a5e1a;
   margin-bottom: 30px;
   position: relative;
 }
@@ -202,48 +203,15 @@ body {
   cursor: pointer;
   font-family: var(--fuente);
   font-size: 18px;
+  font-weight: 600;
   color: var(--texto);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
   padding: 15px 21px;
-  border: 1px solid var(--fondo-borde);
   border-radius: 14px;
   position: fixed;
   bottom: 25px;
   right: 35px;
   text-decoration: none;
-}
-
-/* ===========================
-   RESPONSIVE
-=========================== */
-@media (max-width: 768px) {
-  body {
-    padding: 15px;
-  }
-
-  .container {
-    padding: 20px;
-  }
-
-  .titulo-vista {
-    font-size: 26px;
-  }
-
-  .acciones {
-    justify-content: center;
-  }
-
-  .acciones .btn {
-    width: 100%;
-    text-align: center;
-  }
-  #btn-volver {
-    top: 20px;
-    right: 20px;
-    bottom: auto;
-    padding: 12px 18px;
-    font-size: 16px;
-  }
 }
 
 /* ===========================
@@ -309,4 +277,43 @@ body {
 }
 .accionesModal .btn:hover {
   background: linear-gradient(135deg, var(--azul), var(--azul));
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+  }
+  .container {
+    padding: 20px;
+  }
+  .titulo-vista {
+    font-size: 26px;
+  }
+  .acciones {
+    justify-content: center;
+  }
+  .acciones .btn {
+    width: 100%;
+    text-align: center;
+  }
+  #btn-volver {
+    top: 20px;
+    right: 20px;
+    bottom: auto;
+    padding: 12px 18px;
+    font-size: 16px;
+  }
+  .modal {
+    padding: 15px;
+  }
+  .accionesModal {
+    display: flex;
+  }
+  .accionesModal .btn {
+    font-size: 14px;
+    padding: 8px 14px;
+  }
 }

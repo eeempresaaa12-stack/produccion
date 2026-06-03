@@ -33,8 +33,8 @@ require_once("auth/proteger.php");
                 ? 'modules/sellado/views/dashboard.php'
                 : 'modules/sellado/views/lista.php';
             ?>" class="area-card">
-                <h2>Producción de Sellado</h2>
-                <p>Control de paquetes producidos</p>
+                <h2>Sellado</h2>
+                <p>Control de paquetes <br>producidos</p>
             </a>
 
             <!-- Módulo Rollos -->
@@ -43,8 +43,8 @@ require_once("auth/proteger.php");
                     ? 'modules/rollo/views/dashboard.php'
                     : 'modules/rollo/views/lista.php';
             ?>" class="area-card">
-                <h2>Producción de Rollos</h2>
-                <p>Control de rollos producidos</p>
+                <h2>Rollos</h2>
+                <p>Control de rollos <br>producidos</p>
             </a>
 
             <!-- Módulo Máquina Plana -->
@@ -53,8 +53,8 @@ require_once("auth/proteger.php");
                     ? 'modules/plana/views/dashboard.php'
                     : 'modules/plana/views/lista.php';
             ?>" class="area-card">
-                <h2>Producción Máquina Plana</h2>
-                <p>Control producción máquina plana</p>
+                <h2>Máquina Plana</h2>
+                <p>Control producción <br>máquina plana</p>
             </a>
 
         </div>

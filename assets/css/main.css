@@ -15,7 +15,7 @@
 body {
   font-family: "Poppins", sans-serif;
   background:
-    linear-gradient(rgba(32, 32, 32, 0.4), rgba(78, 78, 78, 0.6)),
+    linear-gradient(rgba(238, 237, 237, 0.6), rgba(214, 214, 214, 0.5)),
     url("../img/fondo2.jpg");
   background-size: cover;
   background-position: center;
@@ -26,7 +26,7 @@ body {
    NAVBAR
 ================================================= */
 .navbar {
-  background: linear-gradient(90deg, #14532d, #24726d);
+  background: #14532d;
   padding: 12px 25px;
   height: 90px;
   width: 100%;
@@ -110,28 +110,6 @@ body {
   .navbar h1 {
     font-size: 18px;
   }
-}
-/* =================================================
-   LINKS
-================================================= */
-.navbar-links {
-  display: flex;
-  gap: 20px;
-  list-style: none;
-}
-
-.navbar-links a {
-  color: white;
-  text-decoration: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: 0.25s;
-}
-
-.navbar-links a:hover {
-  background: rgba(201, 100, 100, 0.18);
-  backdrop-filter: blur(6px);
 }
 
 /* =================================================
