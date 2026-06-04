@@ -94,7 +94,7 @@ $res = mysqli_query($conexion, $sql);
 <div class="overlay" id="modalCrear">
     <div class="modal">
         <!-- Título -->
-        <h2 class="titulo-vista">Crear Usuario</h2>
+        <h2 class="titulo-modal">Crear Usuario</h2>
 
         <!-- Formulario de creación -->
         <form action="../controllers/guardarUsuario.php" method="POST">
@@ -132,7 +132,7 @@ $res = mysqli_query($conexion, $sql);
 <div class="overlay" id="modalEditar">
     <div class="modal">
         <!-- Título -->
-        <h2 class="titulo-vista">Editar Usuario</h2>
+        <h2 class="titulo-modal">Editar Usuario</h2>
 
         <!-- Formulario de edición -->
         <form action="../controllers/actualizarUsuario.php" method="POST">

@@ -197,7 +197,7 @@ form select:focus {
   padding: 12px 20px;
   margin-top: 18px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #207070, rgb(88, 222, 236));
+  background: linear-gradient(135deg, #207070, #58deec);
   border: none;
   color: white;
   font-weight: 600;
@@ -209,7 +209,7 @@ form select:focus {
 
 .btn:hover {
   transform: translateY(-2px);
-  background: linear-gradient(135deg, #215224, #215224);
+  background: linear-gradient(135deg, #207070, #207070);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 }
 
@@ -254,7 +254,7 @@ form select:focus {
   display: inline-block;
   padding: 7px 15px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #207070, rgb(88, 222, 236));
+  background: linear-gradient(135deg, #207070, #58deec);
   border: none;
   color: white;
   font-weight: 600;
@@ -265,7 +265,7 @@ form select:focus {
 }
 #btnCerrar:hover {
   transform: translateY(-2px);
-  background: linear-gradient(135deg, #086168, #086168);
+  background: linear-gradient(135deg, #207070, #207070);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 }
 

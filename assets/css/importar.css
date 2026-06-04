@@ -13,7 +13,9 @@
    BODY
 ================================================= */
 body {
-  background: rgb(20, 80, 33);
+  background:
+    linear-gradient(rgba(238, 237, 237, 0.6), rgba(214, 214, 214, 0.5)),
+    url("../img/fondo1.jpg");
   color: white;
   font-family: "Poppins", sans-serif;
   min-height: 90vh;
@@ -21,7 +23,9 @@ body {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background-image: radial-gradient(#1c233340 1px, transparent 1px);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   overflow: hidden;
 }
 
@@ -199,18 +203,18 @@ body {
   font-family: "Poppins", sans-serif;
   font-size: 2.2rem;
   font-weight: 500;
-  color: #27bec9;
+  color: #3cc6e9;
   line-height: 1;
 }
 .sign {
   font-family: "Poppins", sans-serif;
   font-size: 1rem;
-  color: #27bec9;
+  color: #3cc6e9;
 }
 #counter {
   font-family: "Poppins", sans-serif;
   font-size: 1rem;
-  color: #27bec9;
+  color: #3cc6e9;
 }
 
 @media (max-width: 480px) {
@@ -254,22 +258,22 @@ body {
 }
 .st .l {
   font-size: 0.7rem;
-  color: #1c8c94;
+  color: #3cc6e9;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 .st.ok .v {
-  color: #1c8c94;
+  color: #3cc6e9;
 }
 .st.upd .v {
-  color: #1c8c94;
+  color: #3cc6e9;
 }
 .st.dup .v {
-  color: #1c8c94;
+  color: #3cc6e9;
 }
 .st.tot .v,
 .st.tot .l {
-  color: #10501e;
+  color: #166d29;
 }
 
 /* ================================
@@ -335,7 +339,7 @@ body {
   border-bottom: none;
 }
 .lr .n {
-  color: rgb(20, 80, 30);
+  color: rgb(24, 95, 36);
   min-width: 26px;
   text-align: right;
 }
@@ -346,27 +350,31 @@ body {
   color: #24788d;
 }
 .lr.dup .t {
-  color: #ac6802;
+  color: #aa6703;
 }
 
 /*================================
    BOTÓN VOLVER
 =================================*/
-
 #btn-volver {
-  background: rgba(255, 255, 255, 0.6);
+  background: linear-gradient(
+    rgba(238, 237, 237, 0.6),
+    rgba(214, 214, 214, 0.4)
+  );
   cursor: pointer;
   font-family: "Poppins", sans-serif;
-  font-size: 20px;
-  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a5e1a;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
   padding: 15px 21px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: 14px;
   position: fixed;
   bottom: 25px;
   right: 35px;
   text-decoration: none;
+  transition: 0.25s;
+  border: 1px solid rgba(255, 255, 255, 0.45);
 }
 @media (max-width: 480px) {
   #btn-volver {

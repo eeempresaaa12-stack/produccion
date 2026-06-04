@@ -4,55 +4,8 @@
   border: 0px solid white;
 }
 
-:root {
-  /* ==========================
-     COLORES CORPORATIVOS
-  ========================== */
-  --teal: #134e4a;
-  --teal-frio: #24726d;
-  --jade: #00a86b;
-  --turquesa: #14b8a6;
-  --verde: #14532d;
-  --azul: #0369a1;
-  --cian: #06b6d4;
-
-  /* ==========================
-     FONDOS OSCUROS
-  ========================== */
-  --fondo-body: linear-gradient(rgba(37, 37, 37, 0.4), rgba(71, 71, 71, 0.6));
-  --fondo-panel: rgba(20, 12, 12, 0.6);
-  --fondo-card: rgba(40, 110, 110, 0.3);
-  --fondo-hover: rgba(20, 184, 166, 0.08);
-  --fondo-borde: rgba(20, 184, 166, 0.12);
-  --fondo-modal: rgba(36, 114, 109, 0.7);
-  --fondo-input: rgba(197, 195, 195, 0.6);
-
-  /* ==========================
-     TEXTO
-  ========================== */
-  --texto: #f8fafc;
-
-  /* ==========================
-     ESTADOS
-  ========================== */
-  --activo: #4ade80;
-  --inactivo: #f87171;
-
-  /* ==========================
-     SOMBRAS
-  ========================== */
-  --shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
-  --shadow-btn: 0 10px 25px rgba(20, 184, 166, 0.25);
-  --shadow-btn-h: 0 15px 35px rgba(20, 184, 166, 0.4);
-
-  /* ==========================
-     FUENTE
-  ========================== */
-  --fuente: "Poppins", sans-serif;
-}
-
 body {
-  font-family: var(--fuente);
+  font-family: "Poppins", sans-serif;
   min-height: 100vh;
   background:
     linear-gradient(rgba(238, 237, 237, 0.6), rgba(214, 214, 214, 0.5)),
@@ -106,14 +59,14 @@ body {
   border-radius: 14px;
   font-weight: 600;
   cursor: pointer;
-  color: var(--fuente);
-  background: linear-gradient(135deg, var(--teal-frio), var(--turquesa));
+  color: white;
+  background: #156626;
   transition: 0.25s;
-  box-shadow: var(--shadow-btn);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-btn-h);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 }
 
 /* ===========================
@@ -127,29 +80,33 @@ body {
   min-width: 800px;
   border-collapse: collapse;
   overflow: hidden;
-  border-radius: 20px;
-  background: var(--fondo-card);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  background: white;
 }
 .tabla thead {
-  background: linear-gradient(135deg, var(--verde), var(--teal-frio));
+  background: #14532d;
 }
 .tabla th {
-  color: var(--texto);
+  color: white;
   padding: 18px;
   font-size: 14px;
   font-weight: 600;
 }
 .tabla td {
-  color: var(--texto);
+  color: #14532d;
   padding: 16px;
   text-align: center;
-  border-bottom: 1px solid var(--fondo-borde);
+  border: 1px solid #14532d;
 }
 .tabla tbody tr {
   transition: 0.25s;
 }
 .tabla tbody tr:hover {
-  background: var(--fondo-hover);
+  background: linear-gradient(
+    rgba(238, 237, 237, 0.6),
+    rgba(214, 214, 214, 0.5)
+  );
 }
 
 /* ===========================
@@ -157,7 +114,7 @@ body {
 =========================== */
 .tabla td:nth-child(3) {
   font-weight: 600;
-  color: var(--turquesa);
+  color: #207070;
 }
 /* ===========================
    ESTADOS
@@ -171,13 +128,13 @@ body {
   font-weight: 600;
 }
 .estado.activo {
-  background: rgba(74, 222, 128, 0.15);
-  color: var(--activo);
+  background: rgba(74, 222, 128, 0.3);
+  color: rgb(8, 190, 105);
   border: 1px solid rgba(74, 222, 128, 0.25);
 }
 .estado.inactivo {
-  background: rgba(248, 113, 113, 0.15);
-  color: var(--inactivo);
+  background: rgba(248, 113, 113, 0.3);
+  color: rgb(230, 93, 88);
   border: 1px solid rgba(248, 113, 113, 0.25);
 }
 
@@ -188,23 +145,27 @@ body {
   padding: 8px 18px;
   border-radius: 10px;
   font-size: 13px;
-  background: linear-gradient(135deg, var(--azul), var(--cian));
-  box-shadow: var(--shadow-btn);
+  background: linear-gradient(135deg, #207070, #58deec);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  color: white;
 }
 .tabla .btn:hover {
-  background: linear-gradient(135deg, var(--azul), var(--azul));
+  background: linear-gradient(135deg, #207070, #207070);
 }
 
 /*================================
    BOTÓN VOLVER
 =================================*/
 #btn-volver {
-  background: var(--fondo-panel);
+  background: linear-gradient(
+    rgba(238, 237, 237, 0.6),
+    rgba(214, 214, 214, 0.4)
+  );
   cursor: pointer;
-  font-family: var(--fuente);
+  font-family: "Poppins", sans-serif;
   font-size: 18px;
   font-weight: 600;
-  color: var(--texto);
+  color: #1a5e1a;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
   padding: 15px 21px;
   border-radius: 14px;
@@ -212,8 +173,12 @@ body {
   bottom: 25px;
   right: 35px;
   text-decoration: none;
+  transition: 0.25s;
+  border: 1px solid rgba(255, 255, 255, 0.45);
 }
-
+#btn-volver:hover {
+  transform: translateY(-4px);
+}
 /* ===========================
    MODALES
 =========================== */
@@ -230,22 +195,31 @@ body {
   z-index: 20;
 }
 .modal {
-  background: var(--fondo-modal);
+  background: rgba(11, 61, 18, 0.7);
   backdrop-filter: blur(12px);
   padding: 30px;
   border-radius: 12px;
   width: 450px;
   text-align: center;
   position: relative;
+  border: 1px solid rgba(15, 56, 13, 0.45);
 }
+.titulo-modal {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 30px;
+  position: relative;
+}
+
 .modal form {
-  background: var(--fondo-panel);
+  background: rgba(255, 255, 255, 0.5);
   border-radius: 10px;
-  color: var(--texto);
+  color: rgb(6, 44, 3);
   display: grid;
   padding: 15px 40px;
   gap: 8px;
-  box-shadow: var(--shadow);
 }
 .modal label {
   font-size: 16px;
@@ -271,12 +245,13 @@ body {
   padding: 10px 18px;
   border-radius: 10px;
   font-size: 16px;
-  background: linear-gradient(135deg, var(--azul), var(--cian));
-  box-shadow: var(--shadow-btn);
+  background: #156626;
+  transition: 0.25s;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
   margin: 15px;
 }
 .accionesModal .btn:hover {
-  background: linear-gradient(135deg, var(--azul), var(--azul));
+  transform: translateY(-2px);
 }
 
 /* ===========================
