@@ -1,11 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+:root {
+  --azul: rgb(31, 140, 212);
+  --cian: rgb(28, 186, 226);
+  --prueba: linear-gradient(var(--azul), var(--cian));
+}
 /* =============================================
    BODY
 ============================================= */
@@ -16,9 +20,9 @@ body {
   justify-content: flex-end;
   align-items: center;
   background:
-    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)),
-    url("../img/fondo3.png");
-  background-size: contain;
+    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)),
+    url("../img/fondo1.jpg");
+  background-size: cover;
   background-repeat: no-repeat;
   overflow: hidden;
 }
