@@ -1,6 +1,3 @@
-/* =================================================
-   TIPOGRAFIA + RESET
-================================================= */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
 * {
@@ -9,9 +6,9 @@
   box-sizing: border-box;
 }
 
-/* =================================================
+/* =============================================
    BODY
-================================================= */
+============================================= */
 body {
   background:
     linear-gradient(rgba(238, 237, 237, 0.6), rgba(214, 214, 214, 0.5)),
@@ -29,9 +26,9 @@ body {
   overflow: hidden;
 }
 
-/* ================================
+/* ===========================
    CONTENEDOR PRINCIPAL
-=================================*/
+=========================== */
 .wrapper {
   width: 100%;
   max-width: 540px;
@@ -42,20 +39,10 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.45);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
 }
-@media (max-width: 480px) {
-  .wrapper {
-    padding: 20px;
-  }
-}
-@media (max-width: 360px) {
-  .wrapper {
-    padding: 15px;
-  }
-}
 
-/* ================================
+/* ===========================
    ENCABEZADO 
-================================= */
+=========================== */
 .top {
   background: rgba(255, 255, 255, 0.75);
   color: #134213;
@@ -68,9 +55,9 @@ body {
   border: 1px solid #134413;
 }
 
-/* ================================
+/* ===========================
    TARJETA 
-================================= */
+=========================== */
 .card {
   background: rgba(17, 73, 29, 0.9);
   border: 1px solid #0e4112;
@@ -90,20 +77,10 @@ body {
   background: linear-gradient(90deg, transparent, green, transparent);
   opacity: 0.4;
 }
-@media (max-width: 480px) {
-  .card {
-    padding: 20px 16px;
-  }
-  .top {
-    flex-direction: column;
-    text-align: center;
-    margin-bottom: 24px;
-  }
-}
-/*================================
-   INDICADORES DE ESTADO
-=================================*/
 
+/* ===========================
+   INDICADORES DE ESTADO
+=========================== */
 .status-row {
   display: flex;
   align-items: center;
@@ -165,9 +142,9 @@ body {
   min-height: 1.5em;
 }
 
-/* ================================
+/* ===========================
    BARRA DE PROGRESO
-=================================*/
+=========================== */
 .track {
   width: 100%;
   height: 8px;
@@ -185,9 +162,9 @@ body {
   transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ================================
+/* ===========================
    NÚMEROS Y ESTADÍSTICAS
-=================================*/
+=========================== */
 .num-row {
   display: flex;
   justify-content: space-between;
@@ -203,32 +180,23 @@ body {
   font-family: "Poppins", sans-serif;
   font-size: 2.2rem;
   font-weight: 500;
-  color: #3cc6e9;
+  color: #299dd3;
   line-height: 1;
 }
 .sign {
   font-family: "Poppins", sans-serif;
   font-size: 1rem;
-  color: #3cc6e9;
+  color: #299dd3;
 }
 #counter {
   font-family: "Poppins", sans-serif;
   font-size: 1rem;
-  color: #3cc6e9;
+  color: #299dd3;
 }
 
-@media (max-width: 480px) {
-  #pct {
-    font-size: 1.5rem;
-  }
-  #counter {
-    font-size: 0.9rem;
-  }
-}
-
-/* ================================
+/* ===========================
    ESTADÍSTICAS DETALLADAS
-=================================*/
+=========================== */
 #stats {
   display: none;
   grid-template-columns: repeat(3, 1fr);
@@ -241,7 +209,6 @@ body {
 .st.tot {
   grid-column: span 3;
 }
-
 .st {
   background: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.45);
@@ -258,27 +225,27 @@ body {
 }
 .st .l {
   font-size: 0.7rem;
-  color: #3cc6e9;
+  color: #158dc5;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 .st.ok .v {
-  color: #3cc6e9;
+  color: #158dc5;
 }
 .st.upd .v {
-  color: #3cc6e9;
+  color: #158dc5;
 }
 .st.dup .v {
-  color: #3cc6e9;
+  color: #158dc5;
 }
 .st.tot .v,
 .st.tot .l {
   color: #166d29;
 }
 
-/* ================================
+/* ===========================
    VER DETALLES
-=================================*/
+=========================== */
 #toggle-btn {
   display: none;
   width: 100%;
@@ -303,7 +270,6 @@ body {
 #toggle-btn.open svg {
   transform: rotate(180deg);
 }
-
 #log {
   display: none;
   margin-top: 10px;
@@ -325,7 +291,6 @@ body {
   background: rgb(20, 80, 30);
   border-radius: 2px;
 }
-
 .lr {
   display: flex;
   align-items: center;
@@ -353,9 +318,9 @@ body {
   color: #aa6703;
 }
 
-/*================================
+/* ===========================
    BOTÓN VOLVER
-=================================*/
+=========================== */
 #btn-volver {
   background: linear-gradient(
     rgba(238, 237, 237, 0.6),
@@ -376,12 +341,38 @@ body {
   transition: 0.25s;
   border: 1px solid rgba(255, 255, 255, 0.45);
 }
+
+/* ===========================
+   RESPONSIVE
+=========================== */
 @media (max-width: 480px) {
+  .wrapper {
+    padding: 20px;
+  }
+  .card {
+    padding: 20px 16px;
+  }
+  .top {
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  #pct {
+    font-size: 1.5rem;
+  }
+  #counter {
+    font-size: 0.9rem;
+  }
   #btn-volver {
     top: 20px;
     right: 20px;
     bottom: auto;
     padding: 12px 18px;
     font-size: 16px;
+  }
+}
+@media (max-width: 360px) {
+  .wrapper {
+    padding: 15px;
   }
 }

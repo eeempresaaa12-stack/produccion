@@ -1,9 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
 * {
-  border: 0px solid white;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+/* =============================================
+   BODY
+============================================= */
 body {
   font-family: "Poppins", sans-serif;
   min-height: 100vh;
@@ -17,7 +22,7 @@ body {
 }
 
 /* ===========================
-   CONTENEDOR
+   CONTENEDOR PRINCIPAL
 =========================== */
 .container {
   max-width: 1200px;
@@ -116,6 +121,7 @@ body {
   font-weight: 600;
   color: #207070;
 }
+
 /* ===========================
    ESTADOS
 =========================== */
@@ -153,9 +159,9 @@ body {
   background: linear-gradient(135deg, #207070, #207070);
 }
 
-/*================================
+/* ===========================
    BOTÓN VOLVER
-=================================*/
+=========================== */
 #btn-volver {
   background: linear-gradient(
     rgba(238, 237, 237, 0.6),
@@ -179,6 +185,7 @@ body {
 #btn-volver:hover {
   transform: translateY(-4px);
 }
+
 /* ===========================
    MODALES
 =========================== */
@@ -212,7 +219,6 @@ body {
   margin-bottom: 30px;
   position: relative;
 }
-
 .modal form {
   background: rgba(255, 255, 255, 0.5);
   border-radius: 10px;
