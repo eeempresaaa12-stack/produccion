@@ -37,7 +37,7 @@ function obtenerProduccionMesPlana($conexion){
 }
 
 /* =================================================
-   TOP OPERARIO
+   TOP OPERARIO (MES ACTUAL)
 ================================================= */
 // Operario con más producción en el mes actual
 function obtenerTopOperarioPlana($conexion){
@@ -58,72 +58,28 @@ function obtenerTopOperarioPlana($conexion){
         'total' => 0
     ];
 }
-// Operario con más producción en el mes anterior
-function obtenerTopOperarioAnteriorPlana($conexion){
-    $sql = "SELECT o.nombre, IFNULL(SUM(p.bultos_plana),0) total
-            FROM PRODUCCION_PLANA p
-            LEFT JOIN OPERARIOS o ON p.id_operario = o.id_operario
-            WHERE MONTH(p.fecha_plana)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-            AND YEAR(p.fecha_plana)=YEAR(CURDATE()-INTERVAL 1 MONTH)
-            GROUP BY p.id_operario
-            ORDER BY total DESC
-            LIMIT 1";
-    $res = mysqli_query($conexion, $sql);
-    if($res && mysqli_num_rows($res) > 0){
-        return mysqli_fetch_assoc($res);
-    }
-    return [
-        'nombre' => 'Sin datos',
-        'total' => 0
-    ];
-}
 
 /* =================================================
-   TOTALES MES ACTUAL Y ANTERIOR
+   TOTAL MES
 ================================================= */
-// Total de paquetes del mes actual
-function obtenerTotalMesActualPlana($conexion){
+// Total de paquetes del mes
+function obtenerTotalMesPlana($conexion,$mes){
     $sql = "SELECT SUM(total_plana) total
             FROM PRODUCCION_PLANA
-            WHERE MONTH(fecha_plana)=MONTH(CURDATE())
+            WHERE MONTH(fecha_plana) = $mes
             AND YEAR(fecha_plana)=YEAR(CURDATE())";
-    return obtenerTotalPlana($conexion, $sql);
-}
-// Total de paquetes del mes anterior
-function obtenerTotalMesAnteriorPlana($conexion){
-    $sql = "SELECT SUM(total_plana) total
-            FROM PRODUCCION_PLANA
-            WHERE MONTH(fecha_plana)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-            AND YEAR(fecha_plana)=YEAR(CURDATE()-INTERVAL 1 MONTH)";
     return obtenerTotalPlana($conexion, $sql);
 }
 
 /* =================================================
-   RESUMENES
+   RESUMEN MES
 ================================================= */
-// Resumen de producción del mes actual
-function obtenerResumenMesPlana($conexion){
+// Resumen de producción del mes
+function obtenerResumenMesPlana($conexion,$mes){
     $sql = "SELECT SUM(peso_plana) bruto, SUM(retal_plana) retal, SUM(total_plana) neto
             FROM PRODUCCION_PLANA
-            WHERE MONTH(fecha_plana)=MONTH(CURDATE())
+            WHERE MONTH(fecha_plana) = $mes
             AND YEAR(fecha_plana)=YEAR(CURDATE())";
-    $res = mysqli_query($conexion, $sql);
-    if($res){
-        $row = mysqli_fetch_assoc($res);
-        return [
-            'bruto' => $row['bruto'] ?? null,
-            'retal' => $row['retal'] ?? null,
-            'neto'  => $row['neto']  ?? null
-        ];
-    }
-    return ['bruto' => null, 'retal' => null, 'neto' => null];
-}
-// Resumen de producción del mes anterior
-function obtenerResumenMesAnteriorPlana($conexion){
-    $sql = "SELECT SUM(peso_plana) bruto, SUM(retal_plana) retal, SUM(total_plana) neto
-            FROM PRODUCCION_PLANA
-            WHERE MONTH(fecha_plana)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-            AND YEAR(fecha_plana)=YEAR(CURDATE()-INTERVAL 1 MONTH)";
     $res = mysqli_query($conexion, $sql);
     if($res){
         $row = mysqli_fetch_assoc($res);
@@ -139,11 +95,11 @@ function obtenerResumenMesAnteriorPlana($conexion){
 /* =================================================
    MEJOR Y PEOR DÍA
 ================================================= */
-// Mejor y peor día de producción del mes actual
-function obtenerMejorPeorDiaMesPlana($conexion){
+// Mejor y peor día de producción del mes
+function obtenerMejorPeorDiaMesPlana($conexion,$mes){
     $sql = "SELECT DATE(fecha_plana) fecha, SUM(total_plana) total
             FROM PRODUCCION_PLANA
-            WHERE MONTH(fecha_plana)=MONTH(CURDATE())
+            WHERE MONTH(fecha_plana) = $mes
             AND YEAR(fecha_plana)=YEAR(CURDATE())
             GROUP BY DATE(fecha_plana)";
     $res = mysqli_query($conexion, $sql);
@@ -164,29 +120,27 @@ function obtenerMejorPeorDiaMesPlana($conexion){
         'peor' => $peor
     ];
 }
-// Mejor y peor día de producción del mes anterior
-function obtenerMejorPeorDiaAnteriorPlana($conexion){
-    $sql = "SELECT DATE(fecha_plana) fecha, SUM(total_plana) total
-            FROM PRODUCCION_PLANA
-            WHERE MONTH(fecha_plana)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-            AND YEAR(fecha_plana)=YEAR(CURDATE()-INTERVAL 1 MONTH)
-            GROUP BY DATE(fecha_plana)";
+
+/* =================================================
+   TOP OPERARIO
+================================================= */
+// Operario con más producción en el mes
+function obtenerTopOperarioMesPlana($conexion,$mes){
+    $sql = "SELECT o.nombre, IFNULL(SUM(p.bultos_plana),0) total
+            FROM PRODUCCION_PLANA p
+            LEFT JOIN OPERARIOS o ON p.id_operario = o.id_operario
+            WHERE MONTH(p.fecha_plana) = $mes
+            AND YEAR(p.fecha_plana)=YEAR(CURDATE())
+            GROUP BY p.id_operario
+            ORDER BY total DESC
+            LIMIT 1";
     $res = mysqli_query($conexion, $sql);
-    $mejor = ['fecha' => 'Sin datos', 'total' => 0];
-    $peor = ['fecha' => 'Sin datos', 'total' => 0];
     if($res && mysqli_num_rows($res) > 0){
-        while($row = mysqli_fetch_assoc($res)){
-            if($row['total'] > $mejor['total']){
-                $mejor = $row;
-            }
-            if($peor['fecha'] === 'Sin datos' || $row['total'] < $peor['total']){
-                $peor = $row;
-            }
-        }
+        return mysqli_fetch_assoc($res);
     }
     return [
-        'mejor' => $mejor,
-        'peor' => $peor
+        'nombre' => 'Sin datos',
+        'total' => 0
     ];
 }
 

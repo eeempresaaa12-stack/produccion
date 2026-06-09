@@ -22,39 +22,43 @@ $semanas = [
 $semana_actual = date('W', strtotime('this week'));
 $mes_actual = date('n');
 $mes_anterior = date('n', strtotime('-1 month'));
+// Meses a comparar
+$mes1 = $_GET['mes1'] ?? $mes_anterior;
+$mes2 = $_GET['mes2'] ?? $mes_actual;
 
 // Total histórico de producción
 $total = obtenerTotalHistoricoRollo($conexion);
-
 // Producción de la semana y del mes actual
 $semana = obtenerProduccionSemanaRollo($conexion);
 $mes = obtenerProduccionMesRollo($conexion);
-
-// Top máquina mes actual y anterior
+// Top máquina del mes actual
 $top_maquina = obtenerTopMaquinaRollo($conexion);
-$top_maquina_ant = obtenerTopMaquinaAnteriorRollo($conexion);
 
-// Totales mes actual y anterior
-$act = obtenerTotalMesActualRollo($conexion);
-$ant = obtenerTotalMesAnteriorRollo($conexion);
+// Totales de los meses
+$total_mes1 = obtenerTotalMesRollo($conexion,$mes1);
+$total_mes2 = obtenerTotalMesRollo($conexion,$mes2);
 
-// Resumenes del mes actual y anterior
-$resumen = obtenerResumenMesRollo($conexion);
-$bruto = $resumen['bruto'];
-$retal = $resumen['retal'];
-$neto = $resumen['neto'];
-$resumen_ant = obtenerResumenMesAnteriorRollo($conexion);
-$bruto_ant = $resumen_ant['bruto'];
-$retal_ant = $resumen_ant['retal'];
-$neto_ant = $resumen_ant['neto'];
+// Resumenes de los meses
+$resumen_mes1 = obtenerResumenMesRollo($conexion,$mes1);
+$bruto_mes1 = $resumen_mes1['bruto'];
+$retal_mes1 = $resumen_mes1['retal'];
+$neto_mes1 = $resumen_mes1['neto'];
+$resumen_mes2 = obtenerResumenMesRollo($conexion,$mes2);
+$bruto_mes2 = $resumen_mes2['bruto'];
+$retal_mes2 = $resumen_mes2['retal'];
+$neto_mes2 = $resumen_mes2['neto'];
 
-// Mejor y peor día del mes actual y anterior
-$dias_mes = obtenerMejorPeorDiaMesRollo($conexion);
-$mejor_dia = $dias_mes['mejor'];
-$peor_dia = $dias_mes['peor'];
-$dias_ant = obtenerMejorPeorDiaAnteriorRollo($conexion);
-$mejor_dia_ant = $dias_ant['mejor'];
-$peor_dia_ant = $dias_ant['peor'];
+// Mejor y peor día de los meses
+$dias_mes1 = obtenerMejorPeorDiaMesRollo($conexion,$mes1);
+$mejor_dia_mes1 = $dias_mes1['mejor'];
+$peor_dia_mes1 = $dias_mes1['peor'];
+$dias_mes2 = obtenerMejorPeorDiaMesRollo($conexion,$mes2);
+$mejor_dia_mes2 = $dias_mes2['mejor'];
+$peor_dia_mes2 = $dias_mes2['peor'];
+
+// Top máquina de los meses
+$top_maquina_mes1 = obtenerTopMaquinaMesRollo($conexion,$mes1);
+$top_maquina_mes2 = obtenerTopMaquinaMesRollo($conexion,$mes2);
 
 // Filtros de fecha para tablas
 $desde = $_GET['desde'] ?? date('Y-m-01');
@@ -64,12 +68,12 @@ $res_tabla_fecha = obtenerTablaFechasRollo($conexion,$desde,$hasta);
 $res_tabla_maquina = obtenerTablaMaquinasRollo($conexion,$desde,$hasta);
 
 // Diferencia y porcentaje de variación entre meses
-$diferencia = ($act ?? 0) - ($ant ?? 0);
-$porcentaje = ($ant > 0) ? (($diferencia / $ant) * 100) : 0;
+$diferencia = ($total_mes2 ?? 0) - ($total_mes1 ?? 0);
+$porcentaje = ($total_mes1 > 0) ? (($diferencia / $total_mes1) * 100) : 0;
 
-// Calculo de eficiencia mes actual y anterior
-$eficiencia     = ($bruto !== null && $bruto > 0) ? (($neto / $bruto) * 100) : null;
-$eficiencia_ant = ($bruto_ant !== null && $bruto_ant > 0) ? (($neto_ant / $bruto_ant) * 100) : null;
+// Calculo de eficiencia de los meses
+$eficiencia_mes1 = ($bruto_mes1 !== null && $bruto_mes1 > 0) ? (($neto_mes1 / $bruto_mes1) * 100) : null;
+$eficiencia_mes2 = ($bruto_mes2 !== null && $bruto_mes2 > 0) ? (($neto_mes2 / $bruto_mes2) * 100) : null;
 
 // Última fecha de importación
 $ultima_fecha = obtenerUltimaImportacionRollo($conexion);

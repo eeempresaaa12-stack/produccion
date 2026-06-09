@@ -1,26 +1,28 @@
 <?php
 /** @var array $meses */
-/** @var array $semanas */
+/** @var int $semana_actual */
 /** @var int $mes_actual */
 /** @var int $mes_anterior */
-/** @var int $semana_actual */
+/** @var int $mes1 */
+/** @var int $mes2 */
 /** @var float $total */
 /** @var float $semana */
 /** @var float $mes */
 /** @var array $top_operario */
-/** @var array $top_operario_ant */
-/** @var float $bruto */
-/** @var float $retal */
-/** @var float $neto */
-/** @var float $eficiencia */
-/** @var float $bruto_ant */
-/** @var float $retal_ant */
-/** @var float $neto_ant */
-/** @var float $eficiencia_ant */
-/** @var array $mejor_dia */
-/** @var array $peor_dia */
-/** @var array $mejor_dia_ant */
-/** @var array $peor_dia_ant */
+/** @var float $bruto_mes1 */
+/** @var float $retal_mes1 */
+/** @var float $neto_mes1 */
+/** @var float $eficiencia_mes1 */
+/** @var float $bruto_mes2 */
+/** @var float $retal_mes2 */
+/** @var float $neto_mes2 */
+/** @var float $eficiencia_mes2 */
+/** @var array $mejor_dia_mes1 */
+/** @var array $peor_dia_mes1 */
+/** @var array $mejor_dia_mes2 */
+/** @var array $peor_dia_mes2 */
+/** @var array $top_operario_mes1 */
+/** @var array $top_operario_mes2 */
 /** @var float $diferencia */
 /** @var float $porcentaje */
 /** @var mysqli_result $res_tabla_fecha */
@@ -77,58 +79,69 @@ include("../../../templates/header.php");
         </div>
     </div>
 
-    <!-- Comparativo mes anterior vs mes actual -->
+    <!-- Comparativo mes 1 y mes 2 -->
     <div class="resumenes">
-        <!-- Resumen mes anterior -->
-        <div class="resumen-anterior">
-            <h3>Resumen de <?php echo $meses[$mes_anterior]; ?></h3>
+        <!-- Resumen mes 1 -->
+        <div class="resumen-mes1">
+            <h3>Resumen de 
+                <!-- Selección del mes 1 a comparar -->
+                <select name="mes1" id="mes1">
+                    <?php foreach($meses as $num => $nombre) { ?>
+                        <option
+                            value="<?= $num ?>"
+                            <?= ($num == $mes1) ? "selected" : "" ?>>
+                            <?= $nombre ?>        
+                        </option>
+                    <?php } ?>
+                </select>
+            </h3>
             <p>
                 🏭 Producción bruta: <?php 
-                echo $bruto_ant !== null 
-                    ? number_format($bruto_ant).' kg' 
+                echo $bruto_mes1 !== null 
+                    ? number_format($bruto_mes1).' kg' 
                     : 'Sin datos'; 
                 ?>
             </p>
             <p>
                 ♻️ Retal: <?php 
-                echo $retal_ant !== null 
-                    ? number_format($retal_ant).' kg' 
+                echo $retal_mes1 !== null 
+                    ? number_format($retal_mes1).' kg' 
                     : 'Sin datos'; 
                 ?>
             </p>
             <p>
                 📦 Producción final: <?php 
-                echo $neto_ant !== null 
-                    ? number_format($neto_ant).' kg' 
+                echo $neto_mes1 !== null 
+                    ? number_format($neto_mes1).' kg' 
                     : 'Sin datos'; 
                 ?>
             </p>
             <p>
                 ⚙️ Eficiencia: <?php 
-                echo $eficiencia_ant !== null 
-                    ? round($eficiencia_ant,1).'%' 
+                echo $eficiencia_mes1 !== null 
+                    ? round($eficiencia_mes1,1).'%' 
                     : 'Sin datos'; 
                 ?>
             </p>
             <p>
                 📅 Mejor día: <?php 
-                echo ($mejor_dia_ant['fecha'] != "Sin datos") 
-                    ? date("d M Y", strtotime($mejor_dia_ant['fecha'])) 
-                    : "Sin datos"; ?> (<?php echo number_format($mejor_dia_ant['total']); 
+                echo ($mejor_dia_mes1['fecha'] != "Sin datos") 
+                    ? date("d M Y", strtotime($mejor_dia_mes1['fecha'])) 
+                    : "Sin datos"; ?> (<?php echo number_format($mejor_dia_mes1['total']); 
                 ?> kg)
             </p>
             <p>
                 📉 Peor día: <?php 
-                echo ($peor_dia_ant['fecha'] != "Sin datos") 
-                    ? date("d M Y", strtotime($peor_dia_ant['fecha'])) 
-                    : "Sin datos"; ?> (<?php echo number_format($peor_dia_ant['total']); 
+                echo ($peor_dia_mes1['fecha'] != "Sin datos") 
+                    ? date("d M Y", strtotime($peor_dia_mes1['fecha'])) 
+                    : "Sin datos"; ?> (<?php echo number_format($peor_dia_mes1['total']); 
                 ?> kg)
             </p>
             <p>
                 🔧 Mejor máquina: <?php 
-                echo $top_operario_ant['nombre'] ?? 'Sin datos'; ?> 
-                <?php if(!empty($top_operario_ant['total'])){ ?>
-                    (<?php echo number_format($top_operario_ant['total']); ?> kg)
+                echo $top_operario_mes1['nombre'] ?? 'Sin datos'; ?> 
+                <?php if(!empty($top_operario_mes1['total'])){ ?>
+                    (<?php echo number_format($top_operario_mes1['total']); ?> kg)
                 <?php } ?>
             </p>
         </div>
@@ -150,56 +163,67 @@ include("../../../templates/header.php");
             </p>
         </div>
 
-        <!-- Resumen mes actual -->
-        <div class="resumen-actual">
-            <h3>Resumen de <?php echo $meses[$mes_actual]; ?></h3>
+        <!-- Resumen mes 2 -->
+        <div class="resumen-mes2">
+            <h3>Resumen de 
+                <!-- Selección del mes 2 a comparar -->
+                <select name="mes2" id="mes2">
+                    <?php foreach($meses as $num => $nombre) { ?>
+                        <option
+                            value="<?= $num ?>"
+                            <?= ($num == $mes2) ? "selected" : "" ?>>
+                            <?= $nombre ?>        
+                        </option>
+                    <?php } ?>
+                </select>
+            </h3>
             <p>
                 🏭 Producción bruta: <?php 
-                echo $bruto !== null 
-                    ? number_format($bruto).' kg' 
+                echo $bruto_mes2 !== null 
+                    ? number_format($bruto_mes2).' kg' 
                     : 'Sin datos'; 
                 ?>
             </p>
             <p>
                 ♻️ Retal: <?php 
-                echo $retal !== null 
-                    ? number_format($retal).' kg' 
+                echo $retal_mes2 !== null 
+                    ? number_format($retal_mes2).' kg' 
                     : 'Sin datos'; 
                 ?>
             </p>
             <p>
                 📦 Producción final: <?php 
-                echo $neto !== null 
-                    ? number_format($neto).' kg' 
+                echo $neto_mes2 !== null 
+                    ? number_format($neto_mes2).' kg' 
                     : 'Sin datos'; 
                 ?>
             </p>
             <p>
                 ⚙️ Eficiencia: <?php 
-                echo $eficiencia !== null 
-                    ? round($eficiencia,1).'%' 
+                echo $eficiencia_mes2 !== null 
+                    ? round($eficiencia_mes2,1).'%' 
                     : 'Sin datos'; 
                 ?>
             </p>
             <p>
                 📅 Mejor día: <?php 
-                echo ($mejor_dia['fecha'] != "Sin datos") 
-                    ? date("d M Y", strtotime($mejor_dia['fecha'])) 
-                    : "Sin datos"; ?> (<?php echo number_format($mejor_dia['total']); 
+                echo ($mejor_dia_mes2['fecha'] != "Sin datos") 
+                    ? date("d M Y", strtotime($mejor_dia_mes2['fecha'])) 
+                    : "Sin datos"; ?> (<?php echo number_format($mejor_dia_mes2['total']); 
                 ?> kg)
             </p>
             <p>
                 📉 Peor día: <?php 
-                echo ($peor_dia['fecha'] != "Sin datos") 
-                    ? date("d M Y", strtotime($peor_dia['fecha'])) 
-                    : "Sin datos"; ?> (<?php echo number_format($peor_dia['total']); 
+                echo ($peor_dia_mes2['fecha'] != "Sin datos") 
+                    ? date("d M Y", strtotime($peor_dia_mes2['fecha'])) 
+                    : "Sin datos"; ?> (<?php echo number_format($peor_dia_mes2['total']); 
                 ?> kg)
             </p> 
             <p>
                 🔧 Mejor máquina: <?php 
-                echo $top_operario['nombre'] ?? 'Sin datos'; ?> 
-                <?php if(!empty($top_operario['total'])){ ?>
-                    (<?php echo number_format($top_operario['total']); ?> kg)
+                echo $top_operario_mes2['nombre'] ?? 'Sin datos'; ?> 
+                <?php if(!empty($top_operario_mes2['total'])){ ?>
+                    (<?php echo number_format($top_operario_mes2['total']); ?> kg)
                 <?php } ?>
             </p>
         </div>

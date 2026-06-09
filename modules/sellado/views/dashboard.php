@@ -1,23 +1,26 @@
 <?php 
 /** @var array $meses */
+/** @var int $semana_actual */
 /** @var int $mes_actual */
 /** @var int $mes_anterior */
-/** @var int $semana_actual */
+/** @var int $mes1 */
+/** @var int $mes2 */
 /** @var int $total */
 /** @var int $semana */
 /** @var int $mes */
-/** @var array $top */
-/** @var array $top_ant */
-/** @var array $mejor_dia */
-/** @var array $peor_dia */
-/** @var array $mejor_dia_ant */
-/** @var array $peor_dia_ant */
-/** @var int $act */
-/** @var int $ant */
-/** @var float $porcentaje */
+/** @var array $top_operario */
+/** @var int $total_mes1 */
+/** @var int $total_mes2 */
+/** @var array $mejor_dia_mes1 */
+/** @var array $peor_dia_mes1 */
+/** @var array $mejor_dia_mes2 */
+/** @var array $peor_dia_mes2 */
+/** @var array $top_operario_mes1 */
+/** @var array $top_operario_mes2 */
 /** @var float $diferencia */
-/** @var float $promedio */
-/** @var float $promedio_ant */
+/** @var float $porcentaje */
+/** @var float $promedio_mes1 */
+/** @var float $promedio_mes2 */
 /** @var string $desde */
 /** @var string $hasta */
 /** @var mysqli_result $res_tabla_fecha */
@@ -64,8 +67,8 @@ include("../../../templates/header.php");
             <p>Top operario del mes</p>
             <h2>
                 <?php 
-                if(!empty($top)){
-                    echo $top['nombre'] . "<br><span style='font-size:14px'>(".$top['total']." paquetes)</span>";
+                if(!empty($top_operario)){
+                    echo $top_operario['nombre'] . "<br><span style='font-size:14px'>(".$top_operario['total']." paquetes)</span>";
                 }else{
                     echo "Sin datos";
                 }
@@ -74,40 +77,51 @@ include("../../../templates/header.php");
         </div>
     </div>
 
-    <!-- Comparativo mes anterior vs mes actual -->
+    <!-- Comparativo mes 1 y mes 2 -->
     <div class="resumenes">
-        <!-- Resumen mes anterior -->
-        <div class="resumen-anterior">
-            <h3> Resumen de <?php echo $meses[$mes_anterior]; ?></h3>
+        <!-- Resumen mes 1 -->
+        <div class="resumen-mes1">
+            <h3> Resumen de 
+                <!-- Selección del mes 1 a comparar -->
+                <select name="mes1" id="mes1">
+                    <?php foreach($meses as $num => $nombre) { ?>
+                        <option
+                            value="<?= $num ?>"
+                            <?= ($num == $mes1) ? "selected" : "" ?>>
+                            <?= $nombre ?>        
+                        </option>
+                    <?php } ?>
+                </select>
+            </h3>
             <p>
                 📦 Producción total: <?php 
-                echo number_format($ant); ?> paquetes
+                echo number_format($total_mes1); ?> paquetes
             </p>
             <p>
                 📅 Mejor día: <?php 
-                echo $mejor_dia_ant['fecha'] != "Sin datos" && $mejor_dia_ant['fecha'] != "" 
-                    ? date("d M Y", strtotime($mejor_dia_ant['fecha'])) 
+                echo $mejor_dia_mes1['fecha'] != "Sin datos" && $mejor_dia_mes1['fecha'] != "" 
+                    ? date("d M Y", strtotime($mejor_dia_mes1['fecha'])) 
                     : "Sin datos";
                 ?>
-                (<?php echo number_format($mejor_dia_ant['total']); ?> paquetes)
+                (<?php echo number_format($mejor_dia_mes1['total']); ?> paquetes)
             </p>
             <p>
                 📉 Peor día: <?php 
-                echo $peor_dia_ant['fecha'] != "Sin datos" && $peor_dia_ant['fecha'] != ""
-                    ? date("d M Y", strtotime($peor_dia_ant['fecha']))
+                echo $peor_dia_mes1['fecha'] != "Sin datos" && $peor_dia_mes1['fecha'] != ""
+                    ? date("d M Y", strtotime($peor_dia_mes1['fecha']))
                     : "Sin datos";
                 ?>
-                (<?php echo number_format($peor_dia_ant['total']); ?> paquetes)
+                (<?php echo number_format($peor_dia_mes1['total']); ?> paquetes)
             </p>
             <p>
                 📊 Promedio diario: <?php 
-                echo round($promedio_ant); ?> paquetes
+                echo round($promedio_mes1); ?> paquetes
             </p>
             <p>
                 👷 Mejor operario: <?php 
-                echo $top_ant['nombre'] ?? 'Sin datos'; ?>
-                <?php if(!empty($top_ant['total']) && $top_ant['total'] > 0){ ?>
-                    (<?php echo number_format($top_ant['total']); ?> paquetes)
+                echo $top_operario_mes1['nombre'] ?? 'Sin datos'; ?>
+                <?php if(!empty($top_operario_mes1['total']) && $top_operario_mes1['total'] > 0){ ?>
+                    (<?php echo number_format($top_operario_mes1['total']); ?> paquetes)
                 <?php } ?>
             </p>
         </div>
@@ -129,38 +143,50 @@ include("../../../templates/header.php");
             </p>
         </div>
 
-        <!-- Resumen mes actual -->
-        <div class="resumen-actual">
-            <h3> Resumen de <?php echo $meses[$mes_actual]; ?></h3>
+        
+        <!-- Resumen mes 2 -->
+        <div class="resumen-mes2">
+            <h3> Resumen de 
+                <!-- Selección del mes 2 a comparar -->
+                <select name="mes2" id="mes2">
+                    <?php foreach($meses as $num => $nombre) { ?>
+                        <option
+                            value="<?= $num ?>"
+                            <?= ($num == $mes2) ? "selected" : "" ?>>
+                            <?= $nombre ?>        
+                        </option>
+                    <?php } ?>
+                </select>
+            </h3>
             <p>
                 📦 Producción total: <?php 
-                echo number_format($act); ?> paquetes
+                echo number_format($total_mes2); ?> paquetes
             </p>
             <p>
                 📅 Mejor día: <?php 
-                echo ($mejor_dia['fecha'] != "Sin datos" && $mejor_dia['fecha'] != "")
-                    ? date("d M Y", strtotime($mejor_dia['fecha'])) 
+                echo ($mejor_dia_mes2['fecha'] != "Sin datos" && $mejor_dia_mes2['fecha'] != "")
+                    ? date("d M Y", strtotime($mejor_dia_mes2['fecha'])) 
                     : "Sin datos"; 
                 ?>
-                (<?php echo number_format($mejor_dia['total']); ?> paquetes)
+                (<?php echo number_format($mejor_dia_mes2['total']); ?> paquetes)
             </p>
             <p>
                 📉 Peor día: <?php 
-                echo ($peor_dia['fecha'] != "Sin datos") 
-                    ? date("d M Y", strtotime($peor_dia['fecha'])) 
+                echo ($peor_dia_mes2['fecha'] != "Sin datos") 
+                    ? date("d M Y", strtotime($peor_dia_mes2['fecha'])) 
                     : "Sin datos"; 
                 ?>
-                (<?php echo number_format($peor_dia['total']); ?> paquetes)
+                (<?php echo number_format($peor_dia_mes2['total']); ?> paquetes)
             </p>
             <p>
                 📊 Promedio diario: <?php 
-                echo round($promedio); ?> paquetes
+                echo round($promedio_mes2); ?> paquetes
             </p>
             <p>
                 👷 Mejor operario: <?php 
-                echo $top['nombre'] ?? 'Sin datos'; ?>
-                <?php if(!empty($top['total']) && $top['total'] > 0){ ?>
-                    (<?php echo number_format($top['total']); ?> paquetes)
+                echo $top_operario_mes2['nombre'] ?? 'Sin datos'; ?>
+                <?php if(!empty($top_operario_mes2['total']) && $top_operario_mes2['total'] > 0){ ?>
+                    (<?php echo number_format($top_operario_mes2['total']); ?> paquetes)
                 <?php } ?>
             </p>
         </div>

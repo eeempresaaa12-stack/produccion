@@ -38,7 +38,7 @@ function obtenerProduccionMesRollo($conexion){
 }
 
 /* =================================================
-   TOP MÁQUINA
+   TOP MÁQUINA (MES ACTUAL)
 ================================================= */
 // Máquina con más producción en el mes actual
 function obtenerTopMaquinaRollo($conexion){
@@ -48,7 +48,7 @@ function obtenerTopMaquinaRollo($conexion){
             FROM PRODUCCION_ROLLO r
             LEFT JOIN MAQUINAS m
                 ON r.id_maquina = m.id_maquina
-            WHERE MONTH(r.fecha_roll)=MONTH(CURDATE())
+            WHERE MONTH(r.fecha_roll)=MONTH(CURDATE()) 
             AND YEAR(r.fecha_roll)=YEAR(CURDATE())
             GROUP BY r.id_maquina
             ORDER BY total DESC
@@ -62,75 +62,28 @@ function obtenerTopMaquinaRollo($conexion){
         "total" => 0
     ];
 }
-// Máquina con más producción en el mes anterior
-function obtenerTopMaquinaAnteriorRollo($conexion){
-    $sql = "SELECT 
-                m.nombre_maquina,
-                IFNULL(SUM(r.total_roll),0) total
-            FROM PRODUCCION_ROLLO r
-            LEFT JOIN MAQUINAS m
-                ON r.id_maquina = m.id_maquina
-            WHERE MONTH(r.fecha_roll)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-            AND YEAR(r.fecha_roll)=YEAR(CURDATE()-INTERVAL 1 MONTH)
-            GROUP BY r.id_maquina
-            ORDER BY total DESC
-            LIMIT 1";
-    $res = mysqli_query($conexion, $sql);
-    if($res && mysqli_num_rows($res) > 0){
-        return mysqli_fetch_assoc($res);
-    }
-    return [
-        "nombre_maquina" => "Sin datos",
-        "total" => 0
-    ];
-}
 
 /* =================================================
-   TOTALES MES ACTUAL Y ANTERIOR
+   TOTAL MES
 ================================================= */
-// Total de paquetes del mes actual
-function obtenerTotalMesActualRollo($conexion){
+// Total de rollos del mes
+function obtenerTotalMesRollo($conexion,$mes){
     $sql = "SELECT SUM(total_roll) total
             FROM PRODUCCION_ROLLO
-            WHERE MONTH(fecha_roll)=MONTH(CURDATE())
+            WHERE MONTH(fecha_roll) = $mes
             AND YEAR(fecha_roll)=YEAR(CURDATE())";
-    return obtenerTotalRollo($conexion, $sql);
-}
-// Total de paquetes del mes anterior
-function obtenerTotalMesAnteriorRollo($conexion){
-    $sql = "SELECT SUM(total_roll) total
-            FROM PRODUCCION_ROLLO
-            WHERE MONTH(fecha_roll)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-            AND YEAR(fecha_roll)=YEAR(CURDATE()-INTERVAL 1 MONTH)";
     return obtenerTotalRollo($conexion, $sql);
 }
 
 /* =================================================
-   TOTALES MES ACTUAL Y ANTERIOR
+   RESUMEN MES
 ================================================= */
-// Total de paquetes del mes actual
-function obtenerResumenMesRollo($conexion){
+// Resumen de producción del mes
+function obtenerResumenMesRollo($conexion,$mes){
     $sql = "SELECT SUM(peso_rollo) bruto, SUM(retal_roll) retal, SUM(total_roll) neto
             FROM PRODUCCION_ROLLO
-            WHERE MONTH(fecha_roll)=MONTH(CURDATE())
+            WHERE MONTH(fecha_roll)= $mes
             AND YEAR(fecha_roll)=YEAR(CURDATE())";
-    $res = mysqli_query($conexion, $sql);
-    if($res){
-        $row = mysqli_fetch_assoc($res);
-        return [
-            'bruto' => $row['bruto'] ?? null,
-            'retal' => $row['retal'] ?? null,
-            'neto'  => $row['neto']  ?? null
-        ];
-    }
-    return ['bruto' => null, 'retal' => null, 'neto' => null];
-}
-// Resumen de producción del mes anterior
-function obtenerResumenMesAnteriorRollo($conexion){
-    $sql = "SELECT SUM(peso_rollo) bruto, SUM(retal_roll) retal, SUM(total_roll) neto
-            FROM PRODUCCION_ROLLO
-            WHERE MONTH(fecha_roll)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-            AND YEAR(fecha_roll)=YEAR(CURDATE()-INTERVAL 1 MONTH)";
     $res = mysqli_query($conexion, $sql);
     if($res){
         $row = mysqli_fetch_assoc($res);
@@ -146,13 +99,13 @@ function obtenerResumenMesAnteriorRollo($conexion){
 /* =================================================
    MEJOR Y PEOR DÍA
 ================================================= */
-// Mejor y peor día de producción del mes actual
-function obtenerMejorPeorDiaMesRollo($conexion){
+// Mejor y peor día de producción del mes
+function obtenerMejorPeorDiaMesRollo($conexion,$mes){
     $sql = "SELECT 
                 DATE(fecha_roll) fecha,
                 SUM(total_roll) total
             FROM PRODUCCION_ROLLO
-            WHERE MONTH(fecha_roll)=MONTH(CURDATE())
+            WHERE MONTH(fecha_roll) = $mes
             AND YEAR(fecha_roll)=YEAR(CURDATE())
             GROUP BY DATE(fecha_roll)";
     $res = mysqli_query($conexion, $sql);
@@ -182,40 +135,30 @@ function obtenerMejorPeorDiaMesRollo($conexion){
         'peor' => $peor
     ];
 }
-// Mejor y peor día de producción del mes anterior
-function obtenerMejorPeorDiaAnteriorRollo($conexion){
+
+/* =================================================
+   TOP MÁQUINA
+================================================= */
+// Máquina con más producción en el mes
+function obtenerTopMaquinaMesRollo($conexion,$mes){
     $sql = "SELECT 
-                DATE(fecha_roll) fecha,
-                SUM(total_roll) total
-            FROM PRODUCCION_ROLLO
-            WHERE MONTH(fecha_roll)=MONTH(CURDATE()-INTERVAL 1 MONTH)
-            AND YEAR(fecha_roll)=YEAR(CURDATE()-INTERVAL 1 MONTH)
-            GROUP BY DATE(fecha_roll)";
+                m.nombre_maquina,
+                IFNULL(SUM(r.total_roll),0) total
+            FROM PRODUCCION_ROLLO r
+            LEFT JOIN MAQUINAS m
+                ON r.id_maquina = m.id_maquina
+            WHERE MONTH(r.fecha_roll) = $mes
+            AND YEAR(r.fecha_roll)=YEAR(CURDATE())
+            GROUP BY r.id_maquina
+            ORDER BY total DESC
+            LIMIT 1";
     $res = mysqli_query($conexion, $sql);
-    $mejor = null;
-    $peor = null;
     if($res && mysqli_num_rows($res) > 0){
-        while($row = mysqli_fetch_assoc($res)){
-            if(!$mejor || $row['total'] > $mejor['total']){
-                $mejor = $row;
-            }
-            if(!$peor || $row['total'] < $peor['total']){
-                $peor = $row;
-            }
-        }
-    }else{
-        $mejor = [
-            'fecha' => 'Sin datos',
-            'total' => 0
-        ];
-        $peor = [
-            'fecha' => 'Sin datos',
-            'total' => 0
-        ];
+        return mysqli_fetch_assoc($res);
     }
     return [
-        'mejor' => $mejor,
-        'peor' => $peor
+        "nombre_maquina" => "Sin datos",
+        "total" => 0
     ];
 }
 

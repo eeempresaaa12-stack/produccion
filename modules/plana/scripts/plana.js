@@ -73,6 +73,26 @@ function cargarDatos(tipo){
     });
 }
 
+// Aplicar valor de meses y recargar resumenes
+const mes1 = document.getElementById("mes1");
+const mes2 = document.getElementById("mes2");
+
+if(mes1 && mes2){
+
+    function actualizarComparacion(){
+
+        const valorMes1 = mes1.value;
+        const valorMes2 = mes2.value;
+
+        window.location.href =
+            "?mes1=" + valorMes1 +
+            "&mes2=" + valorMes2;
+    }
+
+    mes1.addEventListener("change", actualizarComparacion);
+    mes2.addEventListener("change", actualizarComparacion);
+}
+
 // Aplicar filtros y recargar gráficos
 function actualizarFiltros(){
     let semana = document.getElementById("filtroSemana").value;
