@@ -7,11 +7,13 @@
 /** @var mysqli_result $turnos */
 
 // Importar proteger.php
-require_once("../../../auth/proteger.php");
+require_once dirname(__DIR__, 3) . '/auth/proteger.php';
+// Importar config.php
+require_once dirname(__DIR__, 3) . '/includes/config.php';
 // Importar editarController.php
-require_once("../controllers/editarController.php");
+require_once dirname(__DIR__) . '/controllers/editarController.php';
 // Importar header.php
-include("../../../templates/header.php");
+include dirname(__DIR__, 3) . '/templates/header.php';
 ?>
 
 <!-- Contenedor de Editar -->
@@ -23,7 +25,7 @@ include("../../../templates/header.php");
         <div class="card">
 
             <!-- Formulario de edición -->
-            <form action="../controllers/actualizarController.php" method="POST">
+            <form action="<?= BASE_URL ?>/modules/sellado/controllers/actualizarController.php" method="POST">
             <!-- ID del registro a actualizar -->
             <input type="hidden" name="id" value="<?php echo $fila['id']; ?>">
 
@@ -114,12 +116,12 @@ include("../../../templates/header.php");
         </div>
     <!-- Botones de navegación -->
     <div class="btn-group">
-        <a class="btn" href="../controllers/listaController.php">Volver al historial</a>
-        <a class="btn" href="../controllers/dashboardController.php">Volver al dashboard</a>
+        <a class="btn" href="lista.php">Volver al historial</a>
+        <a class="btn" href="dashboard.php">Volver al dashboard</a>
     </div>
 </div>
 
 <?php 
 // Importar footer.php
-include("../../../templates/footer.php"); 
+include dirname(__DIR__, 3) . '/templates/footer.php';
 ?>

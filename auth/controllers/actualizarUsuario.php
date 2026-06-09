@@ -4,9 +4,11 @@
 // Restringir acceso solo a administradores
 $soloAdmin = true;
 // Importar proteger.php
-require_once("../proteger.php");
+require_once dirname(__DIR__) . '/proteger.php';
 // Importar conexion.php
-require_once("../../includes/conexion.php");
+require_once dirname(__DIR__, 2) . '/includes/conexion.php';
+// Importar config.php
+require_once dirname(__DIR__, 2) . '/includes/config.php';
 
 // Obtener ID y datos del formulario
 $id = (int)($_POST['id_usuario'] ?? 0);
@@ -45,5 +47,5 @@ if(empty($contrasena)){
 mysqli_query($conexion, $sql);
 
 // Redirigir al Usuarios
-header("Location: ../views/usuarios.php");
+header("Location: " . BASE_URL . "/auth/views/usuarios.php");
 exit;

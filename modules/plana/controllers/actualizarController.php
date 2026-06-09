@@ -2,9 +2,11 @@
 /** @var mysqli $conexion */
 
 // Importar conexion.php
-require_once("../../../includes/conexion.php");
+require_once dirname(__DIR__, 3) . '/includes/conexion.php';
+// Importar config.php
+require_once dirname(__DIR__, 3) . '/includes/config.php';
 // Importar produccionModel.php
-require_once("../models/produccionModel.php");
+require_once dirname(__DIR__) . '/models/produccionModel.php';
 
 // Obtener ID del registro a actualizar
 $id = $_POST['id'];
@@ -34,5 +36,5 @@ $datos = [
 actualizarProduccion($conexion, $id, $datos);
 
 // Redirigir al Lista
-header("Location: ../views/lista.php");
+header("Location: " . BASE_URL . "/modules/rollo/views/lista.php");
 exit;

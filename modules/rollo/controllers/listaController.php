@@ -2,7 +2,7 @@
 /** @var mysqli $conexion */
 
 // Importar conexion.php
-require_once("../../../includes/conexion.php");
+require_once dirname(__DIR__, 3) . '/includes/conexion.php';
 
 // Obtener y sanear filtros
 $busqueda = $_GET['buscar'] ?? '';

@@ -4,9 +4,12 @@ if(session_status() === PHP_SESSION_NONE){
     session_start();
 }
 
+// Importar config.php
+require_once dirname(__DIR__, 2) . '/includes/config.php';
+
 // Redirigir al Index si yá inició sesión
 if(isset($_SESSION['usuario'])){
-    header("Location: ../../index.php");
+    header("Location: /index.php");
     exit;
 }
 ?>
@@ -19,8 +22,8 @@ if(isset($_SESSION['usuario'])){
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Iniciar Sesión</title>
     <!-- Ícono y estilos -->
-    <link rel="icon" type="image/png" href="../../assets/img/logo-plastypetco.png">
-    <link rel="stylesheet" href="../../assets/css/login.css">
+    <link rel="icon" type="image/png" href="<?= BASE_URL ?>/assets/img/logo-plastypetco.png">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/login.css">
 
 </head>
 
@@ -29,7 +32,7 @@ if(isset($_SESSION['usuario'])){
     <div class="login-box">
 
         <!-- Logo -->
-        <img src="/CONTROL_PRODUCCION/assets/img/logo-plastypetco.png" alt="Logo Plastypetco">
+        <img src="<?= BASE_URL ?>/assets/img/logo-plastypetco.png" alt="Logo Plastypetco">
         
         <!-- Mensaje de error -->
         <h1>Iniciar Sesión</h1>
@@ -40,7 +43,7 @@ if(isset($_SESSION['usuario'])){
         <?php } ?>
 
         <!-- Formulario de autenticación -->
-        <form action="/CONTROL_PRODUCCION/auth/controllers/validar.php" method="POST">
+        <form action="<?= BASE_URL ?>/auth/controllers/validar.php" method="POST">
 
             <!-- Campo usuario -->
             <div class="grupo">

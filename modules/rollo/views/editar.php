@@ -6,11 +6,13 @@
 /** @var mysqli_result $colores */
 
 // Importar proteger.php
-require_once("../../../auth/proteger.php");
+require_once dirname(__DIR__, 3) . '/auth/proteger.php';
+// Importar config.php
+require_once dirname(__DIR__, 3) . '/includes/config.php';
 // Importar editarController.php
-require_once("../controllers/editarController.php");
+require_once dirname(__DIR__) . '/controllers/editarController.php';
 // Importar header.php
-include("../../../templates/header.php");
+include dirname(__DIR__, 3) . '/templates/header.php';
 ?>
 
 <!-- Contenedor de Editar -->
@@ -22,7 +24,7 @@ include("../../../templates/header.php");
         <div class="card">
 
             <!-- Formulario de edición -->
-            <form action="../controllers/actualizarController.php" method="POST">
+            <form action="<?= BASE_URL ?>/modules/rollo/controllers/actualizarController.php" method="POST">
             <!-- ID del registro a actualizar -->
             <input type="hidden" name="id" value="<?php echo $fila['id']; ?>">
 
@@ -124,5 +126,5 @@ include("../../../templates/header.php");
 
 <?php 
 // Importar footer.php
-include("../../../templates/footer.php"); 
+include dirname(__DIR__, 3) . '/templates/footer.php';
 ?>

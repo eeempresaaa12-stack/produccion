@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-
-<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control Producción</title>
-    <!-- Ícono y estilos -->
-    <link rel="icon" type="image/png" href="/CONTROL_PRODUCCION/assets/img/logo-plastypetco.png">    
-    <link rel="stylesheet" href="/CONTROL_PRODUCCION/assets/css/estilos.css"> 
-
-</head>
+<?php 
+// Importar config.php
+require_once dirname(__DIR__) . '/includes/config.php'; 
+?>
 
 <!-- Pie de página -->
 <footer class="footer">

@@ -4,9 +4,11 @@
 // Restringir acceso solo a administradores
 $soloAdmin = true;
 // Importar proteger.php
-require_once("../proteger.php");
+require_once dirname(__DIR__) . '/proteger.php';
 // Importar conexion.php
-require_once("../../includes/conexion.php");
+require_once dirname(__DIR__, 2) . '/includes/conexion.php';
+// Importar config.php
+require_once dirname(__DIR__, 2) . '/includes/config.php';
 
 // Obtener todos los usuarios ordenados
 $sql = "SELECT * FROM USUARIOS ORDER BY usuario";
@@ -20,8 +22,8 @@ $res = mysqli_query($conexion, $sql);
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Usuarios</title>
     <!-- Ícono y estilos -->
-    <link rel="icon" type="image/png" href="../../assets/img/logo-plastypetco.png">
-    <link rel="stylesheet" href="/CONTROL_PRODUCCION/assets/css/usuarios.css">
+    <link rel="icon" type="image/png" href="<?= BASE_URL ?>/assets/img/logo-plastypetco.png">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/usuarios.css">
 
 </head>
 <body>
@@ -97,7 +99,7 @@ $res = mysqli_query($conexion, $sql);
         <h2 class="titulo-modal">Crear Usuario</h2>
 
         <!-- Formulario de creación -->
-        <form action="../controllers/guardarUsuario.php" method="POST">
+        <form action="<?= BASE_URL ?>/auth/controllers/guardarUsuario.php" method="POST">
             <!-- Campo usuario -->
             <label>Usuario</label>
             <input type="text" name="usuario" required>
@@ -135,7 +137,7 @@ $res = mysqli_query($conexion, $sql);
         <h2 class="titulo-modal">Editar Usuario</h2>
 
         <!-- Formulario de edición -->
-        <form action="../controllers/actualizarUsuario.php" method="POST">
+        <form action="<?= BASE_URL ?>/auth/controllers/actualizarUsuario.php" method="POST">
             <!-- ID del usuario a actualizar -->    
             <input type="hidden" id="edit_id" name="id_usuario">
 
@@ -178,6 +180,8 @@ $res = mysqli_query($conexion, $sql);
 </div>
 
 <!-- Botón para volver -->
-<a id="btn-volver" href="/CONTROL_PRODUCCION/index.php">← Volver</a>
+<a id="btn-volver" href="<?= BASE_URL ?>/index.php">← Volver</a>
 
-<script src="../shared/auth.js"></script>
+<script src="<?= BASE_URL ?>/auth/shared/auth.js"></script>
+
+</html>

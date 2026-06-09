@@ -2,11 +2,12 @@
 /** @var mysqli $conexion */
 
 // Importar conexion.php 
-require_once("../../includes/conexion.php");
+require_once dirname(__DIR__, 2) . '/includes/conexion.php';
 mysqli_set_charset($conexion, "utf8mb4");
-
+// Importar config.php
+require_once dirname(__DIR__, 2) . '/includes/config.php';
 // Importar importarModel.php
-require_once("../importarModel.php");
+require_once dirname(__DIR__) . '/importarModel.php';
 
 // Parametros de importación
 $modo         = $_GET['modo'] ?? 'nuevos';
@@ -16,14 +17,14 @@ $ultima_fecha = obtenerUltimaFecha($conexion, 'rollo');
 $url        = "https://docs.google.com/spreadsheets/d/1CpdDtlNVQJoSHJ7WAc0BrXP-FIohYWhMB6si1bzmOz0/export?format=csv&gid=1327914009";
 $titulo     = "Producción de Rollos";
 $subtitulo  = "PRODUCCION_ROLLO";
-$volver_url = "../../modules/rollo/views/dashboard.php";
+$volver_url = BASE_URL . "/modules/rollo/views/dashboard.php";
 
 // Leer filas del Google Sheet
 [$filas, $omitidas] = leerSheet($url, $modo, $ultima_fecha);
 $total = count($filas);
 
 // Importar progreso.php
-include("../views/progreso.php");
+include dirname(__DIR__) . '/views/progreso.php';
 ?>
 
 <?php

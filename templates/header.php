@@ -1,6 +1,8 @@
 <?php
 // Obtener rol del usuario en sesión
 $rol = $_SESSION['rol'] ?? 'Sin rol';
+// Importar config.php
+require_once dirname(__DIR__) . '/includes/config.php';
 ?>
 
 <!DOCTYPE html>
@@ -10,8 +12,8 @@ $rol = $_SESSION['rol'] ?? 'Sin rol';
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Control Producción</title>
     <!-- Ícono y estilos -->
-    <link rel="icon" type="image/png" href="/CONTROL_PRODUCCION/assets/img/logo-plastypetco.png">    
-    <link rel="stylesheet" href="/CONTROL_PRODUCCION/assets/css/main.css">
+    <link rel="icon" type="image/png" href="<?= BASE_URL ?>/assets/img/logo-plastypetco.png">    
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/main.css">
 
 </head>
 
@@ -21,7 +23,9 @@ $rol = $_SESSION['rol'] ?? 'Sin rol';
 
         <!-- Logo -->
         <div class="navbar-logo">
-            <a href="/CONTROL_PRODUCCION/index.php"><img src="/CONTROL_PRODUCCION/assets/img/logo-plastypetco.png" alt="Logo Plastypetco"></a>
+            <a href="<?= BASE_URL ?>/index.php">
+                <img src="<?= BASE_URL ?>/assets/img/logo-plastypetco.png" alt="Logo Plastypetco">
+            </a>
         </div>
         
         <!-- Título -->
@@ -31,10 +35,10 @@ $rol = $_SESSION['rol'] ?? 'Sin rol';
         <div class="cerrar-sesion">
             <a id="btnRol" href="<?php
                 echo ($_SESSION['rol'] == 'admin')
-                    ? '/CONTROL_PRODUCCION/auth/views/usuarios.php'
+                    ? BASE_URL . '/auth/views/usuarios.php'
                     : '';
             ?>"><h2>Rol: <?php echo $rol ?></h2></a>
-            <a id="btnCerrar" href="/CONTROL_PRODUCCION/auth/controllers/logout.php">Cerrar Sesión</a>
+            <a id="btnCerrar" href="<?= BASE_URL ?>/auth/controllers/logout.php">Cerrar Sesión</a>
         </div>
         
     </div>

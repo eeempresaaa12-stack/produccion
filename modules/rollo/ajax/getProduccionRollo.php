@@ -4,9 +4,9 @@
 // Restringir acceso solo a administradores
 $soloAdmin = true;
 // Importar proteger.php
-require_once("../../../auth/proteger.php");
+require_once dirname(__DIR__, 3) . '/auth/proteger.php';
 // Importar conexion.php
-require_once("../../../includes/conexion.php");
+require_once dirname(__DIR__, 3) . '/includes/conexion.php';
 
 // Obtener filtros
 $filtros = [

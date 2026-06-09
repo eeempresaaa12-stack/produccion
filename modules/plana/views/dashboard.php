@@ -35,11 +35,13 @@
 // Restringir acceso solo a administradores
 $soloAdmin = true;
 // Importar proteger.php
-require_once("../../../auth/proteger.php");
+require_once dirname(__DIR__, 3) . '/auth/proteger.php';
+// Importar config.php
+require_once dirname(__DIR__, 3) . '/includes/config.php';
 // Importar dashboardController.php
-require_once("../controllers/dashboardController.php");
+require_once dirname(__DIR__) . '/controllers/dashboardController.php';
 // Importar header.php
-include("../../../templates/header.php");
+include dirname(__DIR__, 3) . '/templates/header.php';
 ?>
 
 <!-- Contenedor Principal -->
@@ -459,7 +461,7 @@ include("../../../templates/header.php");
         <!-- Redirigir al Lista -->
         <a class="btn" href="lista.php">Ver Historial</a>
         <!-- Redirigir al Index -->
-        <a class="btn" href="../../../index.php">Volver al menú</a>
+        <a class="btn" href="<?= BASE_URL ?>/index.php">Volver al menú</a>
     </div>
 
 </div>
@@ -474,10 +476,10 @@ include("../../../templates/header.php");
         </div>
         <!-- Opciones de importación -->
         <div class="btn-row">
-            <a class="btn-nuevos" href="../../../importar/controllers/imp_plana.php?modo=nuevos" >
+            <a class="btn-nuevos" href="<?= BASE_URL ?>/importar/controllers/imp_plana.php?modo=nuevos" >
                 <div class="btn-text"><span class="btn-icon">🗲</span>Importar Nuevos<span class="btn-arrow">›</span></div>
             </a>
-            <a class="btn-todo" href="../../../importar/controllers/imp_plana.php?modo=todo" >
+            <a class="btn-todo" href="<?= BASE_URL ?>/importar/controllers/imp_plana.php?modo=todo" >
                 <div class="btn-text"><span class="btn-icon">⟳</span>Reimportar Todo<span class="btn-arrow">›</span></div>
             </a>
         </div>
@@ -486,10 +488,10 @@ include("../../../templates/header.php");
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="../../shared/global.js"></script>
-<script src="../scripts/plana.js"></script>
+<script src="<?= BASE_URL ?>/modules/shared/global.js"></script>
+<script src="<?= BASE_URL ?>/modules/plana/scripts/plana.js"></script>
 
 <?php 
 // Importar footer.php
-include("../../../templates/footer.php"); 
+include dirname(__DIR__, 3) . '/templates/footer.php'; 
 ?>

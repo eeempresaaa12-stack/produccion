@@ -2,9 +2,9 @@
 /** @var mysqli $conexion */
 
 // Importar conexion.php
-require_once("../../../includes/conexion.php");
+require_once dirname(__DIR__, 3) . '/includes/conexion.php';
 // Importar produccionModel.php
-require_once("../models/produccionModel.php");
+require_once dirname(__DIR__) . '/models/produccionModel.php';
 
 // Obtener ID del registro a editar
 $id = $_GET['id'];

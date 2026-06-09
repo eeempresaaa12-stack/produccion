@@ -1,17 +1,16 @@
 <?php
 // Mostrar errores
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 
 // Variables de la base de datos
-$host     = "switchyard.proxy.rlwy.net";
-$usuario  = "root";
-$password = "EagzBrYIJHawioQrQhpqbjYAxXFhMwUU";
-$database = "CONTROL_PRODUCCION";
-$puerto   = 22573;
+$host     = "sql301.infinityfree.com";
+$usuario  = "if0_42142771";
+$password = "plastypet12";
+$database = "if0_42142771_produccion";
 
 // Conectar a la base de datos
-$conexion = mysqli_connect($host, $usuario, $password, $database, $puerto);
+$conexion = mysqli_connect($host, $usuario, $password, $database);
 
 // Verificar conexión
 if (!$conexion) {

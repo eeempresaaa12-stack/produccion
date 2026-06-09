@@ -1,8 +1,12 @@
 <?php
+/** @var string $volver_url */
+
 // Restringir acceso solo a administradores
 $soloAdmin = true;
 // Importar proteger.php
-require_once("../../auth/proteger.php");
+require_once dirname(__DIR__, 2) . '/auth/proteger.php';
+// Importar config.php
+require_once dirname(__DIR__, 2) . '/includes/config.php';
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +18,7 @@ require_once("../../auth/proteger.php");
 <title>Importando <?php echo $titulo; ?></title>
     <!-- Fuente y estilos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="../../assets/css/importar.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/importar.css">
 
 </head>
 <body>
@@ -99,4 +103,4 @@ require_once("../../auth/proteger.php");
 
 <!-- URL de retorno y scripts -->
 <script>window.VOLVER_URL = '<?php echo $volver_url; ?>';</script>
-<script src="../scripts/importar.js"></script>
+<script src="<?= BASE_URL ?>/importar/scripts/importar.js"></script>

@@ -4,11 +4,13 @@
 // Restringir acceso solo a administradores
 $soloAdmin = true;
 // Importar proteger.php
-require_once("../proteger.php");
+require_once dirname(__DIR__) . '/proteger.php';
 // Importar conexion.php
-require_once("../../includes/conexion.php");
+require_once dirname(__DIR__, 2) . '/includes/conexion.php';
+// Importar config.php
+require_once dirname(__DIR__, 2) . '/includes/config.php';
 // Importar header.php
-require_once("../../templates/header.php");
+require_once dirname(__DIR__, 2) . '/templates/header.php';
 
 // Obtener ID del usuario a editar
 $id = (int)($_GET['id'] ?? 0);
@@ -31,7 +33,7 @@ $usuario = mysqli_fetch_assoc($res);
     <h2 class="titulo-vista">Editar Usuario</h2>
 
     <!-- Formulario de edición -->
-    <form action="../controllers/actualizarUsuario.php" method="POST">
+    <form action="<?= BASE_URL ?>/auth/controllers/actualizarUsuario.php" method="POST">
         <!-- ID del usuario a actualizar -->    
         <input type="hidden" name="id_usuario"
             value="<?= $usuario['id_usuario'] ?>">
@@ -76,13 +78,13 @@ $usuario = mysqli_fetch_assoc($res);
 
         <!-- Botones de acción -->
         <div class="acciones">
-            <button class="btn" type="submit" href="usuarios.php">
+            <button class="btn" type="submit">
                 Guardar Cambios
             </button>
 
-            <button class="btn" href="usuarios.php">
+            <a class="btn" href="<?= BASE_URL ?>/auth/views/usuarios.php">
                 Cancelar
-            </button>
+            </a>
         </div>
     </form>
 
@@ -90,5 +92,5 @@ $usuario = mysqli_fetch_assoc($res);
 
 <?php 
 // Importar footer.php
-include("../../templates/footer.php"); 
+include dirname(__DIR__, 2) . '/templates/footer.php';
 ?>

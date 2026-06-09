@@ -6,11 +6,13 @@
 /** @var string $fecha */
 
 // Importar proteger.php
-require_once("../../../auth/proteger.php");
+require_once dirname(__DIR__, 3) . '/auth/proteger.php';
+// Importar config.php
+require_once dirname(__DIR__, 3) . '/includes/config.php';
 // Importar listaController.php
-require_once("../controllers/listaController.php");
+include dirname(__DIR__) . '/controllers/listaController.php';
 // Importar header.php
-include("../../../templates/header.php");
+include dirname(__DIR__, 3) . '/templates/header.php';
 ?>
 
 <!-- Contenedor del Historial -->
@@ -34,7 +36,7 @@ include("../../../templates/header.php");
                 <input type="date" name="fecha"
                     value="<?php echo $fecha; ?>">
                 <!-- Botón para filtrar -->
-                <a class="btn">Filtrar</a>
+                <a class="btn" type="submit">Filtrar</a>
                 <!-- Botón para limpiar el filtro -->
                 <a class="btn" href="lista.php">Limpiar</a>
 
@@ -120,12 +122,12 @@ include("../../../templates/header.php");
         <a class="btn" href="dashboard.php">Volver al Dashboard</a>
     <?php } ?>
     <!-- Redirigir al Index -->
-    <a class="btn" href="../../../index.php">Volver al menú</a>
+    <a class="btn" href="<?= BASE_URL ?>/index.php">Volver al menú</a>
 </div>
 
 </div>
 
 <?php 
 // Importar footer.php
-include("../../../templates/footer.php"); 
+include dirname(__DIR__, 3) . '/templates/footer.php';
 ?>
