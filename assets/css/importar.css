@@ -5,15 +5,22 @@
   box-sizing: border-box;
 }
 
+:root {
+  --fuente: "Poppins", sans-serif;
+  --fondo: rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4);
+  --blanco: rgba(255, 255, 255, 0.45);
+  --verde: #145a30;
+  --limon: #1ea353;
+  --azul: #0585c0;
+}
+
 /* =============================================
    BODY
 ============================================= */
 body {
-  background:
-    linear-gradient(rgba(238, 237, 237, 0.6), rgba(214, 214, 214, 0.5)),
-    url("../img/fondo1.jpg");
+  background: linear-gradient(var(--fondo)), url("../img/fondo1.jpg");
   color: white;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--fuente);
   min-height: 90vh;
   display: flex;
   align-items: center;
@@ -32,10 +39,10 @@ body {
   width: 100%;
   max-width: 540px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--blanco);
   backdrop-filter: blur(12px);
   padding: 35px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: 1px solid var(--blanco);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
 }
 
@@ -44,22 +51,22 @@ body {
 =========================== */
 .top {
   background: rgba(255, 255, 255, 0.75);
-  color: #134213;
+  color: var(--verde);
   display: flex;
   align-items: center;
   gap: 14px;
   margin-bottom: 32px;
   border-radius: 14px;
   padding: 15px;
-  border: 1px solid #134413;
+  border: 1px solid var(--blanco);
 }
 
 /* ===========================
    TARJETA 
 =========================== */
 .card {
-  background: rgba(17, 73, 29, 0.9);
-  border: 1px solid #0e4112;
+  background: var(--verde);
+  border: 1px solid var(--verde);
   border-radius: 20px;
   padding: 30px 26px;
   position: relative;
@@ -73,7 +80,7 @@ body {
   transform: translateX(-50%);
   width: 55%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, green, transparent);
+  background: linear-gradient(90deg, transparent, var(--limon), transparent);
   opacity: 0.4;
 }
 
@@ -126,9 +133,9 @@ body {
   }
 }
 #status-lbl {
-  font-family: "Poppins", sans-serif;
+  font-family: var(--fuente);
   font-size: 0.8rem;
-  color: #00cc6a;
+  color: var(--limon);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -156,8 +163,8 @@ body {
   height: 100%;
   width: 0%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #00cc6a, green);
-  box-shadow: 0 0 10px #00ff8855;
+  background: linear-gradient(90deg, var(--limon), green);
+  box-shadow: 0 0 10px var(--verde);
   transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -176,21 +183,21 @@ body {
   gap: 2px;
 }
 #pct {
-  font-family: "Poppins", sans-serif;
+  font-family: var(--fuente);
   font-size: 2.2rem;
   font-weight: 500;
-  color: #299dd3;
+  color: var(--azul);
   line-height: 1;
 }
 .sign {
-  font-family: "Poppins", sans-serif;
+  font-family: var(--fuente);
   font-size: 1rem;
-  color: #299dd3;
+  color: var(--azul);
 }
 #counter {
-  font-family: "Poppins", sans-serif;
+  font-family: var(--fuente);
   font-size: 1rem;
-  color: #299dd3;
+  color: var(--azul);
 }
 
 /* ===========================
@@ -209,14 +216,14 @@ body {
   grid-column: span 3;
 }
 .st {
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: var(--blanco);
+  border: 1px solid var(--blanco);
   border-radius: 12px;
   padding: 14px 10px;
   text-align: center;
 }
 .st .v {
-  font-family: "Poppins", sans-serif;
+  font-family: var(--fuente);
   font-size: 1.45rem;
   font-weight: 500;
   line-height: 1;
@@ -224,22 +231,22 @@ body {
 }
 .st .l {
   font-size: 0.7rem;
-  color: #158dc5;
+  color: var(--azul);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 .st.ok .v {
-  color: #158dc5;
+  color: var(--azul);
 }
 .st.upd .v {
-  color: #158dc5;
+  color: var(--azul);
 }
 .st.dup .v {
-  color: #158dc5;
+  color: var(--azul);
 }
 .st.tot .v,
 .st.tot .l {
-  color: #166d29;
+  color: var(--limon);
 }
 
 /* ===========================
@@ -252,7 +259,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--fuente);
   font-size: 0.8rem;
   color: white;
   align-items: center;
@@ -272,8 +279,8 @@ body {
 #log {
   display: none;
   margin-top: 10px;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: var(--blanco);
+  border: 1px solid var(--blanco);
   border-radius: 3px;
   max-height: 220px;
   overflow-y: auto;
@@ -287,7 +294,7 @@ body {
   margin-right: 8px;
 }
 #log::-webkit-scrollbar-thumb {
-  background: rgb(20, 80, 30);
+  background: var(--verde);
   border-radius: 2px;
 }
 .lr {
@@ -295,7 +302,7 @@ body {
   align-items: center;
   gap: 10px;
   padding: 5px 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--fuente);
   font-size: 0.8rem;
   border-bottom: 1px solid #ff000004;
 }
@@ -303,12 +310,12 @@ body {
   border-bottom: none;
 }
 .lr .n {
-  color: rgb(24, 95, 36);
+  color: #185f24;
   min-width: 26px;
   text-align: right;
 }
 .lr.ok .t {
-  color: rgb(28, 109, 41);
+  color: #1c6d29;
 }
 .lr.upd .t {
   color: #24788d;
@@ -321,15 +328,11 @@ body {
    BOTÓN VOLVER
 =========================== */
 #btn-volver {
-  background: linear-gradient(
-    rgba(238, 237, 237, 0.6),
-    rgba(214, 214, 214, 0.4)
-  );
+  background: var(--blanco);
   cursor: pointer;
-  font-family: "Poppins", sans-serif;
   font-size: 18px;
   font-weight: 600;
-  color: #1a5e1a;
+  color: var(--verde);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
   padding: 15px 21px;
   border-radius: 14px;
@@ -338,7 +341,7 @@ body {
   right: 35px;
   text-decoration: none;
   transition: 0.25s;
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: 1px solid var(--blanco);
 }
 
 /* ===========================

@@ -1,13 +1,20 @@
 <?php
 // Mostrar errores
 error_reporting(E_ALL);
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 
 // Variables de la base de datos
-$host     = "sql301.infinityfree.com";
-$usuario  = "if0_42142771";
-$password = "plastypet12";
-$database = "if0_42142771_produccion";
+if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    $host     = "localhost";
+    $usuario  = "root";
+    $password = "";
+    $database = "control_produccion";
+} else {
+    $host     = "sql301.infinityfree.com";
+    $usuario  = "if0_42142771";
+    $password = "plastypet12";
+    $database = "if0_42142771_produccion";
+}
 
 // Conectar a la base de datos
 $conexion = mysqli_connect($host, $usuario, $password, $database);

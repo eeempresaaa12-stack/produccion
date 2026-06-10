@@ -39,6 +39,8 @@ $res = mysqli_query($conexion, $sql);
             </a>
         </div>
 
+        <br>
+        
         <!-- Tabla de usuarios -->
         <div id="containerHistorial">
             <table class="tabla">
