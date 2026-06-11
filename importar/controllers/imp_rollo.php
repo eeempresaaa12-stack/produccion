@@ -14,7 +14,7 @@ $modo         = $_GET['modo'] ?? 'nuevos';
 $ultima_fecha = obtenerUltimaFecha($conexion, 'rollo');
 
 // Fuente de datos
-$url        = "https://docs.google.com/spreadsheets/d/1CpdDtlNVQJoSHJ7WAc0BrXP-FIohYWhMB6si1bzmOz0/export?format=csv&gid=1327914009";
+$url = "https://docs.google.com/spreadsheets/d/1CpdDtlNVQJoSHJ7WAc0BrXP-FIohYWhMB6si1bzmOz0/export?format=csv&gid=1465480052";
 $titulo     = "Producción de Rollos";
 $subtitulo  = "PRODUCCION_ROLLO";
 $volver_url = BASE_URL . "/modules/rollo/views/dashboard.php";
@@ -60,7 +60,6 @@ if (ob_get_level()) ob_flush(); flush();
 $maquinas    = cargarCatalogo($conexion, "MAQUINAS",    "nombre_maquina",    "id_maquina");
 $referencias = cargarCatalogo($conexion, "REFERENCIAS", "nombre_referencia", "id_referencia");
 $colores     = cargarCatalogo($conexion, "COLORES",     "nombre_color",      "id_color");
-$turnos      = cargarCatalogo($conexion, "TURNOS",      "nombre_turno",      "id_turno");
 
 // Contadores de resultado
 $contador     = 0;
@@ -76,40 +75,37 @@ foreach ($filas as $data) {
     $maquina    = limpiarNombre($data[2]);
     $referencia = limpiarNombre($data[3]);
     $color      = limpiarNombre($data[4]);
-    $turno      = limpiarNombre($data[5]);
-    $peso_rollo = convertirNumero($data[6]);
-    $retal      = convertirNumero($data[7]);
+    $peso_rollo = convertirNumero($data[5]);
+    $retal      = convertirNumero($data[6]);
 
     // Obtener IDs de catálogos o crearlos si no existen
     $id_maquina    = $maquinas[$maquina]       ?? autoCrear($conexion, $maquinas,    "MAQUINAS",    "nombre_maquina",    $maquina);
     $id_referencia = $referencias[$referencia] ?? autoCrear($conexion, $referencias, "REFERENCIAS", "nombre_referencia", $referencia);
     $id_color      = $colores[$color]          ?? autoCrear($conexion, $colores,     "COLORES",     "nombre_color",      $color);
-    $id_turno      = $turnos[$turno]           ?? autoCrear($conexion, $turnos,      "TURNOS",      "nombre_turno",      $turno);
 
     // Modo 'todo': Insertar o actualizar si ya existe
     if ($modo === 'todo') {
         $sql = "INSERT INTO PRODUCCION_ROLLO
                     (marca_temporal,fecha_roll,id_maquina,id_referencia,
-                    id_color,id_turno,peso_rollo,retal_roll)
+                    id_color,peso_rollo,retal_roll)
                 VALUES
                     ('$marca','$fecha','$id_maquina','$id_referencia',
-                    '$id_color','$id_turno','$peso_rollo','$retal')
+                    '$id_color','$peso_rollo','$retal')
                 ON DUPLICATE KEY UPDATE
                     fecha_roll    = VALUES(fecha_roll),
                     id_maquina    = VALUES(id_maquina),
                     id_referencia = VALUES(id_referencia),
                     id_color      = VALUES(id_color),
-                    id_turno      = VALUES(id_turno),
                     peso_rollo    = VALUES(peso_rollo),
                     retal_roll    = VALUES(retal_roll)";
     // Modo 'nuevos': Insertar solo si no existe
     } else {
         $sql = "INSERT IGNORE INTO PRODUCCION_ROLLO
                     (marca_temporal,fecha_roll,id_maquina,id_referencia,
-                    id_color,id_turno,peso_rollo,retal_roll)
+                    id_color,peso_rollo,retal_roll)
                 VALUES
                     ('$marca','$fecha','$id_maquina','$id_referencia',
-                    '$id_color','$id_turno','$peso_rollo','$retal')";
+                    '$id_color','$peso_rollo','$retal')";
     }
     // Ejecutar inserción y actualizar progreso
     procesarFila($conexion, $sql, $marca, $contador, $total, $insertados, $actualizados, $duplicados, $nueva_fecha);

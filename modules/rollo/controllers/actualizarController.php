@@ -17,8 +17,6 @@ $datos = [
 
     'id_maquina' => $_POST['id_maquina'],
 
-    'id_turno' => $_POST['id_turno'],
-
     'id_referencia' => $_POST['id_referencia'],
 
     'id_color' => $_POST['id_color'],

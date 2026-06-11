@@ -16,7 +16,7 @@ require_once __DIR__ . '/includes/config.php';
 <title>Control de Producción</title>
     <!-- Ícono y estilos -->
     <link rel="icon" type="image/png" href="<?= BASE_URL ?>/assets/img/logo-plastypetco.png">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/main.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/index.css">
 
 </head>
 

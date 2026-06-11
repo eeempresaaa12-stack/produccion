@@ -30,10 +30,24 @@ function cargarDatos(tipo){
                 }]
             },
             options: {
+                plugins: {
+                    legend: { labels: { color: 'white' } },
+                },
                 responsive: true,
                 maintainAspectRatio: false,
-                interaction: { mode: 'index', intersect: false }
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    x: {
+                        ticks:  { color: 'white' },
+                        border: { color: 'white' }
+                    },
+                    y: {
+                        ticks:  { color: 'white' },
+                        border: { color: 'white' }
+                    }
+                }
             }
+                
         });
 
         // Ordenar máquinas de mayor a menor producción
@@ -58,8 +72,21 @@ function cargarDatos(tipo){
                 }]
             },
             options: {
+                plugins: {
+                    legend: { labels: { color: 'white' } },
+                },
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        ticks:  { color: 'white' },
+                        border: { color: 'white' }
+                    },
+                    y: {
+                        ticks:  { color: 'white' },
+                        border: { color: 'white' }
+                    }
+                }
             }
         });
     });
@@ -129,8 +156,14 @@ function cargarGraficoMeses(){
                     tooltip: { bodyFont: { size: 12 }, titleFont: { size: 12 } }
                 },
                 scales: {
-                    x: { ticks: { font: { size: 13 } } },
-                    y: { ticks: { font: { size: 13 } } }
+                    x: {
+                        ticks:  { color: 'white' },
+                        border: { color: 'white' }
+                    },
+                    y: {
+                        ticks:  { color: 'white' },
+                        border: { color: 'white' }
+                    }
                 }
             }
         });

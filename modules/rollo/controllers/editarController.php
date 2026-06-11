@@ -13,8 +13,6 @@ $fila = obtenerProduccionPorId($conexion, $id);
 // Cargar catálogos para los selectores del formulario
 $maquinas = obtenerMaquinas($conexion);
 
-$turnos = obtenerTurnos($conexion);
-
 $referencias = obtenerReferencias($conexion);
 
 $colores = obtenerColores($conexion);

@@ -49,7 +49,6 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                         <th>ID</th>
                         <th>Fecha</th>
                         <th>Máquina</th>
-                        <th>Turno</th>
                         <th>Referencia</th>
                         <th>Color</th>
                         <th>Peso</th>
@@ -65,7 +64,6 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                             <td><?php echo $fila['id']; ?></td>
                             <td><?php echo $fila['fecha_roll']; ?></td>
                             <td><?php echo $fila['nombre_maquina']; ?></td>
-                            <td><?php echo $fila['nombre_turno']; ?></td>
                             <td><?php echo $fila['nombre_referencia']; ?></td>
                             <td><?php echo $fila['nombre_color']; ?></td>
                             <td><?php echo $fila['peso_rollo']; ?></td>

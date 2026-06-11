@@ -65,7 +65,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
 
     <!-- Top operario del mes -->
     <div class="top-container">
-        <div class="card-kpi top-card">
+        <div class="card-kpi top-card" id="top-card">
             <p>Top operario del mes</p>
             <h2>
                 <?php 
@@ -128,23 +128,29 @@ include dirname(__DIR__, 3) . '/templates/header.php';
             </p>
         </div>
 
+        <?php
+        // Verificar de estado 
+        $clase_estado = 'neutro';
+        if ($diferencia > 0) {
+            $clase_estado = 'positivo';
+        } elseif ($diferencia < 0) {
+            $clase_estado = 'negativo';
+        }
+        ?>
         <!-- Indicador de variación entre meses -->
-        <div class="comparacion">
+        <div class="comparacion <?php echo $clase_estado; ?>">
             <p>
-                <?php 
-                if($diferencia > 0){
-                    echo "<span style='color:green'>▲ Subió ".round($porcentaje,1)."%</span>
-                        <span style='color:green'>+" . number_format($diferencia) . " paquetes</span>";
-                }elseif($diferencia < 0){
-                    echo "<span style='color:red'>▼ Bajó ".round($porcentaje,1)."%</span>
-                        <span style='color:red'>-" . number_format(abs($diferencia)) . " paquetes</span>";
-                }else{
-                    echo "Sin cambios";
-                }
-                ?>
+                <?php if ($diferencia > 0): ?>
+                    <span>▲ Subió <?php echo round($porcentaje, 1); ?>%</span>
+                    <span>+<?php echo number_format($diferencia); ?> paquetes</span>
+                <?php elseif ($diferencia < 0): ?>
+                    <span>▼ Bajó <?php echo round($porcentaje, 1); ?>%</span>
+                    <span>-<?php echo number_format(abs($diferencia)); ?> paquetes</span>
+                <?php else: ?>
+                    <span>Sin cambios</span>
+                <?php endif; ?>
             </p>
         </div>
-
         
         <!-- Resumen mes 2 -->
         <div class="resumen-mes2">

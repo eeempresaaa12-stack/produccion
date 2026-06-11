@@ -47,18 +47,6 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                 <?php endwhile; ?>
             </select>
 
-            <!-- Turno -->
-            <label>Turno</label>
-            <select name="id_turno">
-                <?php while($t = mysqli_fetch_assoc($turnos)): ?>
-                    <option 
-                        value="<?php echo $t['id_turno']; ?>"
-                        <?php if($fila['id_turno'] == $t['id_turno']) echo "selected"; ?>>
-                        <?php echo $t['nombre_turno']; ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
-
             <!-- Referencia -->
             <label>Referencia</label>
             <select name="id_referencia">

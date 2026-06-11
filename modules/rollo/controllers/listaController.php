@@ -18,7 +18,6 @@ $inicio = ($pagina - 1) * $limite;
 // Base de la consulta con JOINs
 $sql_base = "FROM PRODUCCION_ROLLO r
 LEFT JOIN MAQUINAS m ON r.id_maquina = m.id_maquina
-LEFT JOIN TURNOS t ON r.id_turno = t.id_turno
 LEFT JOIN REFERENCIAS ref ON r.id_referencia = ref.id_referencia
 LEFT JOIN COLORES c ON r.id_color = c.id_color
 WHERE 1=1";
@@ -52,7 +51,6 @@ $total_paginas = ceil($total_registros / $limite);
 // Consulta final con campos y límite de página
 $sql = "SELECT r.*, 
             m.nombre_maquina,
-            t.nombre_turno,
             ref.nombre_referencia,
             c.nombre_color
         $sql_base
