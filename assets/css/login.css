@@ -6,22 +6,24 @@
 }
 
 :root {
+  --fuente: "Poppins", sans-serif;
+  --fondo: rgba(0, 0, 0, 0.4), rgba(25, 25, 25, 0.6);
+  --negro: rgba(0, 0, 0, 0.45);
+  --verde: #145a30;
+  --limon: #1ea353;
   --azul: rgb(31, 140, 212);
   --cian: rgb(28, 186, 226);
-  --prueba: linear-gradient(var(--azul), var(--cian));
 }
 /* =============================================
    BODY
 ============================================= */
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: var(--fuente);
   min-height: 100vh;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)),
-    url("../img/fondo1.jpg");
+  background: linear-gradient(var(--fondo)), url("../img/fondo1.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   overflow: hidden;
@@ -32,10 +34,10 @@ body {
 .login-box {
   width: 565px;
   height: 100vh;
-  background: rgba(18, 27, 20, 0.92);
-  backdrop-filter: blur(10px);
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.45);
+  background: var(--negro);
+  backdrop-filter: blur(30px);
+  border-left: 1px solid var(--negro);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
   padding: 45px 35px;
   display: flex;
   flex-direction: column;
@@ -56,7 +58,7 @@ body {
 =========================== */
 .login-box h1 {
   text-align: center;
-  color: #258130;
+  color: var(--limon);
   font-size: 40px;
   font-weight: 600;
   margin-bottom: 35px;
@@ -128,17 +130,17 @@ form {
   outline: none;
   padding: 15px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #1e8340, #209644);
+  background: linear-gradient(135deg, var(--verde), var(--limon));
   color: white;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   transition: 0.25s;
-  box-shadow: 0 10px 25px rgba(27, 179, 73, 0.25);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(27, 179, 73, 0.35);
+  box-shadow: 8px 12px 15px rgba(100, 250, 100, 0.15);
 }
 .btn:active {
   transform: scale(0.98);

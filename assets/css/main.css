@@ -8,8 +8,10 @@
 /* PALETA DE COLORES */
 :root {
   --fuente: "Poppins", sans-serif;
-  --fondo: rgba(0, 0, 0, 0.55), rgba(25, 25, 25, 0.75);
-  --blanco: rgba(0, 0, 0, 0.45);
+  --fondo: rgba(0, 0, 0, 0.4), rgba(25, 25, 25, 0.6);
+  --fondo-azul: rgba(5, 130, 200, 0.25), rgba(80, 190, 220, 0.35);
+  --fondo-verde: rgba(30, 220, 40, 0.25), rgba(20, 120, 60, 0.4);
+  --negro: rgba(0, 0, 0, 0.45);
   --teal: rgba(1, 100, 100, 0.4);
   --verde: #145a30;
   --limon: #1ea353;
@@ -43,6 +45,7 @@ body {
   color: white;
   top: 0;
   z-index: 10;
+  backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--verde);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 }
@@ -74,8 +77,8 @@ body {
   padding: 4px 10px;
   margin-bottom: 5px;
   border-radius: 12px;
-  background: var(--blanco);
-  border: 1px solid var(--blanco);
+  background: var(--negro);
+  border: 1px solid var(--negro);
   text-transform: capitalize;
   letter-spacing: 0.5px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -92,9 +95,9 @@ body {
   margin: 110px auto 50px auto;
   padding: 35px;
   border-radius: 14px;
-  background: var(--blanco);
+  background: var(--negro);
   backdrop-filter: blur(20px);
-  border: 1px solid var(--blanco);
+  border: 1px solid var(--negro);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
 }
 
@@ -107,7 +110,7 @@ body {
   padding: 15px;
   margin-bottom: 25px;
   border-radius: 10px;
-  background: var(--teal);
+  background: linear-gradient(var(--fondo-azul));
   border: 1px solid var(--teal);
   font-weight: 600;
 }
@@ -133,7 +136,7 @@ body {
 .card-kpi:hover {
   background-color: var(--teal);
   transform: translateY(-5px);
-  box-shadow: 8px 12px 20px rgba(1, 90, 90, 0.8);
+  box-shadow: 8px 12px 35px rgba(1, 90, 90, 0.8);
 }
 .card-kpi p {
   font-weight: 600;
@@ -170,12 +173,13 @@ body {
 }
 .resumen-mes1,
 .resumen-mes2 {
-  background: var(--verde);
+  background: linear-gradient(var(--fondo-verde));
   border-radius: 15px;
   padding: 15px;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
   width: 370px;
   color: white;
+  border: 1px solid var(--verde);
 }
 .resumen-mes1 h3,
 .resumen-mes2 h3 {
@@ -344,7 +348,7 @@ body {
 }
 .modal-header {
   font-family: var(--fuente);
-  background: var(--blanco);
+  background: var(--negro);
   padding: 12px;
   border-radius: 10px;
   font-size: 18px;
@@ -386,14 +390,13 @@ body {
   box-shadow: 4px 8px 20px rgba(0, 0, 0, 0.5);
 }
 .modal a:hover {
-  background: var(--blanco);
-  color: var(--limon);
-  box-shadow: 8px 12px 20px rgba(0, 0, 0, 0.5);
+  background: var(--negro);
+  box-shadow: 2px 6px 35px rgba(100, 250, 100, 0.15);
 }
 .modal .btn-icon {
   align-items: center;
   justify-content: center;
-  background: var(--blanco);
+  background: var(--negro);
   margin-right: 20px;
   width: 30px;
   height: 30px;
@@ -401,9 +404,6 @@ body {
   border-radius: 7px;
   color: white;
   font-size: 24px;
-}
-.modal .btn-icon:hover {
-  color: var(--limon);
 }
 .modal .btn-arrow {
   margin-left: 10px;
@@ -439,7 +439,7 @@ body {
   margin-left: 8px;
   padding: 6px 8px;
   border-radius: 5px;
-  border: 1px solid var(--blanco);
+  border: 1px solid var(--negro);
   background: transparent;
   backdrop-filter: blur(5px);
   transition: 0.25s;
@@ -457,7 +457,7 @@ select {
   font-size: 12px;
 }
 select:hover {
-  background: var(--blanco);
+  background: var(--negro);
   color: white;
 }
 #btnAnio {
@@ -470,7 +470,7 @@ select:hover {
   max-width: 800px;
   margin: 0 auto;
   color: var(--cyan);
-  background: var(--teal);
+  background: linear-gradient(var(--fondo-azul));
   border-radius: 10px;
   border: 1px solid var(--teal);
   padding: 30px;
@@ -485,7 +485,7 @@ select:hover {
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   color: var(--cyan);
-  background: var(--teal);
+  background: linear-gradient(var(--fondo-azul));
   border-radius: 10px;
   border: 1px solid var(--teal);
   padding-bottom: 40px;
@@ -520,7 +520,7 @@ canvas {
   |TABLAS DASHBOARD
 =========================== */
 .tabla-dashboard {
-  background: var(--teal);
+  background: linear-gradient(var(--fondo-azul));
   color: white;
   padding: 20px;
   border-radius: 10px;
@@ -537,17 +537,17 @@ canvas {
   font-size: 14px;
 }
 .tabla-dashboard th {
-  background: var(--blanco);
+  background: var(--negro);
   padding: 10px;
   text-align: left;
-  border: 2px solid var(--blanco);
+  border: 2px solid var(--negro);
 }
 .tabla-dashboard td {
   padding: 8px;
-  border: 2px solid var(--blanco);
+  border: 2px solid var(--negro);
 }
 .fila-total {
-  background: var(--blanco);
+  background: var(--negro);
   font-weight: bold;
 }
 .filtro-fechas {
@@ -558,14 +558,19 @@ canvas {
   flex-wrap: wrap;
 }
 .filtro-fechas label {
-  color: var(--limon);
+  color: var(--cyan);
 }
 .filtro-fechas input {
   padding: 6px 8px;
-  border: 2px solid var(--verde);
-  border-radius: 5px;
-  color: var(--limon);
+  border: 2px solid var(--cyan);
+  color: var(--cyan);
   background: var(--teal);
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 5px;
+  border-radius: 10px;
+  transition: 0.25s;
+  font-size: 14px;
 }
 .filtro-fechas input:hover {
   transform: translatey(-1.5px);
@@ -581,7 +586,7 @@ canvas {
   width: 6px;
 }
 .tabla-dashboard::-webkit-scrollbar-track {
-  background: var(--blanco);
+  background: var(--negro);
 }
 .tabla-dashboard::-webkit-scrollbar-thumb {
   background-color: var(--cyan);
@@ -599,6 +604,21 @@ canvas {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
+#containerHistorial .card input {
+  border: 1px solid var(--cyan);
+  background: var(--teal);
+  color: var(--cyan);
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 5px;
+  border-radius: 10px;
+  transition: 0.25s;
+  font-size: 14px;
+}
+#containerHistorial .card input:hover {
+  transform: translatey(-1.5px);
+  box-shadow: 6px 10px 20px rgba(1, 90, 90, 0.8);
+}
 #containerHistorial .tabla {
   width: 100%;
   min-width: 900px;
@@ -613,7 +633,7 @@ canvas {
   border-collapse: collapse;
   margin-top: 20px;
   box-shadow: 0 0 18px rgba(0, 0, 0, 0.15);
-  background-color: var(--blanco);
+  background-color: transparent;
 }
 .tabla th {
   background: var(--verde);
@@ -622,52 +642,12 @@ canvas {
 }
 .tabla td {
   padding: 12px;
-  border: 1px solid var(--verde);
+  border: 2px solid var(--verde);
   font-size: 14px;
+  color: white;
 }
 .tabla tr:nth-child(even) {
-  background: white;
-}
-
-/* ===========================
-   FORMULARIOS
-=========================== */
-form label {
-  display: block;
-  margin-top: 18px;
-  font-weight: 600;
-  color: var(--verde);
-  font-size: 14px;
-}
-form input,
-form textarea,
-form select {
-  width: 100%;
-  padding: 12px 14px;
-  margin-top: 5px;
-  border-radius: 10px;
-  background: var(--blanco);
-  border: 1px solid var(--blanco);
-  backdrop-filter: blur(5px);
-  transition: 0.25s;
-  font-size: 14px;
-}
-form textarea {
-  resize: vertical;
-  min-height: 90px;
-}
-form input:hover,
-form textarea:hover,
-form select:hover {
-  border-color: var(--verde);
-}
-form input:focus,
-form textarea:focus,
-form select:focus {
-  outline: none;
-  border-color: var(--limon);
-  box-shadow: 0 0 10px var(--verde);
-  background: white;
+  background: var(--teal);
 }
 
 /* =================================================
@@ -682,6 +662,7 @@ form select:focus {
   padding: 15px;
   border-radius: 12px;
   margin-top: 20px;
+  color: white;
 }
 .paginacion a {
   display: inline-flex;
@@ -692,9 +673,9 @@ form select:focus {
   padding: 0 10px;
   border-radius: 8px;
   background: rgba(20, 146, 184, 0.15);
-  border: 1px solid rgba(12, 81, 102, 0.3);
+  border: 1px solid rgba(12, 81, 102, 0.6);
   text-decoration: none;
-  color: black;
+  color: white;
   font-weight: 500;
   font-size: 14px;
   transition: 0.2s;
@@ -704,7 +685,6 @@ form select:focus {
   border-color: transparent;
   transform: translateY(-2px);
   box-shadow: 0 0 18px rgba(0, 0, 0, 0.15);
-  color: white;
 }
 .paginacion strong {
   display: inline-flex;
@@ -715,8 +695,7 @@ form select:focus {
   padding: 0 10px;
   border-radius: 8px;
   background: linear-gradient(135deg, var(--azul), var(--azul));
-  color: white;
-  font-size: 14px;
+  font-size: 18px;
   box-shadow: 0 0 18px rgba(0, 0, 0, 0.15);
 }
 
