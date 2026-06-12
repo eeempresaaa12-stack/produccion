@@ -296,7 +296,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
     <br><br><br>
 
     <!-- Gráfico de producción por referencia -->
-    <div class="card-grafico">
+    <div class="card-grafico" id="card-referencias">
         <h3>Producción por referencia</h3>
         <canvas id="graficoReferencias"></canvas>
     </div>
@@ -451,6 +451,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                 <td><?php echo number_format($row['neto'],2); ?></td>
             </tr>
             <?php } ?>
+            <!-- Fila de total -->
             <tr class="fila-total">
                 <td><strong>TOTAL</strong></td>
                 <td><strong><?php echo number_format($total_bruto,2); ?></strong></td>
@@ -468,7 +469,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
         <!-- Redirigir al Lista -->
         <a class="btn" href="lista.php">Ver Historial</a>
         <!-- Redirigir al Index -->
-        <a class="btn" href="<?= BASE_URL ?>/index.php">Volver al menú</a>
+        <a class="btn" href="<?= BASE_URL ?>/index.php">Volver al Menú</a>
     </div>
 
 </div>

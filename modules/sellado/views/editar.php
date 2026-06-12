@@ -17,7 +17,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
 ?>
 
 <!-- Contenedor de Editar -->
-<div class="container">
+<div class="container" id="containerEditar">
     <!-- Título -->
     <h2 class="titulo-vista">Editar Producción Sellado</h2>
 
@@ -107,17 +107,18 @@ include dirname(__DIR__, 3) . '/templates/header.php';
             <label>Observaciones</label>
             <textarea name="observaciones_paq"><?php echo $fila['observaciones_paq']; ?></textarea>
 
-            <br><br>
-
             <!-- Botón de Actualizar -->
-            <button class="btn" type="submit">Actualizar</button>
+            <a class="btn" type="submit">Actualizar</a>
             </form>
 
         </div>
+    
+    <br><br>
+    
     <!-- Botones de navegación -->
-    <div class="btn-group">
-        <a class="btn" href="lista.php">Volver al historial</a>
-        <a class="btn" href="dashboard.php">Volver al dashboard</a>
+    <div class="acciones">
+        <a class="btn" href="lista.php">Volver al Historial</a>
+        <a class="btn" href="dashboard.php">Volver al Dashboard</a>
     </div>
 </div>
 

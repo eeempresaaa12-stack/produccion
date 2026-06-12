@@ -16,7 +16,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
 ?>
 
 <!-- Contenedor de Editar -->
-<div class="container">
+<div class="container" id="containerEditar">
     <!-- Título -->
     <h2 class="titulo-vista">Editar Producción Rollo</h2>
 
@@ -27,7 +27,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
             <form action="<?= BASE_URL ?>/modules/rollo/controllers/actualizarController.php" method="POST">
             <!-- ID del registro a actualizar -->
             <input type="hidden" name="id" value="<?php echo $fila['id']; ?>">
-
+                      
             <!-- Fecha -->
             <label>Fecha</label>
             <input 
@@ -98,18 +98,20 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                 class="form-control" 
                 value="<?php echo $fila['total_roll']; ?>">
         
-            <br><br>
-
             <!-- Botón de Actualizar -->
-            <button class="btn" type="submit">Actualizar</button>
+            <a class="btn" type="submit">Actualizar</a>
             </form>
-
+            
         </div>
+    
+    <br><br>
+
     <!-- Botones de navegación -->
-    <div class="btn-group">
-        <a class="btn" href="lista.php">Volver al historial</a>
-        <a class="btn" href="dashboard.php">Volver al dashboard</a>
+    <div class="acciones">
+        <a class="btn" href="lista.php">Volver al Historial</a>
+        <a class="btn" href="dashboard.php">Volver al Dashboard</a>
     </div>
+
 </div>
 
 <?php 

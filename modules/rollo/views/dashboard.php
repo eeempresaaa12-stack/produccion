@@ -412,7 +412,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
         <!-- Redirigir al Lista -->
         <a class="btn" href="lista.php">Ver Historial</a>
         <!-- Redirigir al Index -->
-        <a class="btn" href="<?= BASE_URL ?>/index.php">Volver al menú</a>
+        <a class="btn" href="<?= BASE_URL ?>/index.php">Volver al Menú</a>
     </div>
 
 </div>

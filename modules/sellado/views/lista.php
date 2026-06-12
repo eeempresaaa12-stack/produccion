@@ -55,6 +55,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                         <th>Referencia</th>
                         <th>Color</th>
                         <th>Paquetes</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 
@@ -70,6 +71,20 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                             <td><?php echo $fila['nombre_referencia']; ?></td>
                             <td><?php echo $fila['nombre_color']; ?></td>
                             <td><?php echo $fila['paquetes_paq']; ?></td>
+                            <!-- Botones de editar o eliminar registros -->
+                            <td>
+                                <a class="btn"
+                                href="editar.php?id=<?php echo $fila['id']; ?>">
+                                    Editar
+                                </a>
+                                <?php if($_SESSION['rol'] == 'admin'){ ?>
+                                    <a class="btn btn-eliminar"
+                                    href="../controllers/eliminarController.php?id=<?php echo $fila['id']; ?>"
+                                    onclick="return confirm('¿Deseas eliminar este registro?');">
+                                        Eliminar
+                                    </a>
+                                <?php } ?>
+                            </td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
@@ -78,51 +93,51 @@ include dirname(__DIR__, 3) . '/templates/header.php';
 
     <br>
 
-<!-- Paginación -->
-<div class="paginacion" style="text-align:center;">
-    <?php
-        // Rango de páginas visibles en la paginación
-        $rango = 5;
-        $inicio = max(1, $pagina - $rango);
-        $fin = min($total_paginas, $pagina + $rango);
-        // Botón anterior
-        if($pagina > 1){
-            echo '<a href="?pagina='.($pagina-1).'&buscar='.$busqueda.'&fecha='.$fecha.'">«</a> ';
-        }
-        // Primera página si el rango no empieza en 1
-        if($inicio > 1){
-            echo '<a href="?pagina=1&buscar='.$busqueda.'&fecha='.$fecha.'">1</a> ... ';
-        }
-        // Páginas del rango
-        for($i = $inicio; $i <= $fin; $i++){
-            if($i == $pagina){
-                echo "<strong>$i</strong> ";
-            }else{
-                echo '<a href="?pagina='.$i.'&buscar='.$busqueda.'&fecha='.$fecha.'">'.$i.'</a> ';
+    <!-- Paginación -->
+    <div class="paginacion" style="text-align:center;">
+        <?php
+            // Rango de páginas visibles en la paginación
+            $rango = 5;
+            $inicio = max(1, $pagina - $rango);
+            $fin = min($total_paginas, $pagina + $rango);
+            // Botón anterior
+            if($pagina > 1){
+                echo '<a href="?pagina='.($pagina-1).'&buscar='.$busqueda.'&fecha='.$fecha.'">«</a> ';
             }
-        }
-        // Última página si faltan páginas al final
-        if($fin < $total_paginas){
-            echo ' ... <a href="?pagina='.$total_paginas.'&buscar='.$busqueda.'&fecha='.$fecha.'">'.$total_paginas.'</a>';
-        }
-        // Botón de siguiente
-        if($pagina < $total_paginas){
-            echo ' <a href="?pagina='.($pagina+1).'&buscar='.$busqueda.'&fecha='.$fecha.'">»</a>';
-        }
-    ?>
-</div>
+            // Primera página si el rango no empieza en 1
+            if($inicio > 1){
+                echo '<a href="?pagina=1&buscar='.$busqueda.'&fecha='.$fecha.'">1</a> ... ';
+            }
+            // Páginas del rango
+            for($i = $inicio; $i <= $fin; $i++){
+                if($i == $pagina){
+                    echo "<strong>$i</strong> ";
+                }else{
+                    echo '<a href="?pagina='.$i.'&buscar='.$busqueda.'&fecha='.$fecha.'">'.$i.'</a> ';
+                }
+            }
+            // Última página si faltan páginas al final
+            if($fin < $total_paginas){
+                echo ' ... <a href="?pagina='.$total_paginas.'&buscar='.$busqueda.'&fecha='.$fecha.'">'.$total_paginas.'</a>';
+            }
+            // Botón de siguiente
+            if($pagina < $total_paginas){
+                echo ' <a href="?pagina='.($pagina+1).'&buscar='.$busqueda.'&fecha='.$fecha.'">»</a>';
+            }
+        ?>
+    </div>
 
-<br>
+    <br>
 
-<!-- Botones de navegación -->
-<div class="acciones">
-    <!-- Redirigir al Dashboard (solo Administradores) -->
-    <?php if($_SESSION['rol'] == 'admin'){ ?>
-        <a class="btn" href="dashboard.php">Volver al Dashboard</a>
-    <?php } ?>
-    <!-- Redirigir al Index -->
-    <a class="btn" href="<?= BASE_URL ?>/index.php">Volver al menú</a>
-</div>
+    <!-- Botones de navegación -->
+    <div class="acciones">
+        <!-- Redirigir al Dashboard (solo Administradores) -->
+        <?php if($_SESSION['rol'] == 'admin'){ ?>
+            <a class="btn" href="dashboard.php">Volver al Dashboard</a>
+        <?php } ?>
+        <!-- Redirigir al Index -->
+        <a class="btn" href="<?= BASE_URL ?>/index.php">Volver al Menú</a>
+    </div>
 
 </div>
 

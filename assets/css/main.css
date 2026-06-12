@@ -261,6 +261,7 @@ body {
   gap: 15px;
   flex-wrap: wrap;
   margin-top: 20px;
+  justify-self: center;
 }
 #btnImportar {
   margin-top: 40px;
@@ -496,6 +497,13 @@ select:hover {
   height: 400px;
   padding: 15px;
 }
+#card-referencias {
+  color: var(--cyan);
+  background: linear-gradient(var(--fondo-azul));
+  border-radius: 10px;
+  border: 1px solid var(--teal);
+  padding-bottom: 40px;
+}
 canvas {
   width: 100% !important;
   height: 100% !important;
@@ -521,12 +529,14 @@ canvas {
 =========================== */
 .tabla-dashboard {
   background: linear-gradient(var(--fondo-azul));
-  color: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   max-height: 350px;
   overflow: auto;
+}
+.tabla-dashboard table {
+  color: white;
 }
 .tabla-dashboard h3 {
   color: var(--cyan);
@@ -645,9 +655,61 @@ canvas {
   border: 2px solid var(--verde);
   font-size: 14px;
   color: white;
+  text-align: center;
+}
+.tabla td:nth-last-child(1) {
+  padding: 5px;
+  width: 100px;
+}
+.tabla td a {
+  margin-top: 5px;
+  width: 80px;
+  margin-right: 0;
+  padding: 10px;
+  background: linear-gradient(var(--fondo-azul));
+  transition: 0.25s;
+  text-align: center;
+}
+.tabla td a:hover {
+  transform: translatey(-5px);
+  box-shadow: 4px 8px 20px rgba(1, 90, 90, 0.8);
+  background: linear-gradient(var(--fondo-azul));
 }
 .tabla tr:nth-child(even) {
   background: var(--teal);
+}
+
+/* ===========================
+   HISTORIAL
+=========================== */
+#containerEditar {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  color: var(--cyan);
+}
+#containerEditar .card input,
+.card select,
+.card textarea {
+  border: 1px solid var(--cyan);
+  background: var(--teal);
+  color: white;
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 5px;
+  border-radius: 10px;
+  transition: 0.25s;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+#containerEditar .card input:hover {
+  transform: translatey(-1.5px);
+  box-shadow: 6px 10px 20px rgba(1, 90, 90, 0.8);
+}
+#containerEditar .tabla {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
 }
 
 /* =================================================
@@ -713,6 +775,7 @@ canvas {
   background: var(--verde);
   color: #eee;
   font-size: 15px;
+  margin-bottom: 0;
 }
 .footer strong {
   color: white;
