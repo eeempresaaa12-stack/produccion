@@ -299,7 +299,7 @@ body {
   margin-right: 8px;
 }
 #log::-webkit-scrollbar-thumb {
-  background: var(--limon);
+  background: var(--verde);
   border-radius: 2px;
 }
 .lr {
@@ -326,7 +326,7 @@ body {
   color: #24788d;
 }
 .lr.dup .t {
-  color: #da8404;
+  color: #b16d07;
 }
 
 /* ===========================

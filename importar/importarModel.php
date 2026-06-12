@@ -3,11 +3,13 @@
 ini_set('memory_limit', '512M');
 set_time_limit(0);
 
-/* Desactivo de Compresion */
-@apache_setenv('no-gzip', 1);
+/* Desactivar compresión */
+if(function_exists('apache_setenv')){
+    @apache_setenv('no-gzip', 1);
+}
+
 @ini_set('zlib.output_compression', 0);
 @ini_set('output_buffering', 0);
-
 
 /* =====================
    FUNCIONES DE TEXTO
