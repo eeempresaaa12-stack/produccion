@@ -54,7 +54,7 @@ $sql = "SELECT r.*,
             ref.nombre_referencia,
             c.nombre_color
         $sql_base
-        ORDER BY r.fecha_roll DESC
+        ORDER BY r.id DESC
         LIMIT $inicio, $limite";
 
 $resultado = mysqli_query($conexion, $sql);

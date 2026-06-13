@@ -56,7 +56,7 @@ $sql = "SELECT p.*,
             o.nombre AS operario, 
             r.nombre_referencia 
         $sql_base 
-        ORDER BY p.fecha_plana 
-        DESC LIMIT $inicio, $limite";
+        ORDER BY p.id DESC 
+        LIMIT $inicio, $limite";
 
 $resultado = mysqli_query($conexion, $sql);

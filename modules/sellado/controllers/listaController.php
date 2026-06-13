@@ -57,7 +57,7 @@ $sql = "SELECT p.*,
             c.nombre_color,
             t.nombre_turno
         $sql_base
-        ORDER BY p.fecha_paq DESC
+        ORDER BY p.id DESC
         LIMIT $inicio, $limite";
 
 $resultado = mysqli_query($conexion,$sql);
