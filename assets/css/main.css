@@ -629,6 +629,9 @@ canvas {
   transform: translatey(-1.5px);
   box-shadow: 6px 10px 20px rgba(1, 90, 90, 0.8);
 }
+#containerHistorial .card #btnFiltrar {
+  font-size: 16px;
+}
 #containerHistorial .tabla {
   width: 100%;
   min-width: 900px;
@@ -680,7 +683,7 @@ canvas {
 }
 
 /* ===========================
-   HISTORIAL
+   EDITAR
 =========================== */
 #containerEditar {
   width: 100%;

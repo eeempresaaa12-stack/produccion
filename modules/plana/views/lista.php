@@ -37,7 +37,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                 <input type="date" name="fecha" 
                     value="<?php echo $fecha; ?>">
                 <!-- Botón para filtrar -->
-                <a class="btn" type="submit">Filtrar</a>
+                <button type="submit" class="btn" id="btnFiltrar">Filtrar</button>
                 <!-- Botón para limpiar el filtro -->
                 <a class="btn" href="lista.php">Limpiar</a>
             </form>
