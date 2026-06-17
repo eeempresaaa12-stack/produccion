@@ -32,7 +32,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
 
             <!-- Filtros de búsqueda -->
             <form method="GET" style="display:flex; gap:10px; flex-wrap:wrap;">
-                <input type="text" name="buscar" placeholder="Buscar..." 
+                <input type="text" name="buscar" autocomplete="off" placeholder="Buscar..." 
                     value="<?php echo $busqueda; ?>">
                 <input type="date" name="fecha" 
                     value="<?php echo $fecha; ?>">

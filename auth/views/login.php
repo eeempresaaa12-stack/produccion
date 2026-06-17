@@ -48,13 +48,13 @@ if(isset($_SESSION['usuario'])){
             <!-- Campo usuario -->
             <div class="grupo">
                 <label>Usuario</label>
-                <input type="text" name="usuario" required>
+                <input type="text" name="usuario" autocomplete="off" required>
             </div>
 
             <!-- Campo contraseña -->
             <div class="grupo">
                 <label>Contraseña</label>
-                <input type="password" name="contrasena" required>
+                <input type="password" name="contrasena" autocomplete="off" required>
             </div>
 
             <!-- Botón ingresar -->
