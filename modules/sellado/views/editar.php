@@ -108,7 +108,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
             <textarea name="observaciones_paq"><?php echo $fila['observaciones_paq']; ?></textarea>
 
             <!-- Botón de Actualizar -->
-            <a class="btn" type="submit">Actualizar</a>
+            <button type="submit" class="btn" id="btnActualizar">Actualizar</button>
             </form>
 
         </div>

@@ -714,6 +714,9 @@ canvas {
   min-width: 900px;
   border-collapse: collapse;
 }
+#containerEditar .card #btnActualizar {
+  font-size: 16px;
+}
 
 /* =================================================
    PAGINACIÓN

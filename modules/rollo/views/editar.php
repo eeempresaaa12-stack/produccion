@@ -99,7 +99,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                 value="<?php echo $fila['total_roll']; ?>">
         
             <!-- Botón de Actualizar -->
-            <a class="btn" type="submit">Actualizar</a>
+            <button type="submit" class="btn" id="btnActualizar">Actualizar</button>
             </form>
             
         </div>
