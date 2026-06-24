@@ -74,7 +74,7 @@ while($row = mysqli_fetch_assoc($res)){
 if($tipo == "semana"){
     // Operarios de todas las semanas del mes
     if($semana == ""){
-        $sql2 = "SELECT o.nombre, SUM(p.paquetes_paq) total
+        $sql2 = "SELECT o.nombre_operario, SUM(p.paquetes_paq) total
                  FROM PRODUCCION_PAQUETES p
                  LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario
                  WHERE MONTH(p.fecha_paq) = $mes
@@ -85,7 +85,7 @@ if($tipo == "semana"){
         // Operarios por rango de días de la semana seleccionada
         $inicio = (($semana - 1) * 7) + 1;
         $fin = $semana * 7;
-        $sql2 = "SELECT o.nombre, SUM(p.paquetes_paq) total
+        $sql2 = "SELECT o.nombre_operario, SUM(p.paquetes_paq) total
                  FROM PRODUCCION_PAQUETES p
                  LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario
                  WHERE MONTH(p.fecha_paq) = $mes
@@ -96,15 +96,15 @@ if($tipo == "semana"){
 // Mostrar por año
 }elseif($tipo === 'anio') {
     // Agrupado del año
-    $sql2 = "SELECT o.nombre, SUM(p.paquetes_paq) total
+    $sql2 = "SELECT o.nombre_operario, SUM(p.paquetes_paq) total
              FROM PRODUCCION_PAQUETES p
              LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario
              WHERE YEAR(p.fecha_paq) = YEAR(CURDATE())
-             GROUP BY o.nombre
+             GROUP BY o.nombre_operario
              ORDER BY total DESC";
 }else{
     // Operarios del mes
-    $sql2 = "SELECT o.nombre, SUM(p.paquetes_paq) total
+    $sql2 = "SELECT o.nombre_operario, SUM(p.paquetes_paq) total
              FROM PRODUCCION_PAQUETES p
              LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario
              WHERE MONTH(p.fecha_paq) = $mes
@@ -117,7 +117,7 @@ $res2 = mysqli_query($conexion,$sql2);
 $operarios = [];
 $totales_op = [];
 while($row = mysqli_fetch_assoc($res2)){
-    $operarios[] = $row['nombre'];
+    $operarios[] = $row['nombre_operario'];
     $totales_op[] = $row['total'];
 }
 

@@ -57,7 +57,7 @@ if (ob_get_level()) ob_flush(); flush();
 echo "<script>document.getElementById('msg').textContent='Cargando catálogos…';</script>\n";
 if (ob_get_level()) ob_flush(); flush();
 
-$operarios   = cargarCatalogo($conexion, "OPERARIOS",   "nombre",            "id_operario");
+$operarios   = cargarCatalogo($conexion, "OPERARIOS",   "nombre_operario",   "id_operario");
 $maquinas    = cargarCatalogo($conexion, "MAQUINAS",    "nombre_maquina",    "id_maquina");
 $referencias = cargarCatalogo($conexion, "REFERENCIAS", "nombre_referencia", "id_referencia");
 $turnos      = cargarCatalogo($conexion, "TURNOS",      "nombre_turno",      "id_turno");
@@ -83,7 +83,7 @@ foreach ($filas as $data) {
     $total_prod = convertirNumero($data[9]);
 
     // Obtener IDs de catálogos o crearlos si no existen
-    $id_operario   = $operarios[$operario]     ?? autoCrear($conexion, $operarios,   "OPERARIOS",   "nombre",            $operario);
+    $id_operario   = $operarios[$operario]     ?? autoCrear($conexion, $operarios,   "OPERARIOS",   "nombre_operario",   $operario);
     $id_maquina    = $maquinas[$maquina]       ?? autoCrear($conexion, $maquinas,    "MAQUINAS",    "nombre_maquina",    $maquina);
     $id_referencia = $referencias[$referencia] ?? autoCrear($conexion, $referencias, "REFERENCIAS", "nombre_referencia", $referencia);
     $id_turno      = $turnos[$turno]           ?? autoCrear($conexion, $turnos,      "TURNOS",      "nombre_turno",      $turno);

@@ -102,8 +102,7 @@ function obtenerResumenMesRollo($conexion,$mes){
 // Mejor y peor día de producción del mes
 function obtenerMejorPeorDiaMesRollo($conexion,$mes){
     $sql = "SELECT 
-                DATE(fecha_roll) fecha,
-                SUM(total_roll) total
+                DATE(fecha_roll) fecha, SUM(total_roll) total
             FROM PRODUCCION_ROLLO
             WHERE MONTH(fecha_roll) = $mes
             AND YEAR(fecha_roll)=YEAR(CURDATE())
@@ -168,13 +167,10 @@ function obtenerTopMaquinaMesRollo($conexion,$mes){
 // Producción agrupada por fecha en un rango
 function obtenerTablaFechasRollo($conexion, $desde, $hasta){
     $sql = "SELECT 
-                DATE(p.fecha_roll) fecha,
-                SUM(p.peso_rollo) bruto,
-                SUM(p.retal_roll) retal,
-                SUM(p.total_roll) neto
+            DATE(p.fecha_roll) fecha, SUM(p.peso_rollo) bruto, SUM(p.retal_roll) retal, SUM(p.total_roll) neto
             FROM PRODUCCION_ROLLO p
             WHERE DATE(p.fecha_roll)
-                BETWEEN '$desde' AND '$hasta'
+            BETWEEN '$desde' AND '$hasta'
             GROUP BY DATE(p.fecha_roll)
             ORDER BY fecha DESC";
     return mysqli_query($conexion, $sql);

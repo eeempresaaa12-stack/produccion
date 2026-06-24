@@ -27,7 +27,7 @@ WHERE 1=1";
 if(!empty($busqueda)){
     $sql_base .= " AND (
         r.nombre_referencia LIKE '%$busqueda%' OR
-        o.nombre LIKE '%$busqueda%' OR
+        o.nombre_operario LIKE '%$busqueda%' OR
         m.nombre_maquina LIKE '%$busqueda%' OR
         p.id LIKE '%$busqueda%' OR
         p.peso_plana LIKE '%$busqueda%' OR
@@ -53,7 +53,7 @@ $total_paginas = ceil($total_registros / $limite);
 $sql = "SELECT p.*, 
             m.nombre_maquina, 
             t.nombre_turno, 
-            o.nombre AS operario, 
+            o.nombre_operario, 
             r.nombre_referencia 
         $sql_base 
         ORDER BY p.id DESC 

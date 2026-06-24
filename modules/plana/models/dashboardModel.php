@@ -41,7 +41,7 @@ function obtenerProduccionMesPlana($conexion){
 ================================================= */
 // Operario con más producción en el mes actual
 function obtenerTopOperarioPlana($conexion){
-    $sql = "SELECT o.nombre, IFNULL(SUM(p.bultos_plana),0) total
+    $sql = "SELECT o.nombre_operario, IFNULL(SUM(p.bultos_plana),0) total
             FROM PRODUCCION_PLANA p
             LEFT JOIN OPERARIOS o ON p.id_operario = o.id_operario
             WHERE MONTH(p.fecha_plana)=MONTH(CURDATE())
@@ -54,7 +54,7 @@ function obtenerTopOperarioPlana($conexion){
         return mysqli_fetch_assoc($res);
     }
     return [
-        'nombre' => 'Sin datos',
+        'nombre_operario' => 'Sin datos',
         'total' => 0
     ];
 }
@@ -126,7 +126,7 @@ function obtenerMejorPeorDiaMesPlana($conexion,$mes){
 ================================================= */
 // Operario con más producción en el mes
 function obtenerTopOperarioMesPlana($conexion,$mes){
-    $sql = "SELECT o.nombre, IFNULL(SUM(p.bultos_plana),0) total
+    $sql = "SELECT o.nombre_operario, IFNULL(SUM(p.bultos_plana),0) total
             FROM PRODUCCION_PLANA p
             LEFT JOIN OPERARIOS o ON p.id_operario = o.id_operario
             WHERE MONTH(p.fecha_plana) = $mes
@@ -139,7 +139,7 @@ function obtenerTopOperarioMesPlana($conexion,$mes){
         return mysqli_fetch_assoc($res);
     }
     return [
-        'nombre' => 'Sin datos',
+        'nombre_operario' => 'Sin datos',
         'total' => 0
     ];
 }
@@ -182,7 +182,9 @@ function obtenerTablaMaquinasPlana($conexion, $desde, $hasta){
 ================================================= */
 // Fecha de la última importación de máquina plana
 function obtenerUltimaImportacionPlana($conexion){
-    $sql = "SELECT ultima_fecha FROM IMPORTAR WHERE nombre = 'plana'";
+    $sql = "SELECT ultima_fecha 
+            FROM IMPORTAR 
+            WHERE nombre = 'plana'";
     $res = mysqli_query($conexion, $sql);
     if(!$res){
         return 'Nunca';

@@ -70,7 +70,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                             <td><?php echo $fila['fecha_plana']; ?></td>
                             <td><?php echo $fila['nombre_maquina']; ?></td>
                             <td><?php echo $fila['nombre_turno']; ?></td>
-                            <td><?php echo $fila['operario']; ?></td>
+                            <td><?php echo $fila['nombre_operario']; ?></td>
                             <td><?php echo $fila['nombre_referencia']; ?></td>
                             <td><?php echo $fila['peso_plana']; ?></td>
                             <td><?php echo $fila['bultos_plana']; ?></td>

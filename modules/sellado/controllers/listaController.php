@@ -27,7 +27,7 @@ WHERE 1=1";
 // Aplicar filtro de búsqueda por texto
 if(!empty($busqueda)){
     $sql_base .= " AND (
-        o.nombre LIKE '%$busqueda%' OR
+        o.nombre_operario LIKE '%$busqueda%' OR
         m.nombre_maquina LIKE '%$busqueda%' OR
         r.nombre_referencia LIKE '%$busqueda%' OR
         c.nombre_color LIKE '%$busqueda%' OR
@@ -51,7 +51,7 @@ $total_paginas = ceil($total_registros / $limite);
 
 // Consulta final con campos y límite de página
 $sql = "SELECT p.*, 
-            o.nombre AS operario,
+            o.nombre_operario,
             m.nombre_maquina,
             r.nombre_referencia,
             c.nombre_color,

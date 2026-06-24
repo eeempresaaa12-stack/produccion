@@ -152,16 +152,16 @@ function cargarGraficoMeses(){
                 maintainAspectRatio: false,
                 interaction: { mode: 'index', intersect: false },
                 plugins: {
-                    legend:  { labels: { font: { size: 12 } } },
+                    legend:  { labels: { font: { size: 12 }, color: 'white' } },
                     tooltip: { bodyFont: { size: 12 }, titleFont: { size: 12 } }
                 },
                 scales: {
                     x: {
-                        ticks:  { color: 'white' },
+                        ticks:  { font: { size: 13 }, color: 'white' },
                         border: { color: 'white' }
                     },
                     y: {
-                        ticks:  { color: 'white' },
+                        ticks:  { font: { size: 13 }, color: 'white' },
                         border: { color: 'white' }
                     }
                 }

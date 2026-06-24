@@ -57,11 +57,11 @@ if (ob_get_level()) ob_flush(); flush();
 echo "<script>document.getElementById('msg').textContent='Cargando catálogos…';</script>\n";
 if (ob_get_level()) ob_flush(); flush();
 
-$operarios   = cargarCatalogo($conexion, "OPERARIOS",   "nombre",            "id_operario");
 $maquinas    = cargarCatalogo($conexion, "MAQUINAS",    "nombre_maquina",    "id_maquina");
+$operarios   = cargarCatalogo($conexion, "OPERARIOS",   "nombre_operario",   "id_operario");
+$turnos      = cargarCatalogo($conexion, "TURNOS",      "nombre_turno",      "id_turno");
 $referencias = cargarCatalogo($conexion, "REFERENCIAS", "nombre_referencia", "id_referencia");
 $colores     = cargarCatalogo($conexion, "COLORES",     "nombre_color",      "id_color");
-$turnos      = cargarCatalogo($conexion, "TURNOS",      "nombre_turno",      "id_turno");
 
 // Contadores de resultado
 $contador     = 0;
@@ -74,46 +74,46 @@ foreach ($filas as $data) {
     // Limpiar y convertir datos de cada fila
     $marca      = convertirMarca($data[0]);
     $fecha      = convertirFecha($data[1]);
-    $operario   = limpiarNombre($data[2]);
-    $maquina    = limpiarNombre($data[3]);
-    $referencia = limpiarNombre($data[4]);
-    $color      = limpiarNombre($data[5]);
-    $turno      = limpiarNombre($data[6]);
+    $maquina    = limpiarNombre($data[2]);
+    $operario   = limpiarNombre($data[3]);
+    $turno      = limpiarNombre($data[4]);
+    $referencia = limpiarNombre($data[5]);
+    $color      = limpiarNombre($data[6]);
     $paquetes   = (int)$data[7];
     $obs        = mysqli_real_escape_string($conexion, $data[8]);
 
     // Obtener IDs de catálogos o crearlos si no existen
-    $id_operario   = $operarios[$operario]     ?? autoCrear($conexion, $operarios,   "OPERARIOS",   "nombre",            $operario);
     $id_maquina    = $maquinas[$maquina]       ?? autoCrear($conexion, $maquinas,    "MAQUINAS",    "nombre_maquina",    $maquina);
+    $id_operario   = $operarios[$operario]     ?? autoCrear($conexion, $operarios,   "OPERARIOS",   "nombre_operario",   $operario);
+    $id_turno      = $turnos[$turno]           ?? autoCrear($conexion, $turnos,      "TURNOS",      "nombre_turno",      $turno);
     $id_referencia = $referencias[$referencia] ?? autoCrear($conexion, $referencias, "REFERENCIAS", "nombre_referencia", $referencia);
     $id_color      = $colores[$color]          ?? autoCrear($conexion, $colores,     "COLORES",     "nombre_color",      $color);
-    $id_turno      = $turnos[$turno]           ?? autoCrear($conexion, $turnos,      "TURNOS",      "nombre_turno",      $turno);
 
     // Modo 'todo': Insertar o actualizar si ya existe
     if ($modo === 'todo') {
         $sql = "INSERT INTO PRODUCCION_PAQUETES
-                    (marca_temporal,fecha_paq,id_operario,id_maquina,id_referencia,
-                    id_color,id_turno,paquetes_paq,observaciones_paq)
+                    (marca_temporal,fecha_paq,id_maquina,id_operario,id_turno,
+                    id_referencia,id_color,paquetes_paq,observaciones_paq)
                 VALUES
-                    ('$marca','$fecha','$id_operario','$id_maquina','$id_referencia',
-                    '$id_color','$id_turno','$paquetes','$obs')
+                    ('$marca','$fecha','$id_maquina','$id_operario','$id_turno',
+                    '$id_referencia','$id_color','$paquetes','$obs')
                 ON DUPLICATE KEY UPDATE
                     fecha_paq         = VALUES(fecha_paq),
-                    id_operario       = VALUES(id_operario),
                     id_maquina        = VALUES(id_maquina),
+                    id_operario       = VALUES(id_operario),
+                    id_turno          = VALUES(id_turno),
                     id_referencia     = VALUES(id_referencia),
                     id_color          = VALUES(id_color),
-                    id_turno          = VALUES(id_turno),
                     paquetes_paq      = VALUES(paquetes_paq),
                     observaciones_paq = VALUES(observaciones_paq)";
     // Modo 'nuevos': Insertar solo si no existe
     } else {
         $sql = "INSERT IGNORE INTO PRODUCCION_PAQUETES
-                    (marca_temporal,fecha_paq,id_operario,id_maquina,id_referencia,
-                    id_color,id_turno,paquetes_paq,observaciones_paq)
+                    (marca_temporal,fecha_paq,id_maquina,id_operario,id_turno,
+                    id_referencia,id_color,paquetes_paq,observaciones_paq)
                 VALUES
-                    ('$marca','$fecha','$id_operario','$id_maquina','$id_referencia',
-                    '$id_color','$id_turno','$paquetes','$obs')";
+                    ('$marca','$fecha','$id_maquina','$id_operario','$id_turno',
+                    '$id_referencia','$id_color','$paquetes','$obs')";
     }
     // Ejecutar inserción y actualizar progreso
     procesarFila($conexion, $sql, $marca, $contador, $total, $insertados, $actualizados, $duplicados, $nueva_fecha);

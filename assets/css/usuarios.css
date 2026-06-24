@@ -234,7 +234,7 @@ body {
 .modal input {
   border-radius: 8px;
   height: 25px;
-  background: transparent;
+  background: var(--negro);
   font-size: 15px;
   border: 1px solid var(--limon);
   color: white;
@@ -242,7 +242,7 @@ body {
 .modal select {
   border-radius: 8px;
   height: 25px;
-  background: transparent;
+  background: var(--negro);
   font-size: 15px;
   border: 1px solid var(--limon);
   color: white;

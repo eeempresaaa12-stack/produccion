@@ -36,18 +36,6 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                     name="fecha_paq"
                     value="<?php echo date('Y-m-d\TH:i', strtotime($fila['fecha_paq'])); ?>">
 
-            <!-- Operario -->
-            <label>Operario</label>
-            <select name="id_operario">
-                <?php while($op = mysqli_fetch_assoc($operarios)): ?>
-                    <option 
-                        value="<?php echo $op['id_operario']; ?>"
-                        <?php echo ($op['id_operario'] == $fila['id_operario']) ? 'selected' : ''; ?>>
-                        <?php echo $op['nombre']; ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
-
             <!-- Máquina -->
             <label>Máquina</label>
             <select name="id_maquina">
@@ -56,6 +44,30 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                         value="<?php echo $m['id_maquina']; ?>"
                         <?php echo ($m['id_maquina'] == $fila['id_maquina']) ? 'selected' : ''; ?>>
                         <?php echo $m['nombre_maquina']; ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+
+            <!-- Operario -->
+            <label>Operario</label>
+            <select name="id_operario">
+                <?php while($op = mysqli_fetch_assoc($operarios)): ?>
+                    <option 
+                        value="<?php echo $op['id_operario']; ?>"
+                        <?php echo ($op['id_operario'] == $fila['id_operario']) ? 'selected' : ''; ?>>
+                        <?php echo $op['nombre_operario']; ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+
+            <!-- Turno -->
+            <label>Turno</label>
+            <select name="id_turno">
+                <?php while($t = mysqli_fetch_assoc($turnos)): ?>
+                    <option
+                        value="<?php echo $t['id_turno']; ?>"
+                        <?php echo ($t['id_turno'] == $fila['id_turno']) ? 'selected' : ''; ?>>
+                        <?php echo $t['nombre_turno']; ?>
                     </option>
                 <?php endwhile; ?>
             </select>
@@ -80,18 +92,6 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                         value="<?php echo $c['id_color']; ?>"
                         <?php echo ($c['id_color'] == $fila['id_color']) ? 'selected' : ''; ?>>
                         <?php echo $c['nombre_color']; ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
-
-            <!-- Turno -->
-            <label>Turno</label>
-            <select name="id_turno">
-                <?php while($t = mysqli_fetch_assoc($turnos)): ?>
-                    <option
-                        value="<?php echo $t['id_turno']; ?>"
-                        <?php echo ($t['id_turno'] == $fila['id_turno']) ? 'selected' : ''; ?>>
-                        <?php echo $t['nombre_turno']; ?>
                     </option>
                 <?php endwhile; ?>
             </select>

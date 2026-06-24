@@ -70,7 +70,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
             <h2>
                 <?php 
                 if(!empty($top_operario)){
-                    echo $top_operario['nombre'] . "<br><span style='font-size:14px'>(".$top_operario['total']." paquetes)</span>";
+                    echo $top_operario['nombre_operario'] . "<br><span style='font-size:14px'>(".$top_operario['total']." paquetes)</span>";
                 }else{
                     echo "Sin datos";
                 }
@@ -121,7 +121,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
             </p>
             <p>
                 👷 Mejor operario: <?php 
-                echo $top_operario_mes1['nombre'] ?? 'Sin datos'; ?>
+                echo $top_operario_mes1['nombre_operario'] ?? 'Sin datos'; ?>
                 <?php if(!empty($top_operario_mes1['total']) && $top_operario_mes1['total'] > 0){ ?>
                     (<?php echo number_format($top_operario_mes1['total']); ?> paquetes)
                 <?php } ?>
@@ -192,7 +192,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
             </p>
             <p>
                 👷 Mejor operario: <?php 
-                echo $top_operario_mes2['nombre'] ?? 'Sin datos'; ?>
+                echo $top_operario_mes2['nombre_operario'] ?? 'Sin datos'; ?>
                 <?php if(!empty($top_operario_mes2['total']) && $top_operario_mes2['total'] > 0){ ?>
                     (<?php echo number_format($top_operario_mes2['total']); ?> paquetes)
                 <?php } ?>
@@ -330,7 +330,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                     $total_operario += $row['total'];
                 ?>
                 <tr>
-                    <td><?php echo $row['nombre']; ?></td>
+                    <td><?php echo $row['nombre_operario']; ?></td>
                     <td><?php echo number_format($row['total']); ?></td>
                 </tr>
                 <?php } ?>

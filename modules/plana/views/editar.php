@@ -66,7 +66,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                     <option 
                         value="<?php echo $o['id_operario']; ?>" 
                         <?php if($fila['id_operario'] == $o['id_operario']) echo 'selected'; ?>>
-                        <?php echo $o['nombre']; ?>
+                        <?php echo $o['nombre_operario']; ?>
                     </option>
                 <?php endwhile; ?>
             </select>

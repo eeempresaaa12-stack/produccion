@@ -71,7 +71,7 @@ $nueva_fecha  = null;
 foreach ($filas as $data) {
     // Limpiar y convertir datos de cada fila
     $marca      = convertirMarca($data[0]);
-    $fecha      = convertirFecha($data[1]) ?? $marca;
+    $fecha      = convertirFecha($data[1]);
     $maquina    = limpiarNombre($data[2]);
     $referencia = limpiarNombre($data[3]);
     $color      = limpiarNombre($data[4]);
