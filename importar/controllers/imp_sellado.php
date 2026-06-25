@@ -11,13 +11,13 @@ require_once dirname(__DIR__) . '/importarModel.php';
 
 // Parametros de importación
 $modo         = $_GET['modo'] ?? 'nuevos';
-$ultima_fecha = obtenerUltimaFecha($conexion, 'paquetes');
+$ultima_fecha = obtenerUltimaFecha($conexion, 'sellado');
 
 // Fuente de datos
 $url        = "https://docs.google.com/spreadsheets/d/17gs1oTKRYY9S-qiU5ZMJCFrxe3K5r_pU1lgeZgUP8u8/export?format=csv&gid=399598423";
-$titulo     = "Producción de Paquetes";
-$subtitulo  = "PRODUCCION_PAQUETES";
-$volver_url = BASE_URL . "/modules/paquetes/views/dashboard.php";
+$titulo     = "Producción de Sellado";
+$subtitulo  = "PRODUCCION_SELLADO";
+$volver_url = BASE_URL . "/modules/sellado/views/dashboard.php";
 
 // Leer filas del Google Sheet
 [$filas, $omitidas] = leerSheet($url, $modo, $ultima_fecha);
@@ -79,8 +79,10 @@ foreach ($filas as $data) {
     $turno      = limpiarNombre($data[4]);
     $referencia = limpiarNombre($data[5]);
     $color      = limpiarNombre($data[6]);
-    $paquetes   = (int)$data[7];
-    $obs        = mysqli_real_escape_string($conexion, $data[8]);
+    $paq_x70    = (int)$data[7];
+    $paq_x90    = (int)$data[8];
+    $paq_x98    = (int)$data[9];
+    $obs        = mysqli_real_escape_string($conexion, $data[10]);
 
     // Obtener IDs de catálogos o crearlos si no existen
     $id_maquina    = $maquinas[$maquina]       ?? autoCrear($conexion, $maquinas,    "MAQUINAS",    "nombre_maquina",    $maquina);
@@ -91,12 +93,13 @@ foreach ($filas as $data) {
 
     // Modo 'todo': Insertar o actualizar si ya existe
     if ($modo === 'todo') {
-        $sql = "INSERT INTO PRODUCCION_PAQUETES
+        $sql = "INSERT INTO PRODUCCION_SELLADO
                     (marca_temporal,fecha_paq,id_maquina,id_operario,id_turno,
-                    id_referencia,id_color,paquetes_paq,observaciones_paq)
+                    id_referencia,id_color,paquetes_x70,paquetes_x90,paquetes_x98,
+                    observaciones_paq)
                 VALUES
                     ('$marca','$fecha','$id_maquina','$id_operario','$id_turno',
-                    '$id_referencia','$id_color','$paquetes','$obs')
+                    '$id_referencia','$id_color','$paq_x70','$paq_x90','$paq_x98','$obs')
                 ON DUPLICATE KEY UPDATE
                     fecha_paq         = VALUES(fecha_paq),
                     id_maquina        = VALUES(id_maquina),
@@ -104,21 +107,24 @@ foreach ($filas as $data) {
                     id_turno          = VALUES(id_turno),
                     id_referencia     = VALUES(id_referencia),
                     id_color          = VALUES(id_color),
-                    paquetes_paq      = VALUES(paquetes_paq),
+                    paquetes_x70      = VALUES(paquetes_x70),
+                    paquetes_x90      = VALUES(paquetes_x90),
+                    paquetes_x98      = VALUES(paquetes_x98),
                     observaciones_paq = VALUES(observaciones_paq)";
     // Modo 'nuevos': Insertar solo si no existe
     } else {
-        $sql = "INSERT IGNORE INTO PRODUCCION_PAQUETES
+        $sql = "INSERT IGNORE INTO PRODUCCION_SELLADO
                     (marca_temporal,fecha_paq,id_maquina,id_operario,id_turno,
-                    id_referencia,id_color,paquetes_paq,observaciones_paq)
+                    id_referencia,id_color,paquetes_x70,paquetes_x90,paquetes_x98,
+                    observaciones_paq)
                 VALUES
                     ('$marca','$fecha','$id_maquina','$id_operario','$id_turno',
-                    '$id_referencia','$id_color','$paquetes','$obs')";
+                    '$id_referencia','$id_color','$paq_x70','$paq_x90','$paq_x98','$obs')";
     }
     // Ejecutar inserción y actualizar progreso
     procesarFila($conexion, $sql, $marca, $contador, $total, $insertados, $actualizados, $duplicados, $nueva_fecha);
 }
 
 // Al finalizar: Mostrar contadores y guardar última fecha
-finalizarImportacion($conexion, 'paquetes', $nueva_fecha, $insertados, $actualizados, $duplicados, $total);
+finalizarImportacion($conexion, 'sellado', $nueva_fecha, $insertados, $actualizados, $duplicados, $total);
 ?>

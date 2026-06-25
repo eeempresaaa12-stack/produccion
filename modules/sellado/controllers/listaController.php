@@ -16,7 +16,7 @@ $pagina = $_GET['pagina'] ?? 1;
 $inicio = ($pagina - 1) * $limite;
 
 // Base de la consulta con JOINs
-$sql_base = "FROM PRODUCCION_PAQUETES p
+$sql_base = "FROM PRODUCCION_SELLADO p
 LEFT JOIN OPERARIOS o ON p.id_operario = o.id_operario
 LEFT JOIN MAQUINAS m ON p.id_maquina = m.id_maquina
 LEFT JOIN REFERENCIAS r ON p.id_referencia = r.id_referencia
@@ -33,7 +33,10 @@ if(!empty($busqueda)){
         c.nombre_color LIKE '%$busqueda%' OR
         t.nombre_turno LIKE '%$busqueda%' OR
         p.id LIKE '%$busqueda%' OR
-        p.paquetes_paq LIKE '%$busqueda%'
+        p.paquetes_x70 LIKE '%$busqueda%' OR
+        p.paquetes_x90 LIKE '%$busqueda%' OR
+        p.paquetes_x98 LIKE '%$busqueda%' OR
+        p.paquetes_total LIKE '%$busqueda%'
     )";
 }
 

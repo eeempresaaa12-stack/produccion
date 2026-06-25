@@ -25,8 +25,8 @@ $semana = $filtros['semana'];
 if($tipo == "semana"){
     // Todas las semanas del mes
     if($semana == ""){
-        $sql = "SELECT DATE(fecha_paq) fecha, SUM(paquetes_paq) total
-                FROM PRODUCCION_PAQUETES
+        $sql = "SELECT DATE(fecha_paq) fecha, SUM(paquetes_total) total
+                FROM PRODUCCION_SELLADO
                 WHERE MONTH(fecha_paq) = $mes
                 AND YEAR(fecha_paq) = YEAR(CURDATE())
                 GROUP BY DATE(fecha_paq)";
@@ -34,8 +34,8 @@ if($tipo == "semana"){
         // Rango de días de la semana seleccionada
         $inicio = (($semana - 1) * 7) + 1;
         $fin = $semana * 7;
-        $sql = "SELECT DATE(fecha_paq) fecha, SUM(paquetes_paq) total
-                FROM PRODUCCION_PAQUETES
+        $sql = "SELECT DATE(fecha_paq) fecha, SUM(paquetes_total) total
+                FROM PRODUCCION_SELLADO
                 WHERE MONTH(fecha_paq) = $mes
                 AND DAY(fecha_paq) BETWEEN $inicio AND $fin
                 AND YEAR(fecha_paq) = YEAR(CURDATE())
@@ -44,15 +44,15 @@ if($tipo == "semana"){
 // Mostrar por año
 } elseif($tipo === 'anio') {
     // Agrupado por semana del año
-    $sql = "SELECT CONCAT('Sem ', WEEK(fecha_paq, 1)) fecha, SUM(paquetes_paq) total
-            FROM PRODUCCION_PAQUETES
+    $sql = "SELECT CONCAT('Sem ', WEEK(fecha_paq, 1)) fecha, SUM(paquetes_total) total
+            FROM PRODUCCION_SELLADO
             WHERE YEAR(fecha_paq) = YEAR(CURDATE())
             GROUP BY WEEK(fecha_paq, 1), CONCAT('Sem ', WEEK(fecha_paq, 1))
             ORDER BY WEEK(fecha_paq, 1) ASC";
 }else{
     // Agrupado por día del mes
-    $sql = "SELECT DATE(fecha_paq) fecha, SUM(paquetes_paq) total
-            FROM PRODUCCION_PAQUETES
+    $sql = "SELECT DATE(fecha_paq) fecha, SUM(paquetes_total) total
+            FROM PRODUCCION_SELLADO
             WHERE MONTH(fecha_paq) = $mes
             AND YEAR(fecha_paq) = YEAR(CURDATE())
             GROUP BY DATE(fecha_paq)";
@@ -74,8 +74,8 @@ while($row = mysqli_fetch_assoc($res)){
 if($tipo == "semana"){
     // Operarios de todas las semanas del mes
     if($semana == ""){
-        $sql2 = "SELECT o.nombre_operario, SUM(p.paquetes_paq) total
-                 FROM PRODUCCION_PAQUETES p
+        $sql2 = "SELECT o.nombre_operario, SUM(p.paquetes_total) total
+                 FROM PRODUCCION_SELLADO p
                  LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario
                  WHERE MONTH(p.fecha_paq) = $mes
                  AND YEAR(p.fecha_paq) = YEAR(CURDATE())
@@ -85,8 +85,8 @@ if($tipo == "semana"){
         // Operarios por rango de días de la semana seleccionada
         $inicio = (($semana - 1) * 7) + 1;
         $fin = $semana * 7;
-        $sql2 = "SELECT o.nombre_operario, SUM(p.paquetes_paq) total
-                 FROM PRODUCCION_PAQUETES p
+        $sql2 = "SELECT o.nombre_operario, SUM(p.paquetes_total) total
+                 FROM PRODUCCION_SELLADO p
                  LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario
                  WHERE MONTH(p.fecha_paq) = $mes
                  AND DAY(p.fecha_paq) BETWEEN $inicio AND $fin
@@ -96,16 +96,16 @@ if($tipo == "semana"){
 // Mostrar por año
 }elseif($tipo === 'anio') {
     // Agrupado del año
-    $sql2 = "SELECT o.nombre_operario, SUM(p.paquetes_paq) total
-             FROM PRODUCCION_PAQUETES p
+    $sql2 = "SELECT o.nombre_operario, SUM(p.paquetes_total) total
+             FROM PRODUCCION_SELLADO p
              LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario
              WHERE YEAR(p.fecha_paq) = YEAR(CURDATE())
              GROUP BY o.nombre_operario
              ORDER BY total DESC";
 }else{
     // Operarios del mes
-    $sql2 = "SELECT o.nombre_operario, SUM(p.paquetes_paq) total
-             FROM PRODUCCION_PAQUETES p
+    $sql2 = "SELECT o.nombre_operario, SUM(p.paquetes_total) total
+             FROM PRODUCCION_SELLADO p
              LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario
              WHERE MONTH(p.fecha_paq) = $mes
              AND YEAR(p.fecha_paq) = YEAR(CURDATE())

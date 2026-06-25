@@ -17,7 +17,7 @@ function tick(cur, total, ok, upd, dup, msgLog, type) {
     // Calcular y mostrar progreso
     var pct = (cur / total) * 100;
     document.getElementById('fill').style.width = pct + '%';
-    document.getElementById('pct').textContent = pct.toFixed(2);
+    document.getElementById('pct').textContent = Math.round(pct);
     document.getElementById('msg').textContent  =
         'Importando \u2026 (' + cur + '\u202f/\u202f' + total + ')';
 

@@ -17,21 +17,21 @@ function obtenerTotalSellado($conexion, $sql){
 ================================================= */
 // Total histórico de producción
 function obtenerTotalHistoricoSellado($conexion){
-    $sql = "SELECT SUM(paquetes_paq) total
-            FROM PRODUCCION_PAQUETES";
+    $sql = "SELECT SUM(paquetes_total) total
+            FROM PRODUCCION_SELLADO";
     return obtenerTotalSellado($conexion, $sql);
 }
 // Producción de la semana actual
 function obtenerProduccionSemanaSellado($conexion){
-    $sql = "SELECT SUM(paquetes_paq) total
-            FROM PRODUCCION_PAQUETES
+    $sql = "SELECT SUM(paquetes_total) total
+            FROM PRODUCCION_SELLADO
             WHERE YEARWEEK(fecha_paq, 1) = YEARWEEK(CURDATE(), 1)";
     return obtenerTotalSellado($conexion, $sql);
 }
 // Producción del mes actual
 function obtenerProduccionMesSellado($conexion){
-    $sql = "SELECT SUM(paquetes_paq) total
-            FROM PRODUCCION_PAQUETES
+    $sql = "SELECT SUM(paquetes_total) total
+            FROM PRODUCCION_SELLADO
             WHERE MONTH(fecha_paq) = MONTH(CURDATE())
             AND YEAR(fecha_paq) = YEAR(CURDATE())";
     return obtenerTotalSellado($conexion, $sql);
@@ -42,8 +42,8 @@ function obtenerProduccionMesSellado($conexion){
 ================================================= */
 // Operario con más producción en el mes actual 
 function obtenerTopOperarioSellado($conexion){
-    $sql = "SELECT o.nombre_operario, IFNULL(SUM(p.paquetes_paq),0) total
-            FROM PRODUCCION_PAQUETES p
+    $sql = "SELECT o.nombre_operario, IFNULL(SUM(p.paquetes_total),0) total
+            FROM PRODUCCION_SELLADO p
             LEFT JOIN OPERARIOS o 
             ON p.id_operario = o.id_operario
             WHERE MONTH(p.fecha_paq)=MONTH(CURDATE())
@@ -56,7 +56,7 @@ function obtenerTopOperarioSellado($conexion){
         return mysqli_fetch_assoc($res);
     }
     return [
-        "nombre" => "Sin datos",
+        "nombre_operario" => "Sin datos",
         "total" => 0
     ];
 }
@@ -66,8 +66,8 @@ function obtenerTopOperarioSellado($conexion){
 ================================================= */
 // Total de paquetes del mes
 function obtenerTotalMesSellado($conexion,$mes){
-    $sql = "SELECT SUM(paquetes_paq) total
-            FROM PRODUCCION_PAQUETES
+    $sql = "SELECT SUM(paquetes_total) total
+            FROM PRODUCCION_SELLADO
             WHERE MONTH(fecha_paq) = $mes
             AND YEAR(fecha_paq)=YEAR(CURDATE())";
     return obtenerTotalSellado($conexion,$sql);
@@ -79,8 +79,8 @@ function obtenerTotalMesSellado($conexion,$mes){
 // Mejor y peor día de producción del mes
 function obtenerMejorPeorDiaMesSellado($conexion,$mes){
     $sql = "SELECT 
-                DATE(fecha_paq) fecha, SUM(paquetes_paq) total
-            FROM PRODUCCION_PAQUETES
+                DATE(fecha_paq) fecha, SUM(paquetes_total) total
+            FROM PRODUCCION_SELLADO
             WHERE MONTH(fecha_paq) = $mes
             AND YEAR(fecha_paq)=YEAR(CURDATE())
             GROUP BY DATE(fecha_paq)";
@@ -111,8 +111,8 @@ function obtenerMejorPeorDiaMesSellado($conexion,$mes){
 ================================================= */
 // Operario con más producción en el mes
 function obtenerTopOperarioMesSellado($conexion,$mes){
-    $sql = "SELECT o.nombre_operario, IFNULL(SUM(p.paquetes_paq),0) total
-            FROM PRODUCCION_PAQUETES p
+    $sql = "SELECT o.nombre_operario, IFNULL(SUM(p.paquetes_total),0) total
+            FROM PRODUCCION_SELLADO p
             LEFT JOIN OPERARIOS o 
             ON p.id_operario = o.id_operario
             WHERE MONTH(p.fecha_paq) = $mes
@@ -136,8 +136,8 @@ function obtenerTopOperarioMesSellado($conexion,$mes){
 // Producción agrupada por fecha en un rango
 function obtenerTablaFechasSellado($conexion,$desde,$hasta){
     $sql = "SELECT 
-            DATE(fecha_paq) as fecha, SUM(paquetes_paq) total
-            FROM PRODUCCION_PAQUETES
+            DATE(fecha_paq) as fecha, SUM(paquetes_total) total
+            FROM PRODUCCION_SELLADO
             WHERE DATE(fecha_paq) BETWEEN '$desde' AND '$hasta'
             GROUP BY DATE(fecha_paq)
             ORDER BY fecha DESC";
@@ -145,8 +145,8 @@ function obtenerTablaFechasSellado($conexion,$desde,$hasta){
 }
 // Producción agrupada por operario en un rango
 function obtenerTablaOperariosSellado($conexion,$desde,$hasta){
-    $sql = "SELECT o.nombre_operario, SUM(p.paquetes_paq) total
-            FROM PRODUCCION_PAQUETES p
+    $sql = "SELECT o.nombre_operario, SUM(p.paquetes_total) total
+            FROM PRODUCCION_SELLADO p
             LEFT JOIN OPERARIOS o 
             ON p.id_operario = o.id_operario
             WHERE DATE(p.fecha_paq) BETWEEN '$desde' AND '$hasta'
@@ -162,7 +162,7 @@ function obtenerTablaOperariosSellado($conexion,$desde,$hasta){
 function obtenerUltimaImportacionSellado($conexion){
     $sql = "SELECT ultima_fecha 
             FROM IMPORTAR 
-            WHERE nombre = 'paquetes'";
+            WHERE nombre = 'sellado'";
     $res = mysqli_query($conexion, $sql);
     if(!$res){
         return 'Nunca';

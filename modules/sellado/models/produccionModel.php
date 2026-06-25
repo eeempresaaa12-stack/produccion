@@ -5,7 +5,7 @@
 // Obtener registro de producción por ID
 function obtenerProduccionPorId($conexion, $id){
     $sql = "SELECT * 
-            FROM PRODUCCION_PAQUETES 
+            FROM PRODUCCION_SELLADO 
             WHERE id = $id";
     $res = mysqli_query($conexion, $sql);
     return mysqli_fetch_assoc($res);
@@ -43,14 +43,16 @@ function obtenerTurnos($conexion){
 ================================================= */
 // Actualizar registro de producción por ID
 function actualizarProduccion($conexion, $id, $datos){
-    $sql = "UPDATE PRODUCCION_PAQUETES SET
+    $sql = "UPDATE PRODUCCION_SELLADO SET
             fecha_paq='{$datos['fecha']}',
             id_operario='{$datos['id_operario']}',
             id_maquina='{$datos['id_maquina']}',
             id_referencia='{$datos['id_referencia']}',
             id_color='{$datos['id_color']}',
             id_turno='{$datos['id_turno']}',
-            paquetes_paq='{$datos['paquetes']}',
+            paquetes_x70='{$datos['paq_x70']}',
+            paquetes_x90='{$datos['paq_x90']}',
+            paquetes_x98='{$datos['paq_x98']}',
             observaciones_paq='{$datos['observaciones']}'
             WHERE id=$id";
     mysqli_query($conexion, $sql);
@@ -61,7 +63,7 @@ function actualizarProduccion($conexion, $id, $datos){
 ================================================= */
 // Eliminar registro de producción por ID
 function eliminarProduccion($conexion, $id){
-    $sql = "DELETE FROM PRODUCCION_PAQUETES 
+    $sql = "DELETE FROM PRODUCCION_SELLADO 
             WHERE id = $id";
     mysqli_query($conexion, $sql);
 }

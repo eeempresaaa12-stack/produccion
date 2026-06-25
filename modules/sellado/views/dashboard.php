@@ -259,7 +259,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
 
     <!-- Gráfico de producción mensual por año -->
     <div class="contenedor-grafico">
-        <h3>Producción por año (Paquetes)</h3>
+        <h3>Producción por año (Sellado)</h3>
             <div class="header-grafico-meses">
                 <!-- Selector de año -->
                 <select id="filtroAnioMes" onchange="cargarGraficoMeses()">
@@ -359,7 +359,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
 <div class="overlay" id="modalImportar">
     <div class="modal">  
         <div class="modal-header">
-            <h2>Importar Paquetes</h2>
+            <h2>Importar Sellado</h2>
             <p>Última Fecha Importada: <strong><?php echo $ultima_fecha; ?></strong></p>
             <button id="cerrarBtn" onclick="cerrarModal('modalImportar')">X</button>
         </div>
@@ -378,7 +378,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="<?= BASE_URL ?>/modules/shared/global.js"></script>
-<script src="<?= BASE_URL ?>/modules/sellado/scripts/paquetes.js"></script>
+<script src="<?= BASE_URL ?>/modules/sellado/scripts/sellado.js"></script>
 
 <?php 
 // Importar footer.php

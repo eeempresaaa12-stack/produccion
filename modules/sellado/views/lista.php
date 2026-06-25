@@ -54,7 +54,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                         <th>Turno</th>
                         <th>Referencia</th>
                         <th>Color</th>
-                        <th>Paquetes</th>
+                        <th>Total</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -70,7 +70,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                             <td><?php echo $fila['nombre_turno']; ?></td>
                             <td><?php echo $fila['nombre_referencia']; ?></td>
                             <td><?php echo $fila['nombre_color']; ?></td>
-                            <td><?php echo $fila['paquetes_paq']; ?></td>
+                            <td><?php echo $fila['paquetes_total']; ?></td>
                             <!-- Botones de editar o eliminar registros -->
                             <td>
                                 <a class="btn"
