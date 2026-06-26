@@ -21,7 +21,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
     <h2 class="titulo-vista">Historial Producción Sellado</h2>
 
         <!-- Botón para registrar producción en Google Forms -->
-        <a class="btn" id="btnRegistrar" href="https://docs.google.com/forms/d/e/1FAIpQLSdBDR9C7O6HMN1L_pmwnOjqLjT4Ca7vod0XE_l-qjx9jmn9Tg/viewform?usp=dialog" target="_blank">
+        <a class="btn" id="btnRegistrar" href="https://docs.google.com/spreadsheets/d/1RZUG-KrzDnf1Pnq7PIEAGz1prrV7DeM_UWNEIZ0LGCw/edit?gid=0#gid=0" target="_blank">
             Registrar Producción
         </a>
 
