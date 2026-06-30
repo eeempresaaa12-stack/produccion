@@ -8,7 +8,7 @@ if ($_SERVER['HTTP_HOST'] === 'localhost') {
     $host     = "localhost";
     $usuario  = "root";
     $password = "";
-    $database = "prueba";
+    $database = "control_produccion";
 } else {
     $host     = "sql301.infinityfree.com";
     $usuario  = "if0_42142771";

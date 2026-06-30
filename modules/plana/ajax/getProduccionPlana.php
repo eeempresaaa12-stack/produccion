@@ -71,7 +71,7 @@ while($row = mysqli_fetch_assoc($res)){
 // Mostrar por año
 if($tipo == "anio"){
     // Top 10 operarios del año
-    $sql2 = "SELECT o.nombre, 
+    $sql2 = "SELECT o.nombre_operario, 
                 SUM(p.bultos_plana) total
             FROM PRODUCCION_PLANA p
             LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario
@@ -93,7 +93,7 @@ if($tipo == "anio"){
         $where2 = "WHERE MONTH(p.fecha_plana) = $mes
                 AND YEAR(p.fecha_plana)=YEAR(CURDATE())";
     }
-    $sql2 = "SELECT o.nombre, 
+    $sql2 = "SELECT o.nombre_operario, 
                 SUM(p.bultos_plana) total
             FROM PRODUCCION_PLANA p
             LEFT JOIN OPERARIOS o ON p.id_operario=o.id_operario

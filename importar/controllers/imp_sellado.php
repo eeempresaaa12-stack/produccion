@@ -14,7 +14,7 @@ $modo         = $_GET['modo'] ?? 'nuevos';
 $ultima_fecha = obtenerUltimaFecha($conexion, 'sellado');
 
 // Fuente de datos
-$url        = "https://docs.google.com/spreadsheets/d/17gs1oTKRYY9S-qiU5ZMJCFrxe3K5r_pU1lgeZgUP8u8/export?format=csv&gid=399598423";
+$url        = "https://docs.google.com/spreadsheets/d/17gs1oTKRYY9S-qiU5ZMJCFrxe3K5r_pU1lgeZgUP8u8/export?format=csv&gid=399598423";      
 $titulo     = "Producción de Sellado";
 $subtitulo  = "PRODUCCION_SELLADO";
 $volver_url = BASE_URL . "/modules/sellado/views/dashboard.php";

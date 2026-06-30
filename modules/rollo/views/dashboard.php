@@ -254,7 +254,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
             <!-- Filtrar por mes -->
             <label class="label" for="filtroMes">
                 Mes:
-                <select id="filtroMes" onchange="cargarDatos('semana')">
+                <select id="filtroMes" onchange="actualizarFiltros()">
                     <?php foreach($meses as $num => $nombre){ ?>
                     <option 
                         value="<?php echo $num; ?>" 
@@ -267,7 +267,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
             <!-- Filtrar por semana segun mes -->
             <label class="label" for="filtroSemana">
                 Semana:
-                <select id="filtroSemana" onchange="cargarDatos('semana')">
+                <select id="filtroSemana" onchange="actualizarFiltros()">
                     <!-- Todas las semanas del mes seleccionado-->
                     <option value = "" <?php if($semana_actual == "") echo "selected"; ?> >
                         Todas

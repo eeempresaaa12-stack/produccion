@@ -40,7 +40,7 @@ $total_mes2 = obtenerTotalMesPlana($conexion,$mes2);
 
 // Resumenes de los meses
 $resumen_mes1 = obtenerResumenMesPlana($conexion,$mes1);
-$bruto_mes1 = $resumen_mes1['bsruto'];
+$bruto_mes1 = $resumen_mes1['bruto'];
 $retal_mes1 = $resumen_mes1['retal'];
 $neto_mes1  = $resumen_mes1['neto'];
 $resumen_mes2 = obtenerResumenMesPlana($conexion,$mes2);
