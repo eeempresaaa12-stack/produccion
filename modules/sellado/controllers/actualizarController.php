@@ -25,13 +25,7 @@ $datos = [
 
     'id_turno' => $_POST['id_turno'],
 
-    'paq_x70' => $_POST['paquetes_x70'],
-
-    'paq_x90' => $_POST['paquetes_x90'],
-
-    'paq_x98' => $_POST['paquetes_x98'],
-
-    'paquetes' => $_POST['paquetes_total'],
+    'paquetes' => $_POST['paquetes'],
 
     'observaciones' => $_POST['observaciones_paq']
 ];

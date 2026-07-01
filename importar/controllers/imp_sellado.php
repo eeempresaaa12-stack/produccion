@@ -79,10 +79,8 @@ foreach ($filas as $data) {
     $turno      = limpiarNombre($data[4]);
     $referencia = limpiarNombre($data[5]);
     $color      = limpiarNombre($data[6]);
-    $paq_x70    = (int)$data[7];
-    $paq_x90    = (int)$data[8];
-    $paq_x98    = (int)$data[9];
-    $obs        = mysqli_real_escape_string($conexion, $data[10]);
+    $paquetes    = (int)$data[7];
+    $obs        = mysqli_real_escape_string($conexion, $data[8]);
 
     // Obtener IDs de catálogos o crearlos si no existen
     $id_maquina    = $maquinas[$maquina]       ?? autoCrear($conexion, $maquinas,    "MAQUINAS",    "nombre_maquina",    $maquina);
@@ -95,11 +93,10 @@ foreach ($filas as $data) {
     if ($modo === 'todo') {
         $sql = "INSERT INTO PRODUCCION_SELLADO
                     (marca_temporal,fecha_paq,id_maquina,id_operario,id_turno,
-                    id_referencia,id_color,paquetes_x70,paquetes_x90,paquetes_x98,
-                    observaciones_paq)
+                    id_referencia,id_color,paquetes,observaciones_paq)
                 VALUES
                     ('$marca','$fecha','$id_maquina','$id_operario','$id_turno',
-                    '$id_referencia','$id_color','$paq_x70','$paq_x90','$paq_x98','$obs')
+                    '$id_referencia','$id_color','$paquetes','$obs')
                 ON DUPLICATE KEY UPDATE
                     fecha_paq         = VALUES(fecha_paq),
                     id_maquina        = VALUES(id_maquina),
@@ -107,19 +104,16 @@ foreach ($filas as $data) {
                     id_turno          = VALUES(id_turno),
                     id_referencia     = VALUES(id_referencia),
                     id_color          = VALUES(id_color),
-                    paquetes_x70      = VALUES(paquetes_x70),
-                    paquetes_x90      = VALUES(paquetes_x90),
-                    paquetes_x98      = VALUES(paquetes_x98),
+                    paquetes          = VALUES(paquetes),
                     observaciones_paq = VALUES(observaciones_paq)";
     // Modo 'nuevos': Insertar solo si no existe
     } else {
         $sql = "INSERT IGNORE INTO PRODUCCION_SELLADO
                     (marca_temporal,fecha_paq,id_maquina,id_operario,id_turno,
-                    id_referencia,id_color,paquetes_x70,paquetes_x90,paquetes_x98,
-                    observaciones_paq)
+                    id_referencia,id_color,paquetes,observaciones_paq)
                 VALUES
                     ('$marca','$fecha','$id_maquina','$id_operario','$id_turno',
-                    '$id_referencia','$id_color','$paq_x70','$paq_x90','$paq_x98','$obs')";
+                    '$id_referencia','$id_color','$paquetes','$obs')";
     }
     // Ejecutar inserción y actualizar progreso
     procesarFila($conexion, $sql, $marca, $contador, $total, $insertados, $actualizados, $duplicados, $nueva_fecha);

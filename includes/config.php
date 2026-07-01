@@ -1,7 +1,7 @@
 <?php 
 // Detectar el entorno
 if ($_SERVER['HTTP_HOST'] === 'localhost') {
-    define('BASE_URL', '/produccion');
+    define('BASE_URL', '/produccion_v1');
 } else if ($_SERVER['HTTP_HOST'] === 'controlproduccion-plastypetco.site-je') {
     define('BASE_URL', '');
 } else {

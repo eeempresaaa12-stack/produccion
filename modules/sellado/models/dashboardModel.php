@@ -17,20 +17,20 @@ function obtenerTotalSellado($conexion, $sql){
 ================================================= */
 // Total histórico de producción
 function obtenerTotalHistoricoSellado($conexion){
-    $sql = "SELECT SUM(paquetes_total) total
+    $sql = "SELECT SUM(paquetes) total
             FROM PRODUCCION_SELLADO";
     return obtenerTotalSellado($conexion, $sql);
 }
 // Producción de la semana actual
 function obtenerProduccionSemanaSellado($conexion){
-    $sql = "SELECT SUM(paquetes_total) total
+    $sql = "SELECT SUM(paquetes) total
             FROM PRODUCCION_SELLADO
             WHERE YEARWEEK(fecha_paq, 1) = YEARWEEK(CURDATE(), 1)";
     return obtenerTotalSellado($conexion, $sql);
 }
 // Producción del mes actual
 function obtenerProduccionMesSellado($conexion){
-    $sql = "SELECT SUM(paquetes_total) total
+    $sql = "SELECT SUM(paquetes) total
             FROM PRODUCCION_SELLADO
             WHERE MONTH(fecha_paq) = MONTH(CURDATE())
             AND YEAR(fecha_paq) = YEAR(CURDATE())";
@@ -42,7 +42,7 @@ function obtenerProduccionMesSellado($conexion){
 ================================================= */
 // Operario con más producción en el mes actual 
 function obtenerTopOperarioSellado($conexion){
-    $sql = "SELECT o.nombre_operario, IFNULL(SUM(p.paquetes_total),0) total
+    $sql = "SELECT o.nombre_operario, IFNULL(SUM(p.paquetes),0) total
             FROM PRODUCCION_SELLADO p
             LEFT JOIN OPERARIOS o 
             ON p.id_operario = o.id_operario
@@ -66,7 +66,7 @@ function obtenerTopOperarioSellado($conexion){
 ================================================= */
 // Total de paquetes del mes
 function obtenerTotalMesSellado($conexion,$mes){
-    $sql = "SELECT SUM(paquetes_total) total
+    $sql = "SELECT SUM(paquetes) total
             FROM PRODUCCION_SELLADO
             WHERE MONTH(fecha_paq) = $mes
             AND YEAR(fecha_paq)=YEAR(CURDATE())";
@@ -79,7 +79,7 @@ function obtenerTotalMesSellado($conexion,$mes){
 // Mejor y peor día de producción del mes
 function obtenerMejorPeorDiaMesSellado($conexion,$mes){
     $sql = "SELECT 
-                DATE(fecha_paq) fecha, SUM(paquetes_total) total
+                DATE(fecha_paq) fecha, SUM(paquetes) total
             FROM PRODUCCION_SELLADO
             WHERE MONTH(fecha_paq) = $mes
             AND YEAR(fecha_paq)=YEAR(CURDATE())
@@ -111,7 +111,7 @@ function obtenerMejorPeorDiaMesSellado($conexion,$mes){
 ================================================= */
 // Operario con más producción en el mes
 function obtenerTopOperarioMesSellado($conexion,$mes){
-    $sql = "SELECT o.nombre_operario, IFNULL(SUM(p.paquetes_total),0) total
+    $sql = "SELECT o.nombre_operario, IFNULL(SUM(p.paquetes),0) total
             FROM PRODUCCION_SELLADO p
             LEFT JOIN OPERARIOS o 
             ON p.id_operario = o.id_operario
@@ -136,7 +136,7 @@ function obtenerTopOperarioMesSellado($conexion,$mes){
 // Producción agrupada por fecha en un rango
 function obtenerTablaFechasSellado($conexion,$desde,$hasta){
     $sql = "SELECT 
-            DATE(fecha_paq) as fecha, SUM(paquetes_total) total
+            DATE(fecha_paq) as fecha, SUM(paquetes) total
             FROM PRODUCCION_SELLADO
             WHERE DATE(fecha_paq) BETWEEN '$desde' AND '$hasta'
             GROUP BY DATE(fecha_paq)
@@ -145,7 +145,7 @@ function obtenerTablaFechasSellado($conexion,$desde,$hasta){
 }
 // Producción agrupada por operario en un rango
 function obtenerTablaOperariosSellado($conexion,$desde,$hasta){
-    $sql = "SELECT o.nombre_operario, SUM(p.paquetes_total) total
+    $sql = "SELECT o.nombre_operario, SUM(p.paquetes) total
             FROM PRODUCCION_SELLADO p
             LEFT JOIN OPERARIOS o 
             ON p.id_operario = o.id_operario

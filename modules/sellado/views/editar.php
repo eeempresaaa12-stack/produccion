@@ -96,33 +96,12 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                 <?php endwhile; ?>
             </select>
 
-            <!-- Cantidad de Paquetes x70 -->
-            <label>X70</label>
-            <input
-                type="number"
-                name="paquetes_x70"
-                value="<?php echo $fila['paquetes_x70']; ?>">
-
-            <!-- Cantidad de Paquetes x90 -->
-            <label>X90</label>
-            <input
-                type="number"
-                name="paquetes_x90"
-                value="<?php echo $fila['paquetes_x90']; ?>">
-
-            <!-- Cantidad de Paquetes x98 -->
-            <label>X98</label>
-            <input
-                type="number"
-                name="paquetes_x98"
-                value="<?php echo $fila['paquetes_x98']; ?>">
-
             <!-- Total de Paquetes -->
-            <label>Total</label>
+            <label>Paquetes</label>
             <input
                 type="number"
-                name="paquetes_total"
-                value="<?php echo $fila['paquetes_total']; ?>">
+                name="paquetes"
+                value="<?php echo $fila['paquetes']; ?>">
 
             <!-- Observaciones -->
             <label>Observaciones</label>

@@ -17,7 +17,7 @@ $anio = $filtros['anio'];
 // Producción total agrupada por mes
 $sql = "SELECT 
             MONTH(fecha_paq) mes,
-            SUM(paquetes_total) total
+            SUM(paquetes) total
         FROM PRODUCCION_SELLADO
         WHERE YEAR(fecha_paq) = '$anio'
         GROUP BY MONTH(fecha_paq)

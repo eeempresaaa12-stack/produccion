@@ -21,7 +21,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
     <h2 class="titulo-vista">Historial Producción Sellado</h2>
 
         <!-- Botón para registrar producción en Google Forms -->
-        <a class="btn" id="btnRegistrar" href="https://docs.google.com/spreadsheets/d/17gs1oTKRYY9S-qiU5ZMJCFrxe3K5r_pU1lgeZgUP8u8/edit?gid=355836140#gid=355836140" target="_blank">
+        <a class="btn" id="btnRegistrar" href="https://docs.google.com/forms/d/e/1FAIpQLSdBDR9C7O6HMN1L_pmwnOjqLjT4Ca7vod0XE_l-qjx9jmn9Tg/viewform?usp=dialog" target="_blank">
             Registrar Producción
         </a>
 
@@ -54,7 +54,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                         <th>Turno</th>
                         <th>Referencia</th>
                         <th>Color</th>
-                        <th>Total</th>
+                        <th>Paquetes</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -70,7 +70,7 @@ include dirname(__DIR__, 3) . '/templates/header.php';
                             <td><?php echo $fila['nombre_turno']; ?></td>
                             <td><?php echo $fila['nombre_referencia']; ?></td>
                             <td><?php echo $fila['nombre_color']; ?></td>
-                            <td><?php echo $fila['paquetes_total']; ?></td>
+                            <td><?php echo $fila['paquetes']; ?></td>
                             <!-- Botones de editar o eliminar registros -->
                             <td>
                                 <a class="btn"

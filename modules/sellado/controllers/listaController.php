@@ -33,10 +33,7 @@ if(!empty($busqueda)){
         c.nombre_color LIKE '%$busqueda%' OR
         t.nombre_turno LIKE '%$busqueda%' OR
         p.id LIKE '%$busqueda%' OR
-        p.paquetes_x70 LIKE '%$busqueda%' OR
-        p.paquetes_x90 LIKE '%$busqueda%' OR
-        p.paquetes_x98 LIKE '%$busqueda%' OR
-        p.paquetes_total LIKE '%$busqueda%'
+        p.paquetes LIKE '%$busqueda%'
     )";
 }
 
